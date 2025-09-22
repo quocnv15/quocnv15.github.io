@@ -3,37 +3,151 @@ layout: page
 title: Home
 ---
 
-## A Blog by QuocNV
+<div class="posts-homepage">
+  <div class="page-header">
+    <h1 class="page-title">Technical Articles & Insights</h1>
+    <p class="page-description">Explore my collection of iOS development articles, architecture patterns, and programming best practices</p>
+  </div>
 
-Hello and welcome to my blog! This space is dedicated to sharing valuable knowledge about iOS development and helping you prepare for interviews in the tech industry. Whether you're a seasoned developer or just starting out, you'll find a wealth of resources here to enhance your skills and boost your career.
+  <!-- iOS Development Articles -->
+  <div class="category-section">
+    <div class="category-header">
+      <h2 class="category-title">
+        <span class="category-icon">📱</span>
+        iOS Development
+      </h2>
+      <span class="post-count">3 articles</span>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.path contains 'GCD' or post.path contains 'memory-leak' or post.path contains 'testing' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="post-read-time">5 min read</span>
+          </div>
+          <p class="post-excerpt">
+            {% if post.content %}
+              {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 
-### What You'll Find Here:
-- **iOS Development Tips**: From Swift programming to UIKit and SwiftUI, we cover a wide range of topics to help you master iOS development.
-- **Project Tutorials**: Step-by-step guides on building real-world iOS applications, with code snippets and explanations.
-- **Interview Preparation**: Insights into common interview questions, coding challenges, and strategies to excel in technical interviews.
-- **Career Advice**: Tips on building a strong resume, networking, and navigating the job market in the tech industry.
-- **Community Support**: Engage with fellow developers, share your experiences, and learn from others in our interactive community.
+  <!-- Data Structures & Algorithms -->
+  <div class="category-section">
+    <div class="category-header">
+      <h2 class="category-title">
+        <span class="category-icon">🔧</span>
+        Data Structures & Algorithms
+      </h2>
+      <span class="post-count">4 articles</span>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.path contains 'data-structure' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="post-read-time">8 min read</span>
+          </div>
+          <p class="post-excerpt">
+            {% if post.content %}
+              {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 
-### Why Follow This Blog?
-My goal is to provide practical, up-to-date content that empowers you to become a proficient iOS developer and succeed in your career. With a focus on real-world applications and best practices, this blog is your go-to resource for continuous learning and professional growth.
+  <!-- Architecture & Design -->
+  <div class="category-section">
+    <div class="category-header">
+      <h2 class="category-title">
+        <span class="category-icon">🏗️</span>
+        Architecture & Design
+      </h2>
+      <span class="post-count">3 articles</span>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="post-read-time">10 min read</span>
+          </div>
+          <p class="post-excerpt">
+            {% if post.content %}
+              {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 
-Stay tuned for regular updates, tutorials, and insights. Happy coding!
+  <!-- Swift Programming -->
+  <div class="category-section">
+    <div class="category-header">
+      <h2 class="category-title">
+        <span class="category-icon">💻</span>
+        Swift Programming
+      </h2>
+      <span class="post-count">2 articles</span>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.path contains 'map' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="post-read-time">6 min read</span>
+          </div>
+          <p class="post-excerpt">
+            {% if post.content %}
+              {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 
----
-
-### **Recent Posts**
-
-{% for post in site.posts limit:5 %}
-<div class="recent-post">
-  <h3><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h3>
-  <p class="post-meta">{{ post.date | date: "%b %-d, %Y" }}{% if post.tags %} • Tags: {{ post.tags | join: ", " }}{% endif %}</p>
-  {% if post.excerpt %}
-    <p>{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
-  {% endif %}
-</div>
-{% endfor %}
-
-<div class="all-posts-link">
-  <a href="{{ 'archive.html' | relative_url }}">View all posts →</a>
+  <!-- All Posts Link -->
+  <div class="view-all-section">
+    <a href="/archive.html" class="view-all-btn">View All Articles →</a>
+  </div>
 </div>
 

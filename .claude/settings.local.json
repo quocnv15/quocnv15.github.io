@@ -2,7 +2,24 @@
   "permissions": {
     "allow": [
       "Bash(bundle exec:*)",
-      "Bash(bundle:*)"
+      "Bash(bundle:*)",
+      "mcp__playwright__browser_navigate",
+      "Bash(gem install:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:apps.apple.com)",
+      "Bash(curl:*)",
+      "WebFetch(domain:play.google.com)",
+      "WebSearch",
+      "WebFetch(domain:www.toyota-fs.com)",
+      "WebFetch(domain:www.google.com)",
+      "Bash(tree:*)",
+      "WebFetch(domain:www.toyota.com.ph)",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(for:*)",
+      "Bash(done)",
+      "Bash(do:*)",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": []

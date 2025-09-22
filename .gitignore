@@ -7,8 +7,7 @@ _site/
 # Ruby/Bundler
 .bundle/
 vendor/
-# Gemfile.lock - uncomment if you want to commit lock file for dependency versioning
-# Gemfile.lock
+# Gemfile and Gemfile.lock are committed for GitHub Pages compatibility
 
 # macOS
 .DS_Store

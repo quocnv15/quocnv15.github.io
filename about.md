@@ -11,8 +11,14 @@ permalink: /about/
         <img src="/images/user/avatar.jpeg" alt="Profile Picture" class="avatar-img">
       </div>
       <div class="profile-info">
-        <h1 class="profile-name">Quoc NV</h1>
-        <p class="profile-title">iOS Developer</p>
+        <h1 class="profile-name">NGUYEN VAN QUOC</h1>
+        <p class="profile-title">Senior iOS Developer</p>
+        <div class="profile-details">
+          <p class="profile-birth"><strong>Date of Birth:</strong> 15/05/1993</p>
+          <p class="profile-phone"><strong>Phone:</strong> +84 3636 34765</p>
+          <p class="profile-email"><strong>Email:</strong> quocnv155@gmail.com</p>
+          <p class="profile-skype"><strong>Skype:</strong> kidboy_155</p>
+        </div>
         <div class="profile-links">
           <a href="https://github.com/quocnv15" target="_blank" rel="noopener" class="profile-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -20,7 +26,7 @@ permalink: /about/
             </svg>
             GitHub
           </a>
-          <a href="https://linkedin.com/in/quocnv15" target="_blank" rel="noopener" class="profile-link">
+          <a href="https://linkedin.com/in/nguyen-quoc-3a16a6226" target="_blank" rel="noopener" class="profile-link">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
             </svg>
@@ -39,88 +45,154 @@ permalink: /about/
     <div class="profile-content">
       <h2>About Me</h2>
       <p>
-        I'm a passionate iOS Developer with a strong focus on creating elegant, user-friendly mobile applications.
-        With expertise in Swift, SwiftUI, and modern iOS development practices, I strive to build apps that not only
-        meet functional requirements but also deliver exceptional user experiences.
+        I'm a Senior iOS Developer with 8+ years of professional experience specializing in mobile application 
+        development and SDK framework creation. My expertise spans across iOS, Windows, and Linux platforms, 
+        with a strong foundation in both native and cross-platform development.
       </p>
 
       <p>
-        I'm dedicated to staying current with the latest iOS development trends and best practices, constantly
-        expanding my knowledge and skills to deliver cutting-edge solutions. My approach combines technical
-        excellence with a deep understanding of user needs and business objectives.
+        I have extensive experience developing medical platforms, fintech applications, and 3D visualization tools 
+        using Swift, Objective-C, and various frameworks. My approach combines technical excellence with 
+        practical problem-solving to deliver robust, scalable solutions.
       </p>
 
       <h3>Skills & Expertise</h3>
       <div class="skills-grid">
         <div class="skill-category">
+          <h4>Core Skills</h4>
+          <ul>
+            <li>Develop SDK (framework) and application on multi-OS (iOS, Windows, Linux)</li>
+            <li>OS: knowledge of iOS/macOS/windows/linux environment</li>
+          </ul>
+        </div>
+        <div class="skill-category">
           <h4>Programming Languages</h4>
           <ul>
-            <li>Swift</li>
-            <li>Flutter</li>
+            <li>Swift, SwiftUI</li>
             <li>Objective-C</li>
+            <li>C#, Flutter</li>
+            <li>C, C++</li>
             <li>Golang</li>
           </ul>
         </div>
         <div class="skill-category">
-          <h4>iOS Frameworks</h4>
+          <h4>Frameworks & Platforms</h4>
           <ul>
-            <li>SwiftUI</li>
-            <li>UIKit</li>
-            <li>Combine</li>
-            <li>Core Data</li>
-            <li>Core Animation</li>
+            <li>RxSwift</li>
+            <li>WPF, XAML</li>
+            <li>MFC</li>
+            <li>boost asio</li>
           </ul>
         </div>
         <div class="skill-category">
-          <h4>Tools & Technologies</h4>
+          <h4>Tools & Version Control</h4>
           <ul>
-            <li>Xcode</li>
-            <li>Git</li>
-            <li>CI/CD</li>
-            <li>Unit Testing</li>
-            <li>Agile Development</li>
+            <li>Xcode, Visual Studio, Source Insight</li>
+            <li>Git, SVN</li>
+            <li>Microsoft Office</li>
           </ul>
         </div>
       </div>
 
       <h3>Professional Experience</h3>
       <div class="experience-item">
-        <h4>Senior iOS Developer</h4>
-        <p class="experience-company">Tech Company Name | 2020 - Present</p>
+        <h4>Senior Developer</h4>
+        <p class="experience-company">Dr.JOY VN, Hanoi | Feb 2020 - Now</p>
         <ul>
-          <li>Developed and maintained multiple iOS applications using Swift and SwiftUI</li>
-          <li>Implemented modern architecture patterns like MVVM and Clean Architecture</li>
-          <li>Optimized app performance and reduced crash rates by 40%</li>
-          <li>Mentored junior developers and conducted code reviews</li>
+          <li>Research and development for company projects</li>
+          <li>Ensure high quality of projects/tasks under management</li>
+          <li>Environment: iOS</li>
+          <li>Programming language: Swift</li>
         </ul>
       </div>
 
       <div class="experience-item">
-        <h4>iOS Developer</h4>
-        <p class="experience-company">Previous Company | 2018 - 2020</p>
+        <h4>Senior Developer</h4>
+        <p class="experience-company">MORHN, Hanoi | Aug 2018 - Feb 2020</p>
         <ul>
-          <li>Built and shipped iOS applications from concept to App Store</li>
-          <li>Collaborated with cross-functional teams to deliver high-quality mobile experiences</li>
-          <li>Implemented complex user interfaces and smooth animations</li>
-          <li>Integrated third-party APIs and services</li>
+          <li>Research and develop for company projects</li>
+          <li>Ensure high quality of projects/tasks under management</li>
+          <li>Environment: iOS</li>
+          <li>Programming language: Swift</li>
+        </ul>
+      </div>
+
+      <div class="experience-item">
+        <h4>Software Developer</h4>
+        <p class="experience-company">DTSVN, Hanoi | Jun 2017 - Aug 2018</p>
+        <ul>
+          <li>Development of the 3D house design application on iOS</li>
+          <li>Maintain, fix a bug, improve the performance of the WPF application</li>
+          <li>Environment: iOS, desktop application</li>
+          <li>Programming language: Objective-C, Swift, C# (WPF)</li>
+        </ul>
+      </div>
+
+      <div class="experience-item">
+        <h4>Software Developer</h4>
+        <p class="experience-company">MQ Solution, Hanoi | Jun 2015 - Jun 2017</p>
+        <ul>
+          <li>Internship (2015-2016) – Software Developer (2016-2017)</li>
+          <li>Develop the application (iOS, Windows):</li>
+          <li>Connect to the embedded system</li>
+          <li>Orbit simulation and display the information on multi-OS</li>
+          <li>Develop the middleware (C/C++) on Windows and Linux</li>
+          <li>Environment: iOS, desktop application, embedded system</li>
+          <li>Programming language: Objective-C, C, C++(MFC)</li>
         </ul>
       </div>
 
       <h3>Education</h3>
       <div class="education-item">
-        <h4>Bachelor of Science in Computer Science</h4>
-        <p class="education-school">University Name | 2014 - 2018</p>
-        <p>
-          Graduated with honors, focusing on mobile application development and software engineering principles.
-        </p>
+        <h4>Bachelor of Computer Science</h4>
+        <p class="education-school">School of Information and Communication Technology (SoICT)</p>
+        <p class="education-school">Hanoi University of Science and Technology</p>
+        <p class="education-period">10/2011 – 6/2016</p>
       </div>
 
       <h3>Blog & Knowledge Sharing</h3>
       <p>
-        Through this blog, I share my knowledge and experiences in iOS development, helping others learn and grow
-        in their careers. I cover topics ranging from basic concepts to advanced techniques, interview preparation,
-        and best practices in mobile development.
+        Through this blog, I share insights from my 8+ years of experience developing iOS applications, 
+        SDK frameworks, and cross-platform solutions. I cover topics ranging from Swift and Objective-C 
+        development to 3D visualization, embedded systems integration, and real-world project challenges.
       </p>
+
+      <h3>Personality & Skills</h3>
+      <div class="personality-grid">
+        <div class="personality-item">
+          <h4>Professional Traits</h4>
+          <ul>
+            <li>Hardworking, well-organized, and high sense of responsibility</li>
+            <li>Quick-learner, self-confident and active</li>
+            <li>Good communication and presentation skills</li>
+            <li>Good at data analyzing</li>
+          </ul>
+        </div>
+        <div class="personality-item">
+          <h4>Interpersonal Skills</h4>
+          <ul>
+            <li>Friendly and hospitable</li>
+            <li>Strong team collaboration</li>
+            <li>Problem-solving mindset</li>
+            <li>Adaptability to new technologies</li>
+          </ul>
+        </div>
+        <div class="personality-item">
+          <h4>Languages</h4>
+          <ul>
+            <li>Vietnamese: native language</li>
+            <li>English: reading and listening specialized documents well</li>
+          </ul>
+        </div>
+        <div class="personality-item">
+          <h4>Hobbies</h4>
+          <ul>
+            <li>Reading books</li>
+            <li>Listening to Chinese music</li>
+            <li>Continuous learning in technology</li>
+          </ul>
+        </div>
+      </div>
 
       <h3>Get In Touch</h3>
       <p>
@@ -131,7 +203,7 @@ permalink: /about/
 
       <div class="contact-buttons">
         <a href="mailto:quocnv155@gmail.com" class="btn-contact">Send Email</a>
-        <a href="https://linkedin.com/in/quocnv15" target="_blank" class="btn-contact secondary">Connect on LinkedIn</a>
+        <a href="https://linkedin.com/in/nguyen-quoc-3a16a6226" target="_blank" class="btn-contact secondary">Connect on LinkedIn</a>
         <a href="#" class="btn-contact secondary" id="downloadCV">Download CV</a>
       </div>
     </div>

@@ -1,11 +1,12 @@
-title: "QuocNV's Blogs"
-author: "QuocNV"
-description: "Some blog about programming." # This will show up in places like twitter, linkedin, etc, if you share your sites url as a post.
+title: "NGUYEN VAN QUOC | Senior iOS Developer"
+author: "NGUYEN VAN QUOC"
+description: "Senior iOS Developer with 8+ years of experience in mobile application development. Expert in Swift, Objective-C, and cross-platform frameworks including Flutter. Specialized in developing SDK frameworks and applications for iOS, Windows, and Linux platforms."
 
 # Email / Social media user names used by the minima theme:
 # All of these are optional and can be removed or commented out
 email: "quocnv155@gmail.com"
 github_username: "quocnv15"
+linkedin_username: "nguyen-quoc-3a16a6226"
 #facebook_username: username
 #flickr_username: username
 #instagram_username: username
@@ -24,6 +25,11 @@ kramdown:
   syntax_highlighter_opts:
     disable: true
 
+collections:
+  projects:
+    output: true
+    permalink: /projects/:path/
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap
@@ -37,4 +43,4 @@ defaults:
       path: ""
       type: post
     values:
-      tags: Other
+      tags: ["Other"]

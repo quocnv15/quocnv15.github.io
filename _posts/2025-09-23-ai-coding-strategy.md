@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Chiến Lược Tối Ưu Z.ai GLM cho Iterative Coding"
+date: 2025-09-23 10:00:00 +0700
+categories: [AI, Strategy]
+tags: [AI, Coding, GLM, Productivity, Strategy]
+---
+
 # Chiến Lược Tối Ưu Z.ai GLM cho Iterative Coding
 
 ## 🎯 Tình Huống Của Bạn

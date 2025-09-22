@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Preparing for an iOS Job Interview"
+date: 2024-12-19 10:00:00 +0700
+categories: [iOS, Interview]
+tags: [iOS, Interview, Swift, Career, Preparation]
+---
+
 # Preparing for an iOS Job Interview
 
 Preparing for an iOS job interview involves a mix of technical and non-technical preparation. Here are some steps and resources to help you get ready:

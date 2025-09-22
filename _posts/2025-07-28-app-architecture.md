@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Phân Tích Kiến Trúc Flutter Flashcard App: SOLID Principles và Architecture Patterns"
+date: 2025-07-28 10:00:00 +0700
+categories: [Architecture, Flutter]
+tags: [Architecture, Flutter, SOLID, Clean Architecture, Design Patterns]
+---
+
 # Phân Tích Kiến Trúc Flutter Flashcard App: SOLID Principles và Architecture Patterns
 
 ## Tổng Quan Kiến Trúc

@@ -21,6 +21,10 @@ theme: "minima"
 
 rss: rss
 
+# Allow future posts to be displayed
+future: true
+timezone: Asia/Ho_Chi_Minh
+
 kramdown:
   syntax_highlighter_opts:
     disable: true
@@ -41,6 +45,6 @@ titles_from_headings:
 defaults:
   - scope:
       path: ""
-      type: post
+      type: posts
     values:
       tags: ["Other"]

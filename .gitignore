@@ -1,1 +1,47 @@
-﻿_site
+﻿# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Ruby/Bundler
+.bundle/
+vendor/
+# Gemfile.lock - uncomment if you want to commit lock file for dependency versioning
+# Gemfile.lock
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Claude specific
+.claude/
+.playwright-mcp/
+
+# Build artifacts
+*.tar.gz
+*.zip
+
+# Node.js (if using npm scripts)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

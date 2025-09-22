@@ -8,7 +8,7 @@ permalink: /about/
   <div class="about-profile">
     <div class="profile-header">
       <div class="profile-avatar">
-        <img src="https://via.placeholder.com/150" alt="Profile Picture" class="avatar-img">
+        <img src="/images/user/avatar.jpeg" alt="Profile Picture" class="avatar-img">
       </div>
       <div class="profile-info">
         <h1 class="profile-name">Quoc NV</h1>
@@ -56,9 +56,9 @@ permalink: /about/
           <h4>Programming Languages</h4>
           <ul>
             <li>Swift</li>
+            <li>Flutter</li>
             <li>Objective-C</li>
-            <li>JavaScript</li>
-            <li>Python</li>
+            <li>Golang</li>
           </ul>
         </div>
         <div class="skill-category">

@@ -3,6 +3,16 @@ hr {
   margin-bottom: 20px;
 }
 
+/* Hide Minima's default header to avoid duplicate headers */
+body > .site-header {
+  display: none !important;
+}
+
+/* Ensure our custom header is visible */
+header.custom-header {
+  display: block !important;
+}
+
 /* Site Header Navigation */
 .site-header {
   background: #fff;

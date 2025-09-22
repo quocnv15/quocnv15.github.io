@@ -145,6 +145,108 @@ title: Home
     </div>
   </div>
 
+  <!-- AI & Coding Strategy -->
+  <div class="category-section">
+    <div class="category-header">
+      <h2 class="category-title">
+        <span class="category-icon">🤖</span>
+        AI & Coding Strategy
+      </h2>
+      <span class="post-count">1 article</span>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.categories contains 'AI' or post.categories contains 'Strategy' or post.path contains 'ai-coding' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="post-read-time">12 min read</span>
+          </div>
+          <p class="post-excerpt">
+            {% if post.content %}
+              {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Interview Preparation -->
+  <div class="category-section">
+    <div class="category-header">
+      <h2 class="category-title">
+        <span class="category-icon">💼</span>
+        Interview Preparation
+      </h2>
+      <span class="post-count">1 article</span>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.categories contains 'Interview' or post.path contains 'interview' or post.path contains 'prepare' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="post-read-time">15 min read</span>
+          </div>
+          <p class="post-excerpt">
+            {% if post.content %}
+              {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- App Architecture -->
+  <div class="category-section">
+    <div class="category-header">
+      <h2 class="category-title">
+        <span class="category-icon">🏛️</span>
+        App Architecture
+      </h2>
+      <span class="post-count">1 article</span>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts %}
+        {% if post.categories contains 'Architecture' or post.categories contains 'Flutter' or post.path contains 'app-architecture' %}
+      <article class="post-card">
+        <div class="post-content">
+          <h3 class="post-title">
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-meta">
+            <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
+            <span class="post-read-time">20 min read</span>
+          </div>
+          <p class="post-excerpt">
+            {% if post.content %}
+              {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
+            {% endif %}
+          </p>
+        </div>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
   <!-- All Posts Link -->
   <div class="view-all-section">
     <a href="/archive.html" class="view-all-btn">View All Articles →</a>

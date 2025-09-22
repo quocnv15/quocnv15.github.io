@@ -1,0 +1,43 @@
+<header class="site-header">
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <a class="site-title" rel="author" href="{{ '/' | relative_url }}">QuocNV</a>
+      <div class="nav-links">
+        <a class="nav-link" href="{{ '/' | relative_url }}">Home</a>
+        <a class="nav-link" href="{{ '/about/' | relative_url }}">About</a>
+        <a class="nav-link" href="{{ '/archive.html' | relative_url }}">Archive</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+          <span class="nav-toggle-icon"></span>
+          <span class="nav-toggle-icon"></span>
+          <span class="nav-toggle-icon"></span>
+        </button>
+      </div>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a class="nav-link" href="{{ '/' | relative_url }}">Home</a>
+      <a class="nav-link" href="{{ '/about/' | relative_url }}">About</a>
+      <a class="nav-link" href="{{ '/archive.html' | relative_url }}">Archive</a>
+    </div>
+  </nav>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const navToggle = document.getElementById('navToggle');
+    const navMobile = document.getElementById('navMobile');
+
+    navToggle.addEventListener('click', function() {
+      navMobile.classList.toggle('active');
+      navToggle.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking on a link
+    const mobileLinks = navMobile.querySelectorAll('.nav-link');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        navMobile.classList.remove('active');
+        navToggle.classList.remove('active');
+      });
+    });
+  });
+</script>

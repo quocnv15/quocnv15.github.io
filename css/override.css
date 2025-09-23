@@ -625,8 +625,17 @@ header.custom-header {
   color: #3498db;
 }
 
-/* Responsive Design */
+/* Mobile menu open state */
+body.nav-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/* Enhanced Responsive Design */
 @media (max-width: 768px) {
+  /* Navigation Improvements */
   .nav-links {
     display: none;
   }
@@ -639,21 +648,47 @@ header.custom-header {
     display: none;
   }
 
+  /* Header adjustments */
+  .site-nav {
+    padding: 0 15px;
+  }
+
+  .site-nav-inner {
+    gap: 1rem;
+  }
+
+  .site-title {
+    font-size: 1.25rem;
+  }
+
+  /* Profile section */
   .profile-header {
     flex-direction: column;
     text-align: center;
     gap: 1.5rem;
+    padding: 1.5rem;
   }
 
   .profile-name {
     font-size: 2rem;
   }
 
+  .profile-title {
+    font-size: 1.1rem;
+  }
+
+  .avatar-img {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Skills grid */
   .skills-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
 
+  /* Contact buttons */
   .contact-buttons {
     flex-direction: column;
     align-items: center;
@@ -665,6 +700,7 @@ header.custom-header {
     text-align: center;
   }
 
+  /* Archive layout */
   .archive-list li {
     flex-direction: column;
     align-items: flex-start;
@@ -707,6 +743,342 @@ header.custom-header {
 
   .section-title {
     font-size: 2rem;
+  }
+
+  /* Experience and education items */
+  .experience-item, .education-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Personality grid */
+  .personality-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Enhanced mobile navigation menu */
+  .nav-mobile {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid #e8e8e8;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    flex-direction: column;
+    padding: 1rem 0;
+    z-index: 999;
+  }
+
+  .nav-mobile.active {
+    display: flex;
+  }
+
+  .nav-mobile .nav-link {
+    padding: 1rem 2rem;
+    display: block;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s ease;
+  }
+
+  .nav-mobile .nav-link:hover {
+    background-color: #f8f9fa;
+  }
+
+  .nav-mobile .nav-link:last-child {
+    border-bottom: none;
+  }
+
+  /* Enhanced hamburger menu animation */
+  .nav-toggle.active .nav-toggle-icon:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+  }
+
+  .nav-toggle.active .nav-toggle-icon:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav-toggle.active .nav-toggle-icon:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+  }
+
+  /* Close menu when clicking outside */
+  .nav-toggle {
+    position: relative;
+    z-index: 1001;
+  }
+
+  /* Improved mobile spacing */
+  .page-content {
+    padding: 1rem 0;
+  }
+
+  .wrapper {
+    padding: 0 1rem;
+  }
+
+  /* Better mobile typography */
+  .page-title {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+  }
+
+  .post-excerpt {
+    font-size: 0.9rem;
+  }
+
+  /* Mobile-optimized buttons */
+  .hero-btn, .btn-contact, .view-all-btn {
+    padding: 0.875rem 1.75rem;
+    font-size: 0.95rem;
+  }
+
+  /* Better mobile images */
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  /* Enhanced mobile readability */
+  .post-content, .page-content, .profile-content {
+    line-height: 1.6;
+  }
+
+  /* Better mobile typography hierarchy */
+  h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  h4 {
+    font-size: 1.1rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  /* Improved mobile spacing */
+  .post-card, .content-category, .skill-category, .personality-item {
+    margin-bottom: 1.25rem;
+  }
+
+  .category-section {
+    margin-bottom: 2.5rem;
+  }
+
+  /* Better mobile list styling */
+  ul, ol {
+    margin-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+
+  /* Mobile-optimized blockquotes */
+  blockquote {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-left: 3px solid #3498db;
+    background: #f8f9fa;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* Better mobile link styling */
+  a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+  }
+
+  /* Improved mobile code styling */
+  code {
+    background: #f8f9fa;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+  }
+
+  /* Better mobile horizontal rules */
+  hr {
+    margin: 1.5rem 0;
+    border: none;
+    border-top: 1px solid #e8e8e8;
+  }
+
+  /* Better mobile form elements */
+  input, textarea, select {
+    font-size: 16px;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Mobile-optimized code blocks */
+  pre, code {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  pre {
+    padding: 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+
+  /* Better mobile tables */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-radius: 6px;
+  }
+
+  table th, table td {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Small screen optimization (phones) */
+@media (max-width: 480px) {
+  .site-nav {
+    padding: 0 10px;
+  }
+
+  .site-title {
+    font-size: 1.1rem;
+  }
+
+  .hero-section {
+    padding: 2rem 0.75rem;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .page-title {
+    font-size: 1.6rem;
+  }
+
+  .profile-header {
+    padding: 1rem;
+  }
+
+  .avatar-img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profile-name {
+    font-size: 1.75rem;
+  }
+
+  .skills-grid, .personality-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .post-card {
+    padding: 1rem;
+  }
+
+  .post-title {
+    font-size: 1rem;
+  }
+
+  .post-excerpt {
+    font-size: 0.85rem;
+  }
+
+  .btn-contact, .hero-btn, .view-all-btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Enhanced mobile navigation for small screens */
+  .nav-mobile .nav-link {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* Better spacing for small screens */
+  .experience-item, .education-item, .skill-category, .personality-item {
+    padding: 0.875rem;
+    margin-bottom: 0.875rem;
+  }
+}
+
+/* Medium screen optimization (tablets) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .site-nav {
+    padding: 0 30px;
+  }
+
+  .skills-grid, .personality-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .content-categories {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .hero-section {
+    padding: 3.5rem 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
   }
 }
 

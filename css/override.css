@@ -848,6 +848,66 @@ body.nav-open {
     border-radius: 8px;
   }
 
+  /* Blog post responsive improvements */
+  .post-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e8e8e8;
+  }
+
+  .post-navigation .nav-link {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem;
+    text-decoration: none;
+    color: #3498db;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .post-navigation .nav-link:hover {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+  }
+
+  .post-navigation .nav-prev {
+    margin-right: 0.5rem;
+  }
+
+  .post-navigation .nav-next {
+    margin-left: 0.5rem;
+  }
+
+  /* Responsive code blocks for blog posts */
+  .post-content pre {
+    background: #f8f9fa;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 1rem 0;
+  }
+
+  .post-content code {
+    background: #f8f9fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    color: #e83e8c;
+  }
+
+  /* Better mobile table of contents */
+  .post-content h1, .post-content h2, .post-content h3, 
+  .post-content h4, .post-content h5, .post-content h6 {
+    scroll-margin-top: 80px;
+  }
+
   /* Enhanced mobile readability */
   .post-content, .page-content, .profile-content {
     line-height: 1.6;
@@ -1084,9 +1144,9 @@ body.nav-open {
 
 /* Homepage Posts Layout */
 .posts-homepage {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 2rem;
 }
 
 .posts-homepage .page-header {
@@ -1146,7 +1206,7 @@ body.nav-open {
 
 .posts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
 }
 
@@ -1300,4 +1360,157 @@ body.nav-open {
   transform: translateY(-50%);
   font-size: 2.5em;
   opacity: 0.3;
+}
+
+/* Large Screen Optimization (1400px and above) */
+@media (min-width: 1400px) {
+  .posts-homepage {
+    max-width: 1600px;
+    padding: 3rem 3rem;
+  }
+  
+  .posts-homepage .page-title {
+    font-size: 3rem;
+  }
+  
+  .posts-homepage .page-description {
+    font-size: 1.2rem;
+    max-width: 800px;
+  }
+  
+  .posts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+  }
+  
+  .post-card {
+    padding: 2rem;
+  }
+  
+  .post-title {
+    font-size: 1.4rem;
+  }
+  
+  .post-excerpt {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .category-header {
+    padding: 1.5rem 0;
+  }
+  
+  .category-title {
+    font-size: 1.8rem;
+  }
+  
+  /* Better spacing for large screens */
+  .category-section {
+    margin-bottom: 5rem;
+  }
+  
+  .view-all-section {
+    margin-top: 4rem;
+  }
+}
+
+/* Ultra-Wide Screen Optimization (1920px and above) */
+@media (min-width: 1920px) {
+  .posts-homepage {
+    max-width: 1800px;
+    padding: 4rem 4rem;
+  }
+  
+  .posts-homepage .page-title {
+    font-size: 3.5rem;
+  }
+  
+  .posts-homepage .page-description {
+    font-size: 1.3rem;
+    max-width: 1000px;
+  }
+  
+  .posts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 3rem;
+  }
+  
+  .post-card {
+    padding: 2.5rem;
+  }
+  
+  .post-title {
+    font-size: 1.5rem;
+  }
+  
+  .post-excerpt {
+    font-size: 1.1rem;
+    line-height: 1.8;
+  }
+  
+  .category-title {
+    font-size: 2rem;
+  }
+  
+  /* Enhanced spacing for ultra-wide screens */
+  .category-section {
+    margin-bottom: 6rem;
+  }
+  
+  .view-all-section {
+    margin-top: 5rem;
+  }
+  
+  .view-all-btn {
+    padding: 1.2rem 2.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+/* Super Ultra-Wide Screen Optimization (2560px and above) */
+@media (min-width: 2560px) {
+  .posts-homepage {
+    max-width: 2200px;
+    padding: 5rem 5rem;
+  }
+  
+  .posts-homepage .page-title {
+    font-size: 4rem;
+  }
+  
+  .posts-homepage .page-description {
+    font-size: 1.4rem;
+    max-width: 1200px;
+  }
+  
+  .posts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 3.5rem;
+  }
+  
+  .post-card {
+    padding: 3rem;
+  }
+  
+  .post-title {
+    font-size: 1.6rem;
+  }
+  
+  .post-excerpt {
+    font-size: 1.2rem;
+    line-height: 1.9;
+  }
+  
+  .category-title {
+    font-size: 2.2rem;
+  }
+  
+  /* Maximum spacing for super ultra-wide screens */
+  .category-section {
+    margin-bottom: 8rem;
+  }
+  
+  .view-all-section {
+    margin-top: 6rem;
+  }
 }

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Một Hệ Thống Đang Thay Đổi Cuộc Sống Tôi"
+title: "Một Hệ Thống Đang Thay Đổi Cuộc Sống Tôi - AI gen"
 date: 2025-10-01 14:00:00 +0700
 tags: [nang-suat, he-thong, personal-development, productivity]
 ---
@@ -34,7 +34,7 @@ Hệ thống năng suất toàn diện giải quyết các lý do cơ bản tạ
 Không có cảm xúc nào kéo dài hơn 90 giây trừ khi bạn nuôi dưỡng nó bằng suy nghĩ. Hiện thực sinh lý này cho bạn sức mạnh đáng kinh ngạc để vượt qua cảm giác quá tải về năng suất.
 
 #### Khoa Học Đằng Sau
-Khi một cảm xúc được kích hoạt, cơ thể bạn giải phóng hóa chất lưu thông qua cơ thể và được loại bỏ hoàn toàn trong vòng 90 giây. Điều khiến cảm xúc còn mãi không phải là cảm xúc本身, mà là những câu chuyện chúng ta kể với bản thân làm kích hoạt lại phản ứng hóa chất.
+Khi một cảm xúc được kích hoạt, cơ thể bạn giải phóng hóa chất lưu thông qua cơ thể và được loại bỏ hoàn toàn trong vòng 90 giây. Điều khiến cảm xúc còn mãi không phải là cảm xúc bản thân, mà là những câu chuyện chúng ta kể với bản thân làm kích hoạt lại phản ứng hóa chất.
 
 #### Ứng Dụng Thực Tế
 1. **Nhận biết cảm giác thể chất**: Chặt ngực, nóng mặt
@@ -68,7 +68,7 @@ Môi trường của bạn là não bộ bên ngoài. Ngay bây giờ, nó có t
 
 #### Nguyên Tắc Chính
 - **Làm cho lựa chọn tốt dễ dàng, lựa chọn xấu khó khăn**
-- **Mỗi đối tượng要么 giúp要么 hại - không có trung lập**
+- **Mỗi đối tượng hoặc giúp hoặc hại - không có trung lập**
 - **Thiết kế như trò chơi điện tử**: Chế độ dễ cho thói quen tốt, chế độ không thể cho thói quen xấu
 
 #### Ứng Dụng Thực Tế

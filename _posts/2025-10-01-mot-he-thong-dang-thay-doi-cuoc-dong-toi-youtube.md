@@ -1,12 +1,12 @@
 ---
 layout: post
-title: "Một Hệ Thống Đang Thay Đổi Cuộc Sống Tôi - AI"
+title: "Một Hệ Thống Đang Thay Đổi Cuộc Sống Tôi - Youtube"
 date: 2025-10-01 14:00:00 +0700
 tags: [nang-suat, he-thong, personal-development, productivity]
 ---
 
 > Hệ thống năng suất cách mạng từ IdeasToThrive - Biến cách tiếp cận năng suất và thành công của bạn với các hệ thống hoạt động tự động
-
+[The One Habit That Is Changing My Life](https://www.youtube.com/watch?v=hAvskHhvDis)
 ## 📋 Tổng Quan
 
 ### Thông Tin Video
@@ -335,4 +335,3 @@ Dựa trên background Flutter development và AI tools của bạn:
 
 Các khung này không hoạt động độc lập mà tạo thành một hệ thống tổng thể, giúp bạn xây dựng thói quen bền vững và đạt được mục tiêu dài hạn một cách hiệu quả.[1]
 
-[1](https://www.youtube.com/watch?v=hAvskHhvDis)

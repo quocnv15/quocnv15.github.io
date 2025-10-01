@@ -343,7 +343,7 @@ Thích ứng các framework theo bối cảnh và nhu cầu cụ thể của b�
 Phát triển trực giác về mô hình nào phù hợp với tình huống nào
 
 ### Dạy Cho Người Khác
-Giải thích các mô hình cho người khác để加深 sự hiểu biết của chính bạn
+Giải thích các mô hình cho người khác để làm sâu sự hiểu biết của chính bạn
 
 ---
 

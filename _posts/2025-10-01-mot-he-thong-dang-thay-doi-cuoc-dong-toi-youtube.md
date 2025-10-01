@@ -7,6 +7,7 @@ tags: [nang-suat, he-thong, personal-development, productivity]
 
 > Hệ thống năng suất cách mạng từ IdeasToThrive - Biến cách tiếp cận năng suất và thành công của bạn với các hệ thống hoạt động tự động
 [The One Habit That Is Changing My Life](https://www.youtube.com/watch?v=hAvskHhvDis)
+
 ## 📋 Tổng Quan
 
 ### Thông Tin Video
@@ -14,6 +15,7 @@ tags: [nang-suat, he-thong, personal-development, productivity]
 - **Thời lượng:** 
 - **Ngôn ngữ:** Tiếng Việt
 - **Ngày tạo:** 2025-09-30
+
 # Chi Tiết 14 Khung Lý Thuyết và Công Cụ Thực Tiễn từ Video
 
 Dựa trên nội dung video và kinh nghiệm của bạn với các công cụ AI và phát triển cá nhân, đây là phân tích chi tiết từng khung lý thuyết:

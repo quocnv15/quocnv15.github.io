@@ -8,7 +8,22 @@ title: Home
     <h1 class="page-title">Technical Articles & Insights</h1>
     <p class="page-description">Explore my collection of mobile development and AI integration articles, architecture patterns, and programming best practices</p>
     
-    <!-- Filter functionality temporarily disabled for future improvement -->
+    <!-- Category Filter -->
+    <div class="category-filter">
+      <div class="filter-dropdown-container">
+        <select class="filter-dropdown" id="filterDropdown" aria-label="Filter articles by category">
+          <option value="all">All Articles</option>
+          <option value="ios">📱 iOS Development</option>
+          <option value="data">🔧 Data Structures</option>
+          <option value="architecture">🏗️ Architecture</option>
+          <option value="swift">💻 Swift Programming</option>
+          <option value="ai">🤖 AI & Strategy</option>
+          <option value="interview">💼 Interview Prep</option>
+          <option value="app">🏛️ App Architecture</option>
+          <option value="notes">📝 Knowledge Curation</option>
+        </select>
+      </div>
+    </div>
   </div>
 
   <!-- Featured/Latest Posts Section -->
@@ -417,6 +432,48 @@ title: Home
         {% endfor %}
       </div>
     </div>
+
+    <!-- Knowledge Curation Section -->
+    <div class="category-section" data-category="notes">
+      <div class="category-header">
+        <h2 class="category-title">
+          <span class="category-icon">📝</span>
+          Knowledge Curation
+        </h2>
+        <div class="category-controls">
+          <span class="post-count">
+            {% assign notes_count = site.notes | size %}
+            {{ notes_count }} notes
+          </span>
+          <button class="expand-btn">+</button>
+        </div>
+      </div>
+
+      <div class="posts-grid">
+        {% assign sorted_notes = site.notes | sort: 'date' | reverse %}
+        {% for note in sorted_notes %}
+        <article class="post-card" data-categories="notes" data-date="{{ note.date | date: '%Y%m%d' }}" data-read-time="5">
+          <div class="post-content">
+            <div class="post-tags">
+              <span class="post-tag">{{ note.path | split: '/' | last | split: '-' | first | capitalize }}</span>
+            </div>
+            <h3 class="post-title">
+              <a href="{{ note.url | relative_url }}">{{ note.title }}</a>
+            </h3>
+            <div class="post-meta">
+              <time class="post-date">{{ note.date | date: "%b %-d, %Y" }}</time>
+              <span class="post-read-time">5 min read</span>
+            </div>
+            <p class="post-excerpt">
+              {% if note.content %}
+                {{ note.content | strip_html | truncatewords: 20 | remove: '#' }}
+              {% endif %}
+            </p>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
   </div>
 
   <!-- Additional Navigation Links -->
@@ -432,5 +489,66 @@ title: Home
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const filterDropdown = document.getElementById('filterDropdown');
+  const categorySections = document.querySelectorAll('.category-section');
+  const featuredSection = document.querySelector('.featured-section');
+  
+  // Dropdown functionality
+  if (filterDropdown) {
+    filterDropdown.addEventListener('change', function() {
+      const category = this.value;
+      filterByCategory(category);
+    });
+  }
+  
+  function filterByCategory(category) {
+    // Show/hide sections based on filter
+    categorySections.forEach(section => {
+      const sectionCategory = section.getAttribute('data-category');
+      
+      if (category === 'all' || sectionCategory === category) {
+        section.style.display = 'block';
+        section.classList.remove('hidden');
+      } else {
+        section.style.display = 'none';
+        section.classList.add('hidden');
+      }
+    });
+    
+    // Handle featured section
+    if (featuredSection) {
+      if (category === 'all') {
+        featuredSection.style.display = 'block';
+        featuredSection.classList.remove('hidden');
+      } else {
+        featuredSection.style.display = 'none';
+        featuredSection.classList.add('hidden');
+      }
+    }
+  }
+  
+  // Add URL hash support for deep linking
+  const urlHash = window.location.hash.substring(1);
+  if (urlHash && filterDropdown) {
+    filterDropdown.value = urlHash;
+    filterByCategory(urlHash);
+  }
+  
+  // Update URL hash when filter changes
+  if (filterDropdown) {
+    filterDropdown.addEventListener('change', function() {
+      const category = this.value;
+      if (category !== 'all') {
+        window.history.replaceState(null, null, `#${category}`);
+      } else {
+        window.history.replaceState(null, null, window.location.pathname);
+      }
+    });
+  }
+});
+</script>
 
   

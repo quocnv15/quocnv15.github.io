@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: note
 title: "Một Hệ Thống Đang Thay Đổi Cuộc Sống Tôi - Youtube"
 date: 2025-10-01 14:00:00 +0700
 tags: [nang-suat, he-thong, personal-development, productivity]

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: note
 title: "Từ Hoài Nghi Đến Tin Dùng"
 date: 2025-10-01 16:00:00 +0700
 tags: [tin-tuong, hoai-nghi, tam-ly, phat-trien-ca-nhan, vulnerability, mo-long, relationships, emotional-intelligence]

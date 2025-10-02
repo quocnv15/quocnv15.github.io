@@ -39,7 +39,8 @@
       "Bash(ls:*)",
       "Bash(rm:*)",
       "Bash(git restore:*)",
-      "Bash(fi:*)"
+      "Bash(fi:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

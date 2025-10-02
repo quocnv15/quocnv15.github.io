@@ -1467,6 +1467,110 @@ body.nav-open {
   }
 }
 
+/* Category Filter Styling */
+.category-filter {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+}
+
+.filter-dropdown-container {
+  display: block;
+}
+
+.filter-dropdown {
+  width: 100%;
+  max-width: 300px;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  background: white;
+  color: #2c3e50;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%235a6c7d' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+.filter-dropdown:hover {
+  border-color: #3498db;
+}
+
+.filter-dropdown:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.filter-btn {
+  padding: 0.75rem 1.25rem;
+  background: white;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #5a6c7d;
+  white-space: nowrap;
+}
+
+.filter-btn:hover {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+}
+
+.filter-btn.active {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.filter-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #5a6c7d;
+}
+
+.filter-count {
+  font-weight: 500;
+}
+
+.clear-filter {
+  padding: 0.5rem 1rem;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.clear-filter:hover {
+  background: #c0392b;
+  transform: translateY(-1px);
+}
+
 /* Filter Controls Styling */
 .filter-controls {
   display: flex;
@@ -1758,11 +1862,42 @@ body.nav-open {
 
 /* Responsive Filter Controls */
 @media (max-width: 768px) {
+  .category-filter {
+    padding: 1rem;
+  }
+  
+  .filter-toggle-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    flex: 1;
+  }
+  
+  .view-toggle-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem;
+  }
+  
   .filter-controls {
     flex-direction: column;
     gap: 1rem;
     align-items: stretch;
-    padding: 1rem;
+  }
+  
+  
+  .filter-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .filter-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
   }
   
   .filter-tabs {
@@ -2015,9 +2150,50 @@ body.nav-open {
 .category-dropdown:focus,
 .expand-btn:focus,
 .nav-btn:focus,
-.quick-link:focus {
+.quick-link:focus,
+.filter-btn:focus {
   outline: 2px solid #3498db;
   outline-offset: 2px;
+}
+
+/* Loading spinner */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Enhanced filter button states */
+.filter-btn:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+.filter-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Smooth filter transitions */
+.category-section,
+.featured-section {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.category-section.hidden,
+.featured-section.hidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
 }
 
 /* Super Ultra-Wide Screen Optimization (2560px and above) */

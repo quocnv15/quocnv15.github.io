@@ -32,7 +32,14 @@
       "mcp__playwright__browser_handle_dialog",
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
-      "Bash(xxd:*)"
+      "Bash(xxd:*)",
+      "Bash(while:*)",
+      "Bash(mkdir:*)",
+      "Bash(python3:*)",
+      "Bash(ls:*)",
+      "Bash(rm:*)",
+      "Bash(git restore:*)",
+      "Bash(fi:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,86 @@
+---
+layout: default
+---
+<link href="/css/override.css" rel="stylesheet" type="text/css">
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <div class="note-badge">
+      <span class="note-type">📝 {{ page.path | split: '/' | last | split: '-' | first | capitalize }}</span>
+    </div>
+    <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+        {{ page.date | date: date_format }}
+      </time>
+      {% assign author = page.author | default: site.author %}
+      {%- if author -%}
+        • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ author }}</span></span>
+      {%- endif -%}
+      <span class="note-label">Knowledge Curation</span>
+    </p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    {{ content }}
+  </div>
+
+  <footer class="post-footer">
+    <div class="note-navigation">
+      <a href="/" class="back-link">← Back to Home</a>
+      <a href="/archive.html" class="archive-link">All Articles</a>
+    </div>
+
+    {% include sharelinks.html %}
+  </footer>
+
+  {% include navlinks.html %}
+
+</article>
+
+<style>
+.note-badge {
+  margin-bottom: 1rem;
+}
+
+.note-type {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.note-label {
+  background: #f0f4f8;
+  color: #2d3748;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
+.note-navigation {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-link, .archive-link {
+  color: #4a5568;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover, .archive-link:hover {
+  color: #2d3748;
+}
+</style>

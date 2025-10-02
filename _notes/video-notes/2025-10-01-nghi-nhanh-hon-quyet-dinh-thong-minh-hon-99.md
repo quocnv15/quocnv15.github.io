@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: note
 title: "Nghĩ Nhanh Hơn & Quyết Định Thông Minh Hơn 99% Mọi Người"
 date: 2025-10-01 12:00:00 +0700
 tags: [tư-duy, ra-quyết-định, mental-models, productivity, critical-thinking]

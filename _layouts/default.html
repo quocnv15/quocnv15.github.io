@@ -15,6 +15,25 @@
 
     {%- include footer.html -%}
 
+    <!-- TypeScript Bundle -->
+    <script type="module" defer
+      src="{{ '/assets/js/main.js' | relative_url }}?v={{ site.time | date: '%s' }}">
+    </script>
+
+    <!-- Site Configuration for TypeScript -->
+    <script type="application/json" id="site-config">
+      {
+        "theme": "system",
+        "searchEnabled": false,
+        "tocEnabled": false,
+        "copyCodeEnabled": true,
+        "shareButtonsEnabled": false,
+        "isPost": false,
+        "isHomePage": true,
+        "environment": "{{ jekyll.environment }}"
+      }
+    </script>
+
   </body>
 
 </html>

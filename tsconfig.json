@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    // Strict Type Checking
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+
+    // Module Configuration
+    "module": "esnext",
+    "target": "es2019",
+    "lib": ["ES2020", "DOM"],
+    "moduleResolution": "bundler",
+    "verbatimModuleSyntax": true,
+
+    // Output Configuration
+    "declaration": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true,
+    "removeComments": false,
+
+    // Code Quality
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+    "forceConsistentCasingInFileNames": true,
+
+    // Interop Constraints
+    "skipLibCheck": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "assets",
+    "_site",
+    ".jekyll-cache"
+  ]
+}

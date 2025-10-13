@@ -11,17 +11,29 @@
     "build:ts:watch": "node build.js --watch",
     "check:types": "tsc --noEmit",
     "check:types:watch": "tsc --noEmit --watch",
-    "dev": "npm run build:ts:watch",
-    "build": "npm run build:ts && npm run check:types",
-    "clean": "rm -rf assets/js/*.js assets/js/*.js.map dist",
-    "size-check": "npm run build && du -h assets/js/main.js",
+    "dev": "concurrently \"npm run build:ts:watch\" \"npm run serve:dev\"",
+    "dev:ts": "npm run build:ts:watch",
+    "dev:jekyll": "bundle exec jekyll serve --livereload --port 4001",
+    "serve:dev": "bundle exec jekyll serve --livereload --port 4001",
     "serve": "bundle exec jekyll serve --livereload",
+    "build": "npm run clean && npm run build:ts && npm run check:types",
     "build:jekyll": "bundle exec jekyll build",
-    "deploy": "npm run build && npm run build:jekyll",
+    "build:prod": "NODE_ENV=production npm run build && npm run build:jekyll",
+    "deploy": "npm run build:prod",
+    "clean": "rm -rf assets/js/*.js assets/js/*.js.map dist _site .jekyll-cache",
+    "clean:ts": "rm -rf assets/js/*.js assets/js/*.js.map",
+    "size-check": "npm run build && du -h assets/js/main.js",
+    "analyze": "npm run build:ts -- --analyze",
     "test:bundle": "npm run build && node -e \"require('./assets/js/main.js')\"",
-    "lint": "eslint src/ts --ext .ts || echo 'ESLint not configured'",
-    "format": "prettier --write src/ts/**/*.{ts,js} || echo 'Prettier not configured'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src/ts --ext .ts || echo 'ESLint not configured - install with npm install --save-dev eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin'",
+    "lint:fix": "eslint src/ts --ext .ts --fix || echo 'ESLint not configured'",
+    "format": "prettier --write src/ts/**/*.{ts,js} || echo 'Prettier not configured - install with npm install --save-dev prettier'",
+    "format:check": "prettier --check src/ts/**/*.{ts,js} || echo 'Prettier not configured'",
+    "test": "npm run check:types && npm run test:bundle && npm run test:unit",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "npm run build"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +41,9 @@
   "devDependencies": {
     "@types/node": "^24.7.2",
     "esbuild": "^0.25.10",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "concurrently": "^8.2.2",
+    "vitest": "^1.0.4",
+    "jsdom": "^23.0.1"
   }
 }

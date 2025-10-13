@@ -3,6 +3,7 @@ const path = require('path');
 
 const isProduction = process.env.NODE_ENV === 'production';
 const isWatch = process.argv.includes('--watch');
+const isAnalyze = process.argv.includes('--analyze');
 
 const buildConfig = {
   entryPoints: ['src/ts/main.ts'],
@@ -60,6 +61,26 @@ const buildConfig = {
                 console.warn(`⚠️ Bundle size exceeds 150KB: ${sizeKB} KB`);
               }
             });
+
+            // Detailed analysis if requested
+            if (isAnalyze) {
+              console.log('\n📈 Detailed Bundle Analysis:');
+              const mainBundle = result.metafile.outputs['assets/js/main.js'];
+              if (mainBundle && mainBundle.inputs) {
+                console.log('\n📦 Input Files:');
+                Object.entries(mainBundle.inputs).forEach(([file, input]) => {
+                  const bytesInKB = (input.bytes / 1024).toFixed(2);
+                  console.log(`  ${file}: ${bytesInKB} KB`);
+                });
+              }
+
+              if (mainBundle && mainBundle.exports) {
+                console.log('\n🔗 Exports:');
+                mainBundle.exports.forEach(exportName => {
+                  console.log(`  ${exportName}`);
+                });
+              }
+            }
           }
         });
       }

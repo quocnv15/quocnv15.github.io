@@ -8,16 +8,16 @@
  * - Error handling with graceful degradation
  */
 
-// Feature modules (will be added in Phase 2)
-// import { initTheme, type ThemeMode } from './modules/theme';
-// import { initNavigation } from './modules/navigation';
-// import { initCopyCode } from './modules/copy-code';
-// import { initTOC } from './modules/toc';
+// Feature modules
+import { initTheme, type ThemeMode } from './modules/theme';
+import { initNavigation } from './modules/navigation';
+import { initCopyCode } from './modules/copy-code';
+import { initTOC } from './modules/toc';
 // import { initSearch } from './modules/search';
 // import { initShareButtons } from './modules/share';
 
-// Utilities (will be added in Phase 2)
-// import { ready } from './modules/utils/dom';
+// Utilities
+import { ready as domReady } from './modules/utils/dom';
 // import { initErrorHandling, initPerformanceMonitoring } from './modules/utils/errors';
 
 /**
@@ -68,38 +68,40 @@ const initializeApp = async (): Promise<void> => {
   const config = getAppConfig();
 
   try {
-    // Initialize core infrastructure (Phase 2)
-    // initErrorHandling();
-    // initPerformanceMonitoring();
-
     console.log('🚀 Jekyll TypeScript Frontend Starting...');
     console.log('📊 Config:', config);
 
-    // Initialize features based on configuration (Phase 2)
-    // initTheme(config.theme);
-    // initNavigation();
+    // Initialize core infrastructure
+    // initErrorHandling();
+    // initPerformanceMonitoring();
 
-    // if (config.copyCodeEnabled) {
-    //   await initCopyCode();
-    // }
+    // Initialize features based on configuration
+    initTheme(config.theme);
+    initNavigation();
 
-    // if (config.tocEnabled && config.isPost) {
-    //   await initTOC();
-    // }
+    if (config.copyCodeEnabled) {
+      await initCopyCode();
+    }
 
-    // if (config.searchEnabled) {
-    //   await initSearch();
-    // }
+    if (config.tocEnabled && config.isPost) {
+      await initTOC();
+    }
 
-    // if (config.shareButtonsEnabled && config.isPost) {
-    //   await initShareButtons();
-    // }
+    if (config.searchEnabled) {
+      // await initSearch();
+      console.log('🔍 Search functionality not implemented yet');
+    }
+
+    if (config.shareButtonsEnabled && config.isPost) {
+      // await initShareButtons();
+      console.log('📤 Share buttons not implemented yet');
+    }
 
     // Mark as ready
     document.body.classList.add('js-enabled');
     document.body.classList.remove('js-loading');
 
-    console.log('✅ Jekyll TypeScript frontend initialized successfully (Phase 1 complete)');
+    console.log('✅ Jekyll TypeScript frontend initialized successfully (Phase 2 complete)');
 
   } catch (error) {
     console.error('❌ Failed to initialize app:', error);
@@ -108,28 +110,20 @@ const initializeApp = async (): Promise<void> => {
     document.body.classList.add('js-fallback');
     document.body.classList.remove('js-loading');
 
-    // Still enable basic functionality (Phase 2)
-    // try {
-    //   initTheme(config.theme);
-    //   initNavigation();
-    // } catch (fallbackError) {
-    //   console.error('❌ Even fallback initialization failed:', fallbackError);
-    // }
+    // Still enable basic functionality
+    try {
+      initTheme(config.theme);
+      initNavigation();
+    } catch (fallbackError) {
+      console.error('❌ Even fallback initialization failed:', fallbackError);
+    }
   }
 };
 
 /**
  * Application bootstrap
  */
-const ready = (callback: () => void): void => {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', callback);
-  } else {
-    callback();
-  }
-};
-
-ready(() => {
+domReady(() => {
   document.body.classList.add('js-loading');
   initializeApp();
 });

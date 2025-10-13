@@ -1,8 +1,771 @@
-var r=(e,t=document)=>t.querySelector(e),u=(e,t=document)=>t.querySelectorAll(e),m=(e,t,o)=>{let n=document.createElement(e);return t&&Object.entries(t).forEach(([s,i])=>{n.setAttribute(s,i)}),o!==void 0&&(n.textContent=o),n},L=e=>{document.readyState==="loading"?document.addEventListener("DOMContentLoaded",e):e()};var S=(e,t)=>{let o;return(...n)=>{o||(e(...n),o=!0,setTimeout(()=>o=!1,t))}};var H=(e,t=0,o="smooth")=>{let s=e.getBoundingClientRect().top+window.scrollY-t;window.scrollTo({top:s,behavior:o})},l=(e,t,o,n)=>(e.addEventListener(t,o,n),()=>{e.removeEventListener(t,o,n)});var A="theme",j="data-theme",U=300,O=()=>window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light",f=()=>{try{let e=localStorage.getItem(A);if(e&&["light","dark","system"].includes(e))return e}catch(e){console.warn("Failed to read theme from localStorage:",e)}return"system"},y=()=>{let e=f();return e==="system"?O():e},v=e=>{let t=e==="system"?O():e;document.documentElement.setAttribute(j,t),b(t),document.documentElement.classList.add("theme-transitioning"),setTimeout(()=>{document.documentElement.classList.remove("theme-transitioning")},U),console.log(`\u{1F3A8} Theme applied: ${t} (stored: ${e})`)},J=e=>{try{localStorage.setItem(A,e)}catch(t){console.warn("Failed to save theme to localStorage:",t)}},V=()=>{let t=y()==="light"?"dark":"light",o=f();J(o==="system"?t:"system"),v(o==="system"?t:"system")};var b=e=>{let t=r(".theme-toggle");if(!t)return;let o=e==="dark";t.classList.toggle("active",o),t.setAttribute("aria-pressed",o.toString());let n=t.querySelector(".theme-icon");n&&(n.textContent=e==="dark"?"\u{1F319}":"\u2600\uFE0F"),t.setAttribute("title",e==="dark"?"Switch to light mode":"Switch to dark mode")},W=()=>{if(!window.matchMedia)return;let e=window.matchMedia("(prefers-color-scheme: dark)"),t=()=>{f()==="system"&&v("system")};e.addEventListener?e.addEventListener("change",t):e.addListener(t),console.log("\u{1F440} System theme watcher initialized")},G=()=>{let e=document.createElement("button");return e.className="theme-toggle",e.setAttribute("type","button"),e.setAttribute("aria-label","Toggle dark mode"),e.setAttribute("title","Toggle dark mode"),e.innerHTML='<span class="theme-icon">\u{1F319}</span>',e},Q=()=>{if(r(".theme-toggle")){b(y());return}let t=r(".site-header, header, .site-nav");if(!t){console.warn("\u26A0\uFE0F Could not find suitable location for theme toggle button");return}let o=G();t.appendChild(o);let n=l(o,"click",s=>{s.preventDefault(),V()});o._cleanup=n,b(y()),console.log("\u{1F3A8} Theme toggle button created and added to header")},T=e=>{let t=e||f();v(t),W(),Q(),console.log(`\u{1F3A8} Theme functionality initialized with mode: ${t}`)};var X=768,Z=300,N='button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',E=()=>window.innerWidth<=X||"ontouchstart"in window||navigator.maxTouchPoints>0,I=e=>{let t=document.body;if(e)t.classList.add("nav-open"),t.style.overflow="hidden",t.style.position="fixed",t.style.width="100%",t.style.top=`-${window.scrollY}px`;else{let o=Math.abs(parseInt(t.style.top||"0",10));t.classList.remove("nav-open"),t.style.overflow="",t.style.position="",t.style.width="",t.style.top="",window.scrollTo(0,o)}},g=()=>{let e=r(".nav-toggle"),t=r(".nav-mobile");!e||!t||(e.classList.remove("active"),e.setAttribute("aria-expanded","false"),t.classList.remove("active"),I(!1),setTimeout(()=>{e.focus()},Z),console.log("\u{1F4F1} Mobile menu closed"))},ee=()=>{let e=r(".nav-toggle"),t=r(".nav-mobile");!e||!t||(e.classList.add("active"),e.setAttribute("aria-expanded","true"),t.classList.add("active"),I(!0),setTimeout(()=>{let o=t.querySelector(N);o&&o.focus()},100),console.log("\u{1F4F1} Mobile menu opened"))},te=()=>{let e=r(".nav-toggle");if(!e)return;e.classList.contains("active")?g():ee()},oe=e=>{let t=r(".nav-mobile"),o=r(".nav-toggle");if(!t||!o)return;let n=e.target,s=t.contains(n),i=o.contains(n);!s&&!i&&g()},ne=e=>{e.key==="Escape"&&g()},se=()=>{let e=r(".nav-toggle");if(!e){console.warn("\u26A0\uFE0F Mobile navigation toggle button not found");return}e.classList.remove("active"),e.setAttribute("aria-expanded","false"),e.setAttribute("aria-controls","mobile-menu"),e.setAttribute("aria-label","Toggle navigation menu");let t=l(e,"click",o=>{o.preventDefault(),te()});e._cleanup=t,console.log("\u{1F4F1} Mobile navigation toggle setup complete")},ie=()=>{let e=l(document,"click",oe);document._clickOutsideCleanup=e,console.log("\u{1F4F1} Click outside to close functionality setup")},ae=()=>{let e=r(".nav-mobile");if(!e)return;let o=l(e,"keydown",n=>{if(n.key==="Tab"){let s=Array.from(e.querySelectorAll(N)),i=s[0],a=s[s.length-1];n.shiftKey?document.activeElement===i&&i&&(n.preventDefault(),a==null||a.focus()):document.activeElement===a&&a&&(n.preventDefault(),i==null||i.focus())}});e._keyboardCleanup=o,console.log("\u{1F4F1} Keyboard navigation setup complete")},re=()=>{let e=l(document,"keydown",ne);document._escapeCleanup=e,console.log("\u{1F4F1} Escape key handler setup complete")},le=()=>{let e=E(),t=()=>{let i=E();if(!e&&i){let a=r(".nav-mobile");a&&a.classList.contains("active")&&g()}e&&!i&&g(),e=i},o,s=l(window,"resize",()=>{clearTimeout(o),o=setTimeout(t,150)});window._resizeCleanup=s,console.log("\u{1F4F1} Responsive behavior setup complete")},ce=()=>{let e=document.createElement("button");return e.className="nav-toggle",e.setAttribute("type","button"),e.setAttribute("aria-label","Toggle navigation menu"),e.setAttribute("aria-controls","mobile-menu"),e.setAttribute("aria-expanded","false"),e.innerHTML=`
+// src/ts/modules/utils/dom.ts
+var qsSafe = (selector, parent = document) => {
+  return parent.querySelector(selector);
+};
+var qsa = (selector, parent = document) => {
+  return parent.querySelectorAll(selector);
+};
+var create = (tag, attributes, textContent) => {
+  const element = document.createElement(tag);
+  if (attributes) {
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+  }
+  if (textContent !== void 0) {
+    element.textContent = textContent;
+  }
+  return element;
+};
+var ready = (callback) => {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", callback);
+  } else {
+    callback();
+  }
+};
+var throttle = (func, limit) => {
+  let inThrottle;
+  return (...args) => {
+    if (!inThrottle) {
+      func(...args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+};
+var scrollToElement = (element, offset = 0, behavior = "smooth") => {
+  const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+  const offsetPosition = elementPosition - offset;
+  window.scrollTo({
+    top: offsetPosition,
+    behavior
+  });
+};
+var addEventListener = (element, event, handler, options) => {
+  element.addEventListener(event, handler, options);
+  return () => {
+    element.removeEventListener(event, handler, options);
+  };
+};
+
+// src/ts/modules/theme.ts
+var STORAGE_KEY = "theme";
+var THEME_ATTRIBUTE = "data-theme";
+var THEME_TRANSITION_DURATION = 300;
+var getSystemTheme = () => {
+  if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    return "dark";
+  }
+  return "light";
+};
+var getStoredTheme = () => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && ["light", "dark", "system"].includes(stored)) {
+      return stored;
+    }
+  } catch (error) {
+    console.warn("Failed to read theme from localStorage:", error);
+  }
+  return "system";
+};
+var getCurrentTheme = () => {
+  const stored = getStoredTheme();
+  if (stored === "system") {
+    return getSystemTheme();
+  }
+  return stored;
+};
+var applyTheme = (theme) => {
+  const actualTheme = theme === "system" ? getSystemTheme() : theme;
+  document.documentElement.setAttribute(THEME_ATTRIBUTE, actualTheme);
+  updateToggleButton(actualTheme);
+  document.documentElement.classList.add("theme-transitioning");
+  setTimeout(() => {
+    document.documentElement.classList.remove("theme-transitioning");
+  }, THEME_TRANSITION_DURATION);
+  console.log(`\u{1F3A8} Theme applied: ${actualTheme} (stored: ${theme})`);
+};
+var storeTheme = (theme) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, theme);
+  } catch (error) {
+    console.warn("Failed to save theme to localStorage:", error);
+  }
+};
+var toggleTheme = () => {
+  const current = getCurrentTheme();
+  const next = current === "light" ? "dark" : "light";
+  const stored = getStoredTheme();
+  storeTheme(stored === "system" ? next : "system");
+  applyTheme(stored === "system" ? next : "system");
+};
+var updateToggleButton = (actualTheme) => {
+  const toggle = qsSafe(".theme-toggle");
+  if (!toggle) return;
+  const isActive = actualTheme === "dark";
+  toggle.classList.toggle("active", isActive);
+  toggle.setAttribute("aria-pressed", isActive.toString());
+  const icon = toggle.querySelector(".theme-icon");
+  if (icon) {
+    icon.textContent = actualTheme === "dark" ? "\u{1F319}" : "\u2600\uFE0F";
+  }
+  toggle.setAttribute("title", actualTheme === "dark" ? "Switch to light mode" : "Switch to dark mode");
+};
+var watchSystemTheme = () => {
+  if (!window.matchMedia) return;
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const handleChange = () => {
+    const stored = getStoredTheme();
+    if (stored === "system") {
+      applyTheme("system");
+    }
+  };
+  if (mediaQuery.addEventListener) {
+    mediaQuery.addEventListener("change", handleChange);
+  } else {
+    mediaQuery.addListener(handleChange);
+  }
+  console.log("\u{1F440} System theme watcher initialized");
+};
+var createThemeToggleButton = () => {
+  const button = document.createElement("button");
+  button.className = "theme-toggle";
+  button.setAttribute("type", "button");
+  button.setAttribute("aria-label", "Toggle dark mode");
+  button.setAttribute("title", "Toggle dark mode");
+  button.innerHTML = '<span class="theme-icon">\u{1F319}</span>';
+  return button;
+};
+var setupThemeToggleButton = () => {
+  const existingButton = qsSafe(".theme-toggle");
+  if (existingButton) {
+    updateToggleButton(getCurrentTheme());
+    return;
+  }
+  const header = qsSafe(".site-header, header, .site-nav");
+  if (!header) {
+    console.warn("\u26A0\uFE0F Could not find suitable location for theme toggle button");
+    return;
+  }
+  const button = createThemeToggleButton();
+  header.appendChild(button);
+  const cleanup = addEventListener(button, "click", (e) => {
+    e.preventDefault();
+    toggleTheme();
+  });
+  button._cleanup = cleanup;
+  updateToggleButton(getCurrentTheme());
+  console.log("\u{1F3A8} Theme toggle button created and added to header");
+};
+var initTheme = (defaultTheme) => {
+  const theme = defaultTheme || getStoredTheme();
+  applyTheme(theme);
+  watchSystemTheme();
+  setupThemeToggleButton();
+  console.log(`\u{1F3A8} Theme functionality initialized with mode: ${theme}`);
+};
+
+// src/ts/modules/navigation.ts
+var MOBILE_BREAKPOINT = 768;
+var ANIMATION_DURATION = 300;
+var FOCUSABLE_ELEMENTS = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+var isMobile = () => {
+  return window.innerWidth <= MOBILE_BREAKPOINT || "ontouchstart" in window || navigator.maxTouchPoints > 0;
+};
+var toggleBodyScrollLock = (lock) => {
+  const body = document.body;
+  if (lock) {
+    body.classList.add("nav-open");
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.width = "100%";
+    body.style.top = `-${window.scrollY}px`;
+  } else {
+    const scrollY = Math.abs(parseInt(body.style.top || "0", 10));
+    body.classList.remove("nav-open");
+    body.style.overflow = "";
+    body.style.position = "";
+    body.style.width = "";
+    body.style.top = "";
+    window.scrollTo(0, scrollY);
+  }
+};
+var closeMobileMenu = () => {
+  const toggle = qsSafe(".nav-toggle");
+  const menu = qsSafe(".nav-mobile");
+  if (!toggle || !menu) return;
+  toggle.classList.remove("active");
+  toggle.setAttribute("aria-expanded", "false");
+  menu.classList.remove("active");
+  toggleBodyScrollLock(false);
+  setTimeout(() => {
+    toggle.focus();
+  }, ANIMATION_DURATION);
+  console.log("\u{1F4F1} Mobile menu closed");
+};
+var openMobileMenu = () => {
+  const toggle = qsSafe(".nav-toggle");
+  const menu = qsSafe(".nav-mobile");
+  if (!toggle || !menu) return;
+  toggle.classList.add("active");
+  toggle.setAttribute("aria-expanded", "true");
+  menu.classList.add("active");
+  toggleBodyScrollLock(true);
+  setTimeout(() => {
+    const firstMenuItem = menu.querySelector(FOCUSABLE_ELEMENTS);
+    if (firstMenuItem) {
+      firstMenuItem.focus();
+    }
+  }, 100);
+  console.log("\u{1F4F1} Mobile menu opened");
+};
+var toggleMobileMenu = () => {
+  const toggle = qsSafe(".nav-toggle");
+  if (!toggle) return;
+  const isOpen = toggle.classList.contains("active");
+  if (isOpen) {
+    closeMobileMenu();
+  } else {
+    openMobileMenu();
+  }
+};
+var handleOutsideClick = (event) => {
+  const menu = qsSafe(".nav-mobile");
+  const toggle = qsSafe(".nav-toggle");
+  if (!menu || !toggle) return;
+  const target = event.target;
+  const isClickInsideMenu = menu.contains(target);
+  const isClickOnToggle = toggle.contains(target);
+  if (!isClickInsideMenu && !isClickOnToggle) {
+    closeMobileMenu();
+  }
+};
+var handleEscapeKey = (event) => {
+  if (event.key === "Escape") {
+    closeMobileMenu();
+  }
+};
+var setupMobileToggle = () => {
+  const toggle = qsSafe(".nav-toggle");
+  if (!toggle) {
+    console.warn("\u26A0\uFE0F Mobile navigation toggle button not found");
+    return;
+  }
+  toggle.classList.remove("active");
+  toggle.setAttribute("aria-expanded", "false");
+  toggle.setAttribute("aria-controls", "mobile-menu");
+  toggle.setAttribute("aria-label", "Toggle navigation menu");
+  const cleanup = addEventListener(toggle, "click", (e) => {
+    e.preventDefault();
+    toggleMobileMenu();
+  });
+  toggle._cleanup = cleanup;
+  console.log("\u{1F4F1} Mobile navigation toggle setup complete");
+};
+var setupClickOutsideToClose = () => {
+  const cleanup = addEventListener(document, "click", handleOutsideClick);
+  document._clickOutsideCleanup = cleanup;
+  console.log("\u{1F4F1} Click outside to close functionality setup");
+};
+var setupKeyboardNavigation = () => {
+  const menu = qsSafe(".nav-mobile");
+  if (!menu) return;
+  const keydownHandler = (e) => {
+    if (e.key === "Tab") {
+      const focusableElements = Array.from(menu.querySelectorAll(FOCUSABLE_ELEMENTS));
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement && firstElement) {
+          e.preventDefault();
+          lastElement == null ? void 0 : lastElement.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement && lastElement) {
+          e.preventDefault();
+          firstElement == null ? void 0 : firstElement.focus();
+        }
+      }
+    }
+  };
+  const cleanup = addEventListener(menu, "keydown", keydownHandler);
+  menu._keyboardCleanup = cleanup;
+  console.log("\u{1F4F1} Keyboard navigation setup complete");
+};
+var setupEscapeKeyHandler = () => {
+  const cleanup = addEventListener(document, "keydown", handleEscapeKey);
+  document._escapeCleanup = cleanup;
+  console.log("\u{1F4F1} Escape key handler setup complete");
+};
+var setupResponsiveBehavior = () => {
+  let isCurrentlyMobile = isMobile();
+  const handleResize = () => {
+    const isNowMobile = isMobile();
+    if (!isCurrentlyMobile && isNowMobile) {
+      const menu = qsSafe(".nav-mobile");
+      if (menu && menu.classList.contains("active")) {
+        closeMobileMenu();
+      }
+    }
+    if (isCurrentlyMobile && !isNowMobile) {
+      closeMobileMenu();
+    }
+    isCurrentlyMobile = isNowMobile;
+  };
+  let resizeTimeout;
+  const debouncedResize = () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 150);
+  };
+  const cleanup = addEventListener(window, "resize", debouncedResize);
+  window._resizeCleanup = cleanup;
+  console.log("\u{1F4F1} Responsive behavior setup complete");
+};
+var createMobileToggle = () => {
+  const button = document.createElement("button");
+  button.className = "nav-toggle";
+  button.setAttribute("type", "button");
+  button.setAttribute("aria-label", "Toggle navigation menu");
+  button.setAttribute("aria-controls", "mobile-menu");
+  button.setAttribute("aria-expanded", "false");
+  button.innerHTML = `
     <span class="hamburger">
       <span class="hamburger-line"></span>
       <span class="hamburger-line"></span>
       <span class="hamburger-line"></span>
     </span>
-  `,e},de=()=>{if(r(".nav-mobile")){console.log("\u{1F4F1} Mobile menu already exists");return}let t=document.createElement("nav");t.className="nav-mobile",t.setAttribute("id","mobile-menu"),t.setAttribute("role","navigation"),t.setAttribute("aria-label","Mobile navigation");let o=r(".site-nav, .nav-links");if(o){let s=o.cloneNode(!0);t.appendChild(s)}let n=r(".site-header, header");n&&n.appendChild(t),console.log("\u{1F4F1} Mobile navigation menu created")},C=()=>{if(!E()){console.log("\u{1F4F1} Desktop device detected - mobile navigation not initialized");return}de();let e=r(".nav-toggle");if(!e){e=ce();let o=r(".site-header, header");o&&o.appendChild(e)}se(),ie(),ae(),re(),le();let t=r(".nav-mobile");t&&(t.style.display="block"),console.log("\u{1F4F1} Mobile navigation initialized successfully")};var me="copy-button",ue="copied",pe="copy-error",P=2e3,ge=async e=>{try{if(navigator.clipboard&&window.isSecureContext)return await navigator.clipboard.writeText(e),!0;let t=document.createElement("textarea");t.value=e,t.style.position="fixed",t.style.left="-999999px",t.style.top="0",t.style.width="2em",t.style.height="2em",t.style.padding="0",t.style.border="none",t.style.outline="none",t.style.boxShadow="none",t.style.background="transparent",document.body.appendChild(t),t.focus(),t.select();let o=document.execCommand("copy");return document.body.removeChild(t),o}catch(t){return console.error("Failed to copy text:",t),!1}},fe=e=>{let t=e.textContent||"Copy",o=e.className;e.textContent="Copied!",e.classList.add(ue),setTimeout(()=>{e.textContent=t,e.className=o},P)},_=e=>{let t=e.textContent||"Copy",o=e.className;e.textContent="Failed!",e.classList.add(pe),setTimeout(()=>{e.textContent=t,e.className=o},P)},z=async(e,t)=>{let o=t.textContent||"";if(!o.trim()){console.warn("No code to copy");return}e.disabled=!0,e.style.opacity="0.6",e.style.cursor="wait";try{await ge(o)?fe(e):_(e)}catch(n){console.error("Copy failed:",n),_(e)}finally{e.disabled=!1,e.style.opacity="",e.style.cursor=""}},he=()=>m("button",{class:me,type:"button","aria-label":"Copy code to clipboard",title:"Copy code","data-clipboard-text":""},"Copy"),ye=e=>{let t=e.parentElement;if(!t||t.classList.contains("has-copy-button"))return;let o=t.tagName==="PRE"?t:e.closest("pre");if(!o)return;o.classList.add("has-copy-button");let n=he();o.style.position="relative",o.appendChild(n);let s=l(n,"click",async c=>{c.preventDefault(),await z(n,e)});n._cleanup=s;let a=l(e,"keydown",c=>{if((c.ctrlKey||c.metaKey)&&c.key==="c"){let d=document.activeElement;(d===e||e.contains(d))&&(c.preventDefault(),z(n,e))}});e._keycleanup=a},R=()=>{let e=Array.from(u("pre code, highlight > code, .highlight > pre > code"));if(e.length===0){console.log("\u{1F4DD} No code blocks found for copy functionality");return}e.forEach((t,o)=>{ye(t)}),console.log(`\u{1F4CB} Copy buttons initialized for ${e.length} code blocks`)};var x="#toc-container",be="toc-",h="toc-active",w="h2, h3, h4, h5, h6",q=80,ve=100,D=e=>{let t=[],o=[];return e.forEach((n,s)=>{var c,d,p,M;let i=`${be}${s}`;n.id=i;let a={id:i,text:((c=n.textContent)==null?void 0:c.trim())||`Heading ${s+1}`,level:parseInt(n.tagName.charAt(1)),children:[]};for(;o.length>0&&((p=(d=o[o.length-1])==null?void 0:d.level)!=null?p:0)>=a.level;)o.pop();o.length===0?t.push(a):(M=o[o.length-1])==null||M.children.push(a),o.push(a)}),t},K=(e,t)=>{if(t.length===0){e.innerHTML='<p class="toc-empty">No headings found</p>';return}let o=m("nav",{class:"toc"}),n=m("ol",{class:"toc-list"}),s=m("h2",{class:"toc-title"},"Table of Contents");o.appendChild(s),$(n,t,0),o.appendChild(n),e.innerHTML="",e.appendChild(o)},$=(e,t,o)=>{t.forEach((n,s)=>{let i=m("li",{class:"toc-item"}),a=m("a",{href:`#${n.id}`,class:"toc-link","data-level":n.level.toString()},n.text),c=l(a,"click",d=>{d.preventDefault();let p=document.getElementById(n.id);p&&(H(p,q),k(n.id))});if(i.appendChild(a),n.children.length>0){let d=m("ol",{class:`toc-list toc-list-${o+1}`});$(d,n.children,o+1),i.appendChild(d)}e.appendChild(i)})},k=e=>{var s;document.querySelectorAll(`.${h}`).forEach(i=>i.classList.remove(h));let o=document.querySelector(`a[href="#${e}"]`);o&&o.classList.add(h);let n=o;for(;n;){let i=n.closest(".toc-item");if(i){let a=i.querySelector(".toc-link");a&&a.classList.add(h)}n=(s=i==null?void 0:i.parentElement)==null?void 0:s.closest(".toc-item")}},Te=(e,t=0)=>{let o=e.getBoundingClientRect(),n=window.innerHeight||document.documentElement.clientHeight;return o.top<=n&&o.bottom>=0&&o.left>=0&&o.right<=(window.innerWidth||document.documentElement.clientWidth)&&o.top<=t},B=()=>{let e=u(w);for(let t=e.length-1;t>=0;t--){let o=e[t];if(o&&Te(o,q))return o.id}return null},F=()=>{let e=S(()=>{let o=B();o&&k(o)},ve),t=l(window,"scroll",e);window._scrollSpyCleanup=t,setTimeout(()=>{let o=B();o&&k(o)},100),console.log("\u{1F4D1} Scroll spy functionality setup")},Ee=()=>{let e=document.querySelector(".post-content, .page-content");if(!e)return;new MutationObserver(()=>{setTimeout(()=>{let o=Array.from(u(w));if(o.length===0)return;let n=D(o),s=document.querySelector(x);s&&(K(s,n),F())},100)}).observe(e,{childList:!0,subtree:!0}),console.log("\u{1F4D1} Content observer setup")},Ce=()=>{var i;let e=document.querySelector(x);if(e)return e;let t=document.querySelector(".post-content"),o=document.querySelector(".page-content"),n=t||o;if(!n)return console.warn("\u26A0\uFE0F Could not find suitable location for TOC"),null;e=m("div",{id:x.replace("#",""),class:"toc-container"});let s=n.querySelector("p");return s?(i=s.parentNode)==null||i.insertBefore(e,s.nextSibling):n.insertBefore(e,n.firstChild),e},Y=()=>{console.log("\u{1F4D1} Initializing Table of Contents...");let e=Ce();if(!e){console.log("\u{1F4D1} No suitable location found for TOC");return}let t=Array.from(u(w));if(t.length===0){console.log("\u{1F4D1} No headings found - TOC not created"),e.innerHTML='<p class="toc-empty">No headings found on this page</p>';return}let o=D(t);K(e,o),F(),Ee(),console.log(`\u{1F4D1} Table of Contents initialized with ${t.length} headings`)};var xe=()=>{let e=document.querySelector("#site-config");if(e!=null&&e.textContent)try{return JSON.parse(e.textContent)}catch(t){console.warn("Failed to parse site config:",t)}return{theme:"system",searchEnabled:!!document.querySelector("#search-input"),tocEnabled:document.body.classList.contains("post"),copyCodeEnabled:!!document.querySelector("pre code"),shareButtonsEnabled:!!document.querySelector(".share-links"),isPost:document.body.classList.contains("post"),isHomePage:document.body.classList.contains("home"),environment:"production"}},ke=async()=>{let e=xe();try{console.log("\u{1F680} Jekyll TypeScript Frontend Starting..."),console.log("\u{1F4CA} Config:",e),T(e.theme),C(),e.copyCodeEnabled&&await R(),e.tocEnabled&&e.isPost&&await Y(),e.searchEnabled&&console.log("\u{1F50D} Search functionality not implemented yet"),e.shareButtonsEnabled&&e.isPost&&console.log("\u{1F4E4} Share buttons not implemented yet"),document.body.classList.add("js-enabled"),document.body.classList.remove("js-loading"),console.log("\u2705 Jekyll TypeScript frontend initialized successfully (Phase 2 complete)")}catch(t){console.error("\u274C Failed to initialize app:",t),document.body.classList.add("js-fallback"),document.body.classList.remove("js-loading");try{T(e.theme),C()}catch(o){console.error("\u274C Even fallback initialization failed:",o)}}};L(()=>{document.body.classList.add("js-loading"),ke()});export{xe as getAppConfig,ke as initializeApp};
+  `;
+  return button;
+};
+var setupMobileMenu = () => {
+  const existingMenu = qsSafe(".nav-mobile");
+  if (existingMenu) {
+    console.log("\u{1F4F1} Mobile menu already exists");
+    return;
+  }
+  const menu = document.createElement("nav");
+  menu.className = "nav-mobile";
+  menu.setAttribute("id", "mobile-menu");
+  menu.setAttribute("role", "navigation");
+  menu.setAttribute("aria-label", "Mobile navigation");
+  const desktopNav = qsSafe(".site-nav, .nav-links");
+  if (desktopNav) {
+    const navLinks = desktopNav.cloneNode(true);
+    menu.appendChild(navLinks);
+  }
+  const header = qsSafe(".site-header, header");
+  if (header) {
+    header.appendChild(menu);
+  }
+  console.log("\u{1F4F1} Mobile navigation menu created");
+};
+var initNavigation = () => {
+  if (!isMobile()) {
+    console.log("\u{1F4F1} Desktop device detected - mobile navigation not initialized");
+    return;
+  }
+  setupMobileMenu();
+  let toggle = qsSafe(".nav-toggle");
+  if (!toggle) {
+    toggle = createMobileToggle();
+    const header = qsSafe(".site-header, header");
+    if (header) {
+      header.appendChild(toggle);
+    }
+  }
+  setupMobileToggle();
+  setupClickOutsideToClose();
+  setupKeyboardNavigation();
+  setupEscapeKeyHandler();
+  setupResponsiveBehavior();
+  const menu = qsSafe(".nav-mobile");
+  if (menu) {
+    menu.style.display = "block";
+  }
+  console.log("\u{1F4F1} Mobile navigation initialized successfully");
+};
+
+// src/ts/modules/copy-code.ts
+var COPY_BUTTON_CLASS = "copy-button";
+var COPY_SUCCESS_CLASS = "copied";
+var COPY_ERROR_CLASS = "copy-error";
+var COPY_TIMEOUT = 2e3;
+var copyToClipboard = async (text) => {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.left = "-999999px";
+    textArea.style.top = "0";
+    textArea.style.width = "2em";
+    textArea.style.height = "2em";
+    textArea.style.padding = "0";
+    textArea.style.border = "none";
+    textArea.style.outline = "none";
+    textArea.style.boxShadow = "none";
+    textArea.style.background = "transparent";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (error) {
+    console.error("Failed to copy text:", error);
+    return false;
+  }
+};
+var showCopySuccess = (button) => {
+  const originalText = button.textContent || "Copy";
+  const originalClasses = button.className;
+  button.textContent = "Copied!";
+  button.classList.add(COPY_SUCCESS_CLASS);
+  setTimeout(() => {
+    button.textContent = originalText;
+    button.className = originalClasses;
+  }, COPY_TIMEOUT);
+};
+var showCopyError = (button) => {
+  const originalText = button.textContent || "Copy";
+  const originalClasses = button.className;
+  button.textContent = "Failed!";
+  button.classList.add(COPY_ERROR_CLASS);
+  setTimeout(() => {
+    button.textContent = originalText;
+    button.className = originalClasses;
+  }, COPY_TIMEOUT);
+};
+var handleCopyClick = async (button, codeBlock) => {
+  const code = codeBlock.textContent || "";
+  if (!code.trim()) {
+    console.warn("No code to copy");
+    return;
+  }
+  button.disabled = true;
+  button.style.opacity = "0.6";
+  button.style.cursor = "wait";
+  try {
+    const success = await copyToClipboard(code);
+    if (success) {
+      showCopySuccess(button);
+    } else {
+      showCopyError(button);
+    }
+  } catch (error) {
+    console.error("Copy failed:", error);
+    showCopyError(button);
+  } finally {
+    button.disabled = false;
+    button.style.opacity = "";
+    button.style.cursor = "";
+  }
+};
+var createCopyButton = () => {
+  const button = create("button", {
+    class: COPY_BUTTON_CLASS,
+    type: "button",
+    "aria-label": "Copy code to clipboard",
+    title: "Copy code",
+    "data-clipboard-text": ""
+  }, "Copy");
+  return button;
+};
+var setupCopyButton = (codeBlock) => {
+  const parent = codeBlock.parentElement;
+  if (!parent || parent.classList.contains("has-copy-button")) {
+    return;
+  }
+  const preElement = parent.tagName === "PRE" ? parent : codeBlock.closest("pre");
+  if (!preElement) {
+    return;
+  }
+  preElement.classList.add("has-copy-button");
+  const button = createCopyButton();
+  preElement.style.position = "relative";
+  preElement.appendChild(button);
+  const cleanup = addEventListener(button, "click", async (e) => {
+    e.preventDefault();
+    await handleCopyClick(button, codeBlock);
+  });
+  button._cleanup = cleanup;
+  const keyboardHandler = (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "c") {
+      const activeElement = document.activeElement;
+      if (activeElement === codeBlock || codeBlock.contains(activeElement)) {
+        e.preventDefault();
+        handleCopyClick(button, codeBlock);
+      }
+    }
+  };
+  const keydownCleanup = addEventListener(codeBlock, "keydown", keyboardHandler);
+  codeBlock._keycleanup = keydownCleanup;
+};
+var initCopyCode = () => {
+  const codeBlocks = Array.from(qsa("pre code, highlight > code, .highlight > pre > code"));
+  if (codeBlocks.length === 0) {
+    console.log("\u{1F4DD} No code blocks found for copy functionality");
+    return;
+  }
+  codeBlocks.forEach((codeBlock, index) => {
+    setupCopyButton(codeBlock);
+  });
+  console.log(`\u{1F4CB} Copy buttons initialized for ${codeBlocks.length} code blocks`);
+};
+
+// src/ts/modules/toc.ts
+var TOC_CONTAINER_SELECTOR = "#toc-container";
+var TOC_ID_PREFIX = "toc-";
+var ACTIVE_CLASS = "toc-active";
+var HEADING_SELECTORS = "h2, h3, h4, h5, h6";
+var SCROLL_OFFSET = 80;
+var THROTTLE_DELAY = 100;
+var generateTOC = (headings) => {
+  const toc = [];
+  const stack = [];
+  headings.forEach((heading, index) => {
+    var _a, _b, _c, _d;
+    const id = `${TOC_ID_PREFIX}${index}`;
+    heading.id = id;
+    const item = {
+      id,
+      text: ((_a = heading.textContent) == null ? void 0 : _a.trim()) || `Heading ${index + 1}`,
+      level: parseInt(heading.tagName.charAt(1)),
+      children: []
+    };
+    while (stack.length > 0 && ((_c = (_b = stack[stack.length - 1]) == null ? void 0 : _b.level) != null ? _c : 0) >= item.level) {
+      stack.pop();
+    }
+    if (stack.length === 0) {
+      toc.push(item);
+    } else {
+      (_d = stack[stack.length - 1]) == null ? void 0 : _d.children.push(item);
+    }
+    stack.push(item);
+  });
+  return toc;
+};
+var renderTOC = (container, toc) => {
+  if (toc.length === 0) {
+    container.innerHTML = '<p class="toc-empty">No headings found</p>';
+    return;
+  }
+  const tocElement = create("nav", { class: "toc" });
+  const listElement = create("ol", { class: "toc-list" });
+  const titleElement = create("h2", { class: "toc-title" }, "Table of Contents");
+  tocElement.appendChild(titleElement);
+  renderTOCItems(listElement, toc, 0);
+  tocElement.appendChild(listElement);
+  container.innerHTML = "";
+  container.appendChild(tocElement);
+};
+var renderTOCItems = (parentElement, items, depth) => {
+  items.forEach((item, index) => {
+    const listItem = create("li", { class: "toc-item" });
+    const link = create("a", {
+      href: `#${item.id}`,
+      class: "toc-link",
+      "data-level": item.level.toString()
+    }, item.text);
+    const linkCleanup = addEventListener(link, "click", (e) => {
+      e.preventDefault();
+      const targetElement = document.getElementById(item.id);
+      if (targetElement) {
+        scrollToElement(targetElement, SCROLL_OFFSET);
+        updateActiveTOC(item.id);
+      }
+    });
+    listItem.appendChild(link);
+    if (item.children.length > 0) {
+      const childList = create("ol", { class: `toc-list toc-list-${depth + 1}` });
+      renderTOCItems(childList, item.children, depth + 1);
+      listItem.appendChild(childList);
+    }
+    parentElement.appendChild(listItem);
+  });
+};
+var updateActiveTOC = (activeId) => {
+  var _a;
+  const activeElements = document.querySelectorAll(`.${ACTIVE_CLASS}`);
+  activeElements.forEach((el) => el.classList.remove(ACTIVE_CLASS));
+  const activeLink = document.querySelector(`a[href="#${activeId}"]`);
+  if (activeLink) {
+    activeLink.classList.add(ACTIVE_CLASS);
+  }
+  let currentLink = activeLink;
+  while (currentLink) {
+    const parentItem = currentLink.closest(".toc-item");
+    if (parentItem) {
+      const parentLink = parentItem.querySelector(".toc-link");
+      if (parentLink) {
+        parentLink.classList.add(ACTIVE_CLASS);
+      }
+    }
+    currentLink = (_a = parentItem == null ? void 0 : parentItem.parentElement) == null ? void 0 : _a.closest(".toc-item");
+  }
+};
+var isElementInViewport = (element, offset = 0) => {
+  const rect = element.getBoundingClientRect();
+  const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+  return rect.top <= windowHeight && rect.bottom >= 0 && rect.left >= 0 && rect.right <= (window.innerWidth || document.documentElement.clientWidth) && rect.top <= offset;
+};
+var getCurrentActiveHeading = () => {
+  const headings = qsa(HEADING_SELECTORS);
+  for (let i = headings.length - 1; i >= 0; i--) {
+    const heading = headings[i];
+    if (heading && isElementInViewport(heading, SCROLL_OFFSET)) {
+      return heading.id;
+    }
+  }
+  return null;
+};
+var setupScrollSpy = () => {
+  const scrollHandler = throttle(() => {
+    const activeId = getCurrentActiveHeading();
+    if (activeId) {
+      updateActiveTOC(activeId);
+    }
+  }, THROTTLE_DELAY);
+  const cleanup = addEventListener(window, "scroll", scrollHandler);
+  window._scrollSpyCleanup = cleanup;
+  setTimeout(() => {
+    const activeId = getCurrentActiveHeading();
+    if (activeId) {
+      updateActiveTOC(activeId);
+    }
+  }, 100);
+  console.log("\u{1F4D1} Scroll spy functionality setup");
+};
+var setupContentObserver = () => {
+  const targetNode = document.querySelector(".post-content, .page-content");
+  if (!targetNode) return;
+  const observer = new MutationObserver(() => {
+    setTimeout(() => {
+      const headings = Array.from(qsa(HEADING_SELECTORS));
+      if (headings.length === 0) return;
+      const toc = generateTOC(headings);
+      const container = document.querySelector(TOC_CONTAINER_SELECTOR);
+      if (container) {
+        renderTOC(container, toc);
+        setupScrollSpy();
+      }
+    }, 100);
+  });
+  observer.observe(targetNode, {
+    childList: true,
+    subtree: true
+  });
+  console.log("\u{1F4D1} Content observer setup");
+};
+var getOrCreateTOCContainer = () => {
+  var _a;
+  let container = document.querySelector(TOC_CONTAINER_SELECTOR);
+  if (container) return container;
+  const postContent = document.querySelector(".post-content");
+  const pageContent = document.querySelector(".page-content");
+  const targetContent = postContent || pageContent;
+  if (!targetContent) {
+    console.warn("\u26A0\uFE0F Could not find suitable location for TOC");
+    return null;
+  }
+  container = create("div", {
+    id: TOC_CONTAINER_SELECTOR.replace("#", ""),
+    class: "toc-container"
+  });
+  const firstParagraph = targetContent.querySelector("p");
+  if (firstParagraph) {
+    (_a = firstParagraph.parentNode) == null ? void 0 : _a.insertBefore(container, firstParagraph.nextSibling);
+  } else {
+    targetContent.insertBefore(container, targetContent.firstChild);
+  }
+  return container;
+};
+var initTOC = () => {
+  console.log("\u{1F4D1} Initializing Table of Contents...");
+  const container = getOrCreateTOCContainer();
+  if (!container) {
+    console.log("\u{1F4D1} No suitable location found for TOC");
+    return;
+  }
+  const headings = Array.from(qsa(HEADING_SELECTORS));
+  if (headings.length === 0) {
+    console.log("\u{1F4D1} No headings found - TOC not created");
+    container.innerHTML = '<p class="toc-empty">No headings found on this page</p>';
+    return;
+  }
+  const toc = generateTOC(headings);
+  renderTOC(container, toc);
+  setupScrollSpy();
+  setupContentObserver();
+  console.log(`\u{1F4D1} Table of Contents initialized with ${headings.length} headings`);
+};
+
+// src/ts/main.ts
+var getAppConfig = () => {
+  const script = document.querySelector("#site-config");
+  if (script == null ? void 0 : script.textContent) {
+    try {
+      return JSON.parse(script.textContent);
+    } catch (error) {
+      console.warn("Failed to parse site config:", error);
+    }
+  }
+  return {
+    theme: "system",
+    searchEnabled: !!document.querySelector("#search-input"),
+    tocEnabled: document.body.classList.contains("post"),
+    copyCodeEnabled: !!document.querySelector("pre code"),
+    shareButtonsEnabled: !!document.querySelector(".share-links"),
+    isPost: document.body.classList.contains("post"),
+    isHomePage: document.body.classList.contains("home"),
+    environment: "development"
+  };
+};
+var initializeApp = async () => {
+  const config = getAppConfig();
+  try {
+    console.log("\u{1F680} Jekyll TypeScript Frontend Starting...");
+    console.log("\u{1F4CA} Config:", config);
+    initTheme(config.theme);
+    initNavigation();
+    if (config.copyCodeEnabled) {
+      await initCopyCode();
+    }
+    if (config.tocEnabled && config.isPost) {
+      await initTOC();
+    }
+    if (config.searchEnabled) {
+      console.log("\u{1F50D} Search functionality not implemented yet");
+    }
+    if (config.shareButtonsEnabled && config.isPost) {
+      console.log("\u{1F4E4} Share buttons not implemented yet");
+    }
+    document.body.classList.add("js-enabled");
+    document.body.classList.remove("js-loading");
+    console.log("\u2705 Jekyll TypeScript frontend initialized successfully (Phase 2 complete)");
+  } catch (error) {
+    console.error("\u274C Failed to initialize app:", error);
+    document.body.classList.add("js-fallback");
+    document.body.classList.remove("js-loading");
+    try {
+      initTheme(config.theme);
+      initNavigation();
+    } catch (fallbackError) {
+      console.error("\u274C Even fallback initialization failed:", fallbackError);
+    }
+  }
+};
+ready(() => {
+  document.body.classList.add("js-loading");
+  initializeApp();
+});
+export {
+  getAppConfig,
+  initializeApp
+};
 //# sourceMappingURL=main.js.map

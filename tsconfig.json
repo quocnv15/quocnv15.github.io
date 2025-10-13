@@ -14,22 +14,41 @@
     "lib": ["ES2020", "DOM"],
     "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
-
-    // Output Configuration
-    "declaration": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "sourceMap": true,
-    "removeComments": false,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
 
     // Code Quality
     "allowUnusedLabels": false,
     "allowUnreachableCode": false,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    // Additional Checks
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
 
     // Interop Constraints
     "skipLibCheck": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+
+    // Path Mapping
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+      "@/types/*": ["types/*"],
+      "@/constants/*": ["constants/*"],
+      "@/components/*": ["components/*"],
+      "@/services/*": ["services/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/modules/*": ["modules/*"],
+      "@/utils/*": ["modules/utils/*"]
+    }
   },
   "include": [
     "src/**/*"
@@ -39,6 +58,7 @@
     "dist",
     "assets",
     "_site",
-    ".jekyll-cache"
+    ".jekyll-cache",
+    "src/test/**/*"
   ]
 }

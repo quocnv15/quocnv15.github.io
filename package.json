@@ -1,0 +1,34 @@
+{
+  "name": "quocnv15.github.io",
+  "version": "1.0.0",
+  "description": "A Jekyll-based static blog and personal portfolio showcasing iOS development projects, technical articles, and professional experience.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "build:ts": "node build.js",
+    "build:ts:watch": "node build.js --watch",
+    "check:types": "tsc --noEmit",
+    "check:types:watch": "tsc --noEmit --watch",
+    "dev": "npm run build:ts:watch",
+    "build": "npm run build:ts && npm run check:types",
+    "clean": "rm -rf assets/js/*.js assets/js/*.js.map dist",
+    "size-check": "npm run build && du -h assets/js/main.js",
+    "serve": "bundle exec jekyll serve --livereload",
+    "build:jekyll": "bundle exec jekyll build",
+    "deploy": "npm run build && npm run build:jekyll",
+    "test:bundle": "npm run build && node -e \"require('./assets/js/main.js')\"",
+    "lint": "eslint src/ts --ext .ts || echo 'ESLint not configured'",
+    "format": "prettier --write src/ts/**/*.{ts,js} || echo 'Prettier not configured'",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "esbuild": "^0.25.10",
+    "typescript": "^5.9.3"
+  }
+}

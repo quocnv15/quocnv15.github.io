@@ -1,7 +1,21 @@
 ---
 layout: default
 ---
-<link href="/css/override.css" rel="stylesheet" type="text/css">
+<link href="{{ '/css/override.css' | relative_url }}" rel="stylesheet" type="text/css">
+
+<!-- Post-specific Configuration for TypeScript -->
+<script type="application/json" id="site-config">
+  {
+    "theme": "system",
+    "searchEnabled": false,
+    "tocEnabled": true,
+    "copyCodeEnabled": true,
+    "shareButtonsEnabled": true,
+    "isPost": true,
+    "isHomePage": false,
+    "environment": "{{ jekyll.environment }}"
+  }
+</script>
 
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 

@@ -371,2489 +371,6 @@ var addEventListener = (element, event, handler, options) => {
   return cleanup;
 };
 
-// src/ts/core/performance-monitor.ts
-var PerformanceMonitor = class {
-  constructor(config = {}) {
-    this.observers = [];
-    this.startTime = 0;
-    this.config = {
-      enabled: true,
-      collectVitals: true,
-      collectRuntime: true,
-      collectBundle: true,
-      reportingEndpoint: null,
-      reportInterval: 3e4,
-      // 30 seconds
-      ...config
-    };
-    this.metrics = this.initializeMetrics();
-  }
-  /**
-   * Initialize performance monitoring
-   */
-  init() {
-    if (!this.config.enabled) {
-      console.log("\u{1F4CA} Performance monitoring disabled");
-      return;
-    }
-    this.startTime = performance.now();
-    console.log("\u{1F4CA} Performance monitoring initialized");
-    if (this.config.collectVitals) {
-      this.setupVitalsCollection();
-    }
-    if (this.config.collectRuntime) {
-      this.setupRuntimeCollection();
-    }
-    if (this.config.collectBundle) {
-      this.collectBundleMetrics();
-    }
-    this.setupPeriodicReporting();
-  }
-  /**
-   * Get current performance metrics
-   */
-  getMetrics() {
-    this.updateRuntimeMetrics();
-    return { ...this.metrics };
-  }
-  /**
-   * Record a custom performance metric
-   */
-  recordMetric(name, value) {
-    this.metrics.custom[name] = value;
-    console.log(`\u{1F4CA} Custom metric recorded: ${name} = ${value}ms`);
-  }
-  /**
-   * Mark a performance point
-   */
-  mark(name) {
-    if (performance.mark) {
-      performance.mark(name);
-      console.log(`\u{1F4CA} Performance mark: ${name}`);
-    }
-  }
-  /**
-   * Measure time between marks
-   */
-  measure(name, startMark, endMark) {
-    var _a;
-    if (performance.measure) {
-      try {
-        performance.measure(name, startMark, endMark);
-        const entries = performance.getEntriesByName(name, "measure");
-        if (entries.length > 0) {
-          const lastEntry = entries[entries.length - 1];
-          const duration = (_a = lastEntry == null ? void 0 : lastEntry.duration) != null ? _a : 0;
-          console.log(`\u{1F4CA} Performance measure: ${name} = ${duration.toFixed(2)}ms`);
-          return duration;
-        }
-      } catch (error) {
-        console.warn(`\u26A0\uFE0F Performance measure failed for ${name}:`, error);
-      }
-    }
-    return 0;
-  }
-  /**
-   * Generate performance report
-   */
-  generateReport() {
-    const metrics = this.getMetrics();
-    const timestamp = Date.now();
-    return {
-      timestamp,
-      url: window.location.href,
-      userAgent: navigator.userAgent,
-      metrics,
-      score: this.calculatePerformanceScore(metrics),
-      recommendations: this.generateRecommendations(metrics)
-    };
-  }
-  /**
-   * Cleanup performance monitoring
-   */
-  destroy() {
-    this.observers.forEach((observer) => observer.disconnect());
-    this.observers = [];
-    console.log("\u{1F4CA} Performance monitoring destroyed");
-  }
-  // ============================================================================
-  // Private Methods
-  // ============================================================================
-  initializeMetrics() {
-    return {
-      bundle: {
-        size: { raw: 0, gzipped: 0, brotli: 0 },
-        loadTime: 0,
-        parseTime: 0,
-        modules: 0
-      },
-      runtime: {
-        initTime: 0,
-        renderTime: 0,
-        interactiveTime: 0,
-        memoryUsage: 0,
-        domNodes: 0
-      },
-      vitals: {
-        lcp: 0,
-        fid: 0,
-        cls: 0,
-        fcp: 0,
-        ttfb: 0
-      },
-      custom: {}
-    };
-  }
-  setupVitalsCollection() {
-    this.observePerformanceObserver("largest-contentful-paint", (entries) => {
-      const lastEntry = entries[entries.length - 1];
-      this.metrics.vitals.lcp = lastEntry.startTime;
-      console.log(`\u{1F4CA} LCP: ${lastEntry.startTime.toFixed(2)}ms`);
-    });
-    this.observePerformanceObserver("first-input", (entries) => {
-      const firstEntry = entries[0];
-      if (firstEntry) {
-        this.metrics.vitals.fid = firstEntry.processingStart - firstEntry.startTime;
-        console.log(`\u{1F4CA} FID: ${this.metrics.vitals.fid.toFixed(2)}ms`);
-      }
-    });
-    let clsValue = 0;
-    this.observePerformanceObserver("layout-shift", (entries) => {
-      for (const entry of entries) {
-        if (!entry.hadRecentInput) {
-          clsValue += entry.value;
-        }
-      }
-      this.metrics.vitals.cls = clsValue;
-      console.log(`\u{1F4CA} CLS: ${clsValue.toFixed(4)}`);
-    });
-    this.observePerformanceObserver("paint", (entries) => {
-      const fcpEntry = entries.find((entry) => entry.name === "first-contentful-paint");
-      if (fcpEntry) {
-        this.metrics.vitals.fcp = fcpEntry.startTime;
-        console.log(`\u{1F4CA} FCP: ${fcpEntry.startTime.toFixed(2)}ms`);
-      }
-    });
-    if (performance.getEntriesByType) {
-      const navigationEntries = performance.getEntriesByType("navigation");
-      if (navigationEntries.length > 0) {
-        const navEntry = navigationEntries[0];
-        if ((navEntry == null ? void 0 : navEntry.responseStart) && (navEntry == null ? void 0 : navEntry.requestStart)) {
-          this.metrics.vitals.ttfb = navEntry.responseStart - navEntry.requestStart;
-          console.log(`\u{1F4CA} TTFB: ${this.metrics.vitals.ttfb.toFixed(2)}ms`);
-        }
-      }
-    }
-  }
-  observePerformanceObserver(type, callback) {
-    if (!("PerformanceObserver" in window)) {
-      return;
-    }
-    try {
-      const observer = new PerformanceObserver((list) => {
-        callback(list.getEntries());
-      });
-      observer.observe({ type, buffered: true });
-      this.observers.push(observer);
-    } catch (error) {
-      console.warn(`\u26A0\uFE0F Failed to observe ${type}:`, error);
-    }
-  }
-  setupRuntimeCollection() {
-    setTimeout(() => {
-      this.updateRuntimeMetrics();
-    }, 0);
-    if ("memory" in performance) {
-      setInterval(() => {
-        this.metrics.runtime.memoryUsage = performance.memory.usedJSHeapSize / 1024 / 1024;
-      }, 5e3);
-    }
-    const observer = new MutationObserver(() => {
-      this.metrics.runtime.domNodes = document.querySelectorAll("*").length;
-    });
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
-    this.observers.push(observer);
-  }
-  updateRuntimeMetrics() {
-    this.metrics.runtime.initTime = performance.now() - this.startTime;
-    if (performance.getEntriesByType) {
-      const entries = performance.getEntriesByType("navigation");
-      if (entries.length > 0) {
-        const navEntry = entries[0];
-        if ((navEntry == null ? void 0 : navEntry.loadEventEnd) && (navEntry == null ? void 0 : navEntry.loadEventStart)) {
-          this.metrics.runtime.interactiveTime = navEntry.loadEventEnd - navEntry.loadEventStart;
-        }
-      }
-    }
-  }
-  collectBundleMetrics() {
-    const scripts = document.querySelectorAll("script[src]");
-    let totalSize = 0;
-    let moduleCount = 0;
-    scripts.forEach((script) => {
-      var _a;
-      if ((_a = script.src) == null ? void 0 : _a.includes("/assets/js/main.js")) {
-        moduleCount++;
-        totalSize += 64e3;
-      }
-    });
-    this.metrics.bundle.size.raw = totalSize;
-    this.metrics.bundle.modules = moduleCount;
-    if (performance.getEntriesByType) {
-      const entries = performance.getEntriesByType("resource");
-      const bundleEntry = entries.find(
-        (entry) => entry.name.includes("/assets/js/main.js")
-      );
-      if (bundleEntry && "responseEnd" in bundleEntry && "requestStart" in bundleEntry) {
-        const bundleTiming = bundleEntry;
-        this.metrics.bundle.loadTime = bundleTiming.responseEnd - bundleTiming.requestStart;
-      }
-    }
-    console.log(`\u{1F4CA} Bundle metrics collected: ${totalSize} bytes, ${moduleCount} modules`);
-  }
-  setupPeriodicReporting() {
-    if (!this.config.reportingEndpoint) {
-      return;
-    }
-    setInterval(() => {
-      this.sendReport();
-    }, this.config.reportInterval);
-  }
-  sendReport() {
-    if (!this.config.reportingEndpoint) {
-      return;
-    }
-    const report = this.generateReport();
-    fetch(this.config.reportingEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(report)
-    }).catch((error) => {
-      console.warn("\u26A0\uFE0F Failed to send performance report:", error);
-    });
-  }
-  calculatePerformanceScore(metrics) {
-    let score = 100;
-    if (metrics.vitals.lcp > 2500) score -= 20;
-    if (metrics.vitals.fid > 100) score -= 15;
-    if (metrics.vitals.cls > 0.1) score -= 15;
-    if (metrics.vitals.fcp > 1800) score -= 15;
-    if (metrics.vitals.ttfb > 800) score -= 10;
-    if (metrics.bundle.size.raw > 5e4) score -= 10;
-    if (metrics.runtime.initTime > 1e3) score -= 10;
-    return Math.max(0, score);
-  }
-  generateRecommendations(metrics) {
-    const recommendations = [];
-    if (metrics.vitals.lcp > 2500) {
-      recommendations.push("Optimize images and reduce server response time for better LCP");
-    }
-    if (metrics.vitals.fid > 100) {
-      recommendations.push("Reduce JavaScript execution time and break up long tasks");
-    }
-    if (metrics.vitals.cls > 0.1) {
-      recommendations.push("Ensure proper dimensions for images and avoid inserting content above existing content");
-    }
-    if (metrics.bundle.size.raw > 5e4) {
-      recommendations.push("Consider code splitting and tree shaking to reduce bundle size");
-    }
-    if (metrics.runtime.initTime > 1e3) {
-      recommendations.push("Optimize application initialization and load critical resources first");
-    }
-    if (metrics.runtime.memoryUsage > 50) {
-      recommendations.push("Monitor for memory leaks and optimize memory usage");
-    }
-    return recommendations;
-  }
-};
-var performanceMonitor = new PerformanceMonitor({
-  enabled: false,
-  collectVitals: true,
-  collectRuntime: true,
-  collectBundle: true,
-  reportingEndpoint: null,
-  // Configure as needed
-  reportInterval: 3e4
-});
-var initPerformanceMonitoring = () => {
-  performanceMonitor.init();
-};
-
-// src/ts/core/state-manager.ts
-var ReactiveStateImpl = class _ReactiveStateImpl {
-  constructor(initialValue, key, cleanupManager) {
-    this.listeners = /* @__PURE__ */ new Set();
-    this._value = initialValue;
-    this.key = key;
-    this.cleanupManager = cleanupManager;
-  }
-  get value() {
-    return this._value;
-  }
-  subscribe(listener) {
-    this.listeners.add(listener);
-    const cleanup = () => {
-      this.listeners.delete(listener);
-    };
-    this.cleanupManager.register(cleanup, {
-      id: `state-subscription-${this.key}`,
-      description: `State subscription cleanup for ${this.key}`,
-      priority: 5
-    });
-    return cleanup;
-  }
-  select(selector) {
-    const selectedValue = selector(this._value);
-    const selectedState = new _ReactiveStateImpl(selectedValue, `${this.key}-selected`, this.cleanupManager);
-    this.subscribe((newValue) => {
-      const newSelectedValue = selector(newValue);
-      if (JSON.stringify(newSelectedValue) !== JSON.stringify(selectedState._value)) {
-        selectedState._value = newSelectedValue;
-        selectedState.notify();
-      }
-    });
-    return selectedState;
-  }
-  get() {
-    return this._value;
-  }
-  set(value) {
-    const previousValue = this._value;
-    if (JSON.stringify(previousValue) !== JSON.stringify(value)) {
-      this._value = value;
-      this.notify();
-    }
-  }
-  update(updater) {
-    const newValue = updater(this._value);
-    this.set(newValue);
-  }
-  notify() {
-    for (const listener of this.listeners) {
-      try {
-        listener(this._value, this._value);
-      } catch (error) {
-        console.error(`Error in state listener for ${this.key}:`, error);
-      }
-    }
-  }
-  destroy() {
-    this.listeners.clear();
-  }
-};
-var StateStore = class {
-  constructor(config) {
-    this.debugHistory = [];
-    this.cleanupManager = CleanupManager.getInstance({
-      autoCleanupOnUnload: true,
-      logCleanupActivity: true
-    });
-    this.state = new ReactiveStateImpl(config.initialState, "root", this.cleanupManager);
-    this.reducers = config.reducers || {};
-    this.middleware = config.middleware || [];
-    this.config = this.mergeConfig(config.config);
-    this.metrics = {
-      totalActions: 0,
-      totalSubscribers: 0,
-      averageActionTime: 0,
-      memoryUsage: 0,
-      lastUpdated: Date.now()
-    };
-    this.initializePersistence();
-    this.setupDebugging();
-  }
-  // State Access Methods
-  get(key) {
-    if (key === void 0) {
-      return this.state.get();
-    }
-    return this.state.get()[key];
-  }
-  select(selector) {
-    return this.state.select(selector);
-  }
-  subscribe(listener) {
-    this.metrics.totalSubscribers++;
-    const cleanup = this.state.subscribe(listener);
-    return () => {
-      this.metrics.totalSubscribers--;
-      cleanup();
-    };
-  }
-  // State Mutation Methods
-  dispatch(action, payload, meta) {
-    var _a, _b;
-    const startTime = performance.now();
-    const fullAction = typeof action === "string" ? { type: action, payload, meta, timestamp: Date.now() } : action;
-    if ((_a = this.config.debug) == null ? void 0 : _a.enabled) {
-      this.logAction(fullAction);
-    }
-    const previousState = this.state.get();
-    let nextState = previousState;
-    try {
-      let index = 0;
-      const runMiddleware = () => {
-        var _a2;
-        if (index < this.middleware.length) {
-          const middleware = this.middleware[index];
-          index++;
-          middleware(() => runMiddleware(), fullAction);
-        } else {
-          if (this.reducers[fullAction.type]) {
-            nextState = this.reducers[fullAction.type](previousState, fullAction);
-          } else {
-            if (fullAction.payload !== void 0) {
-              if (meta == null ? void 0 : meta.key) {
-                nextState = { ...previousState, [meta.key]: fullAction.payload };
-              } else {
-                nextState = typeof fullAction.payload === "object" ? { ...previousState, ...fullAction.payload } : fullAction.payload;
-              }
-            }
-          }
-          this.state.set(nextState);
-          this.persistState(nextState);
-          const duration = performance.now() - startTime;
-          this.updateMetrics(duration);
-          if ((_a2 = this.config.debug) == null ? void 0 : _a2.enabled) {
-            this.recordDebugInfo(fullAction, previousState, nextState, duration);
-          }
-        }
-      };
-      runMiddleware();
-    } catch (error) {
-      console.error(`Error dispatching action ${fullAction.type}:`, error);
-      if ((_b = this.config.debug) == null ? void 0 : _b.enabled) {
-        this.recordDebugInfo(fullAction, previousState, previousState, performance.now() - startTime, error);
-      }
-    }
-  }
-  set(key, value) {
-    this.dispatch("SET_STATE", value, { key });
-  }
-  update(key, updater) {
-    const currentValue = this.get(key);
-    const newValue = updater(currentValue);
-    this.set(key, newValue);
-  }
-  reset(newState) {
-    const resetAction = {
-      type: "RESET",
-      payload: newState,
-      timestamp: Date.now()
-    };
-    this.dispatch(resetAction);
-  }
-  // Persistence Methods
-  initializePersistence() {
-    var _a;
-    if ((_a = this.config.persistence) == null ? void 0 : _a.enabled) {
-      const persistedState = this.loadPersistedState();
-      if (persistedState) {
-        this.state.set(persistedState);
-      }
-    }
-  }
-  persistState(state) {
-    var _a;
-    if (!((_a = this.config.persistence) == null ? void 0 : _a.enabled)) return;
-    try {
-      const { key = "app-state", storage = "localStorage", serialize, excludeKeys = [] } = this.config.persistence;
-      let stateToPersist = state;
-      if (excludeKeys.length > 0) {
-        stateToPersist = { ...state };
-        excludeKeys.forEach((excludeKey) => {
-          delete stateToPersist[excludeKey];
-        });
-      }
-      const serialized = serialize ? serialize(stateToPersist) : JSON.stringify(stateToPersist);
-      if (storage === "localStorage") {
-        localStorage.setItem(key, serialized);
-      } else if (storage === "sessionStorage") {
-        sessionStorage.setItem(key, serialized);
-      }
-    } catch (error) {
-      console.error("Failed to persist state:", error);
-    }
-  }
-  loadPersistedState() {
-    var _a;
-    if (!((_a = this.config.persistence) == null ? void 0 : _a.enabled)) return null;
-    try {
-      const { key = "app-state", storage = "localStorage", deserialize } = this.config.persistence;
-      let serialized = null;
-      if (storage === "localStorage") {
-        serialized = localStorage.getItem(key);
-      } else if (storage === "sessionStorage") {
-        serialized = sessionStorage.getItem(key);
-      }
-      if (serialized) {
-        return deserialize ? deserialize(serialized) : JSON.parse(serialized);
-      }
-    } catch (error) {
-      console.error("Failed to load persisted state:", error);
-    }
-    return null;
-  }
-  // Debugging Methods
-  setupDebugging() {
-    var _a;
-    if ((_a = this.config.debug) == null ? void 0 : _a.enabled) {
-      this.setupConsoleDebugging();
-      this.setupPerformanceTracking();
-    }
-  }
-  setupConsoleDebugging() {
-    if (true) {
-      window.__STATE_STORE__ = this;
-      console.group("\u{1F5C4}\uFE0F State Manager Debug Mode");
-      console.log("State Store initialized");
-      console.log("Access via window.__STATE_STORE__");
-      console.log("Available methods: getState(), getDebugInfo(), getMetrics()");
-      console.groupEnd();
-    }
-  }
-  setupPerformanceTracking() {
-    var _a;
-    if ((_a = this.config.performance) == null ? void 0 : _a.trackMetrics) {
-      performanceMonitor.recordMetric("state-store-init", Date.now());
-    }
-  }
-  logAction(action) {
-    var _a;
-    if ((_a = this.config.debug) == null ? void 0 : _a.logActions) {
-      console.group(`\u{1F3AC} Action: ${action.type}`);
-      console.log("Payload:", action.payload);
-      console.log("Meta:", action.meta);
-      console.log("Timestamp:", new Date(action.timestamp));
-      console.groupEnd();
-    }
-  }
-  recordDebugInfo(action, previousState, nextState, duration, error) {
-    var _a, _b;
-    const debugInfo = {
-      action,
-      previousState,
-      nextState,
-      timestamp: Date.now(),
-      duration,
-      stackTrace: error == null ? void 0 : error.stack
-    };
-    this.debugHistory.push(debugInfo);
-    const maxHistorySize = ((_a = this.config.debug) == null ? void 0 : _a.maxHistorySize) || 50;
-    if (this.debugHistory.length > maxHistorySize) {
-      this.debugHistory = this.debugHistory.slice(-maxHistorySize);
-    }
-    if ((_b = this.config.debug) == null ? void 0 : _b.logStateChanges) {
-      console.group(`\u{1F504} State Change: ${action.type}`);
-      console.log("Duration:", `${duration.toFixed(2)}ms`);
-      console.log("Previous:", previousState);
-      console.log("Next:", nextState);
-      if (error) {
-        console.error("Error:", error);
-      }
-      console.groupEnd();
-    }
-  }
-  updateMetrics(duration) {
-    this.metrics.totalActions++;
-    this.metrics.lastUpdated = Date.now();
-    this.metrics.averageActionTime = (this.metrics.averageActionTime * (this.metrics.totalActions - 1) + duration) / this.metrics.totalActions;
-    this.metrics.memoryUsage = JSON.stringify(this.state.get()).length;
-  }
-  // Utility Methods
-  mergeConfig(userConfig) {
-    const defaultConfig = {
-      persistence: {
-        enabled: false,
-        key: "app-state",
-        storage: "localStorage"
-      },
-      debug: {
-        enabled: true,
-        logActions: true,
-        logStateChanges: false,
-        maxHistorySize: 50
-      },
-      performance: {
-        trackMetrics: true,
-        batchSize: 10,
-        batchTimeout: 16
-      }
-    };
-    return {
-      persistence: { ...defaultConfig.persistence, ...userConfig == null ? void 0 : userConfig.persistence },
-      debug: { ...defaultConfig.debug, ...userConfig == null ? void 0 : userConfig.debug },
-      performance: { ...defaultConfig.performance, ...userConfig == null ? void 0 : userConfig.performance }
-    };
-  }
-  // Public API Methods
-  getState() {
-    return this.state.get();
-  }
-  getDebugInfo() {
-    return [...this.debugHistory];
-  }
-  getMetrics() {
-    return { ...this.metrics };
-  }
-  clearDebugHistory() {
-    this.debugHistory = [];
-  }
-  clearPersistedState() {
-    var _a;
-    if ((_a = this.config.persistence) == null ? void 0 : _a.enabled) {
-      const { key = "app-state", storage = "localStorage" } = this.config.persistence;
-      if (storage === "localStorage") {
-        localStorage.removeItem(key);
-      } else if (storage === "sessionStorage") {
-        sessionStorage.removeItem(key);
-      }
-    }
-  }
-  destroy() {
-    this.state.destroy();
-    this.debugHistory = [];
-    this.cleanupManager.cleanupAll();
-  }
-};
-var StateManager = class {
-  constructor() {
-    this.stores = /* @__PURE__ */ new Map();
-    this.cleanupManager = CleanupManager.getInstance({
-      autoCleanupOnUnload: true,
-      logCleanupActivity: true
-    });
-  }
-  createStore(name, config) {
-    if (this.stores.has(name)) {
-      throw new Error(`State store '${name}' already exists`);
-    }
-    const store = new StateStore(config);
-    this.stores.set(name, store);
-    this.cleanupManager.register(() => {
-      store.destroy();
-      this.stores.delete(name);
-    }, {
-      id: `state-store-${name}`,
-      description: `State store cleanup for ${name}`,
-      priority: 3
-    });
-    return store;
-  }
-  getStore(name) {
-    return this.stores.get(name);
-  }
-  removeStore(name) {
-    const store = this.stores.get(name);
-    if (store) {
-      store.destroy();
-      this.stores.delete(name);
-      return true;
-    }
-    return false;
-  }
-  getAllStores() {
-    return new Map(this.stores);
-  }
-  getStoreNames() {
-    return Array.from(this.stores.keys());
-  }
-  // Utility method to create common store configurations
-  static createStoreConfig(initialState, options) {
-    return {
-      initialState,
-      ...options
-    };
-  }
-  destroy() {
-    for (const store of this.stores.values()) {
-      store.destroy();
-    }
-    this.stores.clear();
-    this.cleanupManager.cleanupAll();
-  }
-};
-var stateManager = new StateManager();
-var createStore = (name, config) => stateManager.createStore(name, config);
-
-// src/ts/core/state-persistence.ts
-var StateCompressor = class {
-  static async compress(data) {
-    if ("CompressionStream" in window) {
-      const stream = new CompressionStream("gzip");
-      const writer = stream.writable.getWriter();
-      const reader = stream.readable.getReader();
-      writer.write(new TextEncoder().encode(data));
-      writer.close();
-      const chunks = [];
-      let done = false;
-      while (!done) {
-        const { value, done: readerDone } = await reader.read();
-        done = readerDone;
-        if (value) chunks.push(value);
-      }
-      const compressed = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
-      let offset = 0;
-      for (const chunk of chunks) {
-        compressed.set(chunk, offset);
-        offset += chunk.length;
-      }
-      return btoa(String.fromCharCode(...compressed));
-    }
-    return this.simpleCompress(data);
-  }
-  static async decompress(compressedData) {
-    if ("DecompressionStream" in window) {
-      try {
-        const compressed = Uint8Array.from(atob(compressedData), (c) => c.charCodeAt(0));
-        const stream = new DecompressionStream("gzip");
-        const writer = stream.writable.getWriter();
-        const reader = stream.readable.getReader();
-        writer.write(compressed);
-        writer.close();
-        const chunks = [];
-        let done = false;
-        while (!done) {
-          const { value, done: readerDone } = await reader.read();
-          done = readerDone;
-          if (value) chunks.push(value);
-        }
-        const decompressed = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
-        let offset = 0;
-        for (const chunk of chunks) {
-          decompressed.set(chunk, offset);
-          offset += chunk.length;
-        }
-        return new TextDecoder().decode(decompressed);
-      } catch (error) {
-        console.warn("Failed to decompress with gzip, trying fallback:", error);
-      }
-    }
-    return this.simpleDecompress(compressedData);
-  }
-  static simpleCompress(data) {
-    const dict = {
-      "true": "1",
-      "false": "0",
-      "null": "n",
-      "undefined": "u",
-      '"': "'",
-      "{": "{",
-      "}": "}",
-      "[": "[",
-      "]": "]",
-      ",": ",",
-      ":": ":"
-    };
-    let compressed = data;
-    for (const [key, value] of Object.entries(dict)) {
-      compressed = compressed.split(key).join(value);
-    }
-    return compressed;
-  }
-  static simpleDecompress(compressedData) {
-    const dict = {
-      "1": "true",
-      "0": "false",
-      "n": "null",
-      "u": "undefined"
-    };
-    let decompressed = compressedData;
-    for (const [key, value] of Object.entries(dict)) {
-      decompressed = decompressed.split(key).join(value);
-    }
-    return decompressed;
-  }
-};
-var StateEncryptor = class {
-  static async generateKey(password) {
-    const encoder = new TextEncoder();
-    const keyMaterial = await crypto.subtle.importKey(
-      "raw",
-      encoder.encode(password),
-      { name: "PBKDF2" },
-      false,
-      ["deriveBits", "deriveKey"]
-    );
-    return crypto.subtle.deriveKey(
-      {
-        name: "PBKDF2",
-        salt: encoder.encode("state-manager-salt"),
-        iterations: 1e5,
-        hash: "SHA-256"
-      },
-      keyMaterial,
-      { name: "AES-GCM", length: 256 },
-      false,
-      ["encrypt", "decrypt"]
-    );
-  }
-  static async encrypt(data, password) {
-    if (!password) return data;
-    try {
-      const key = await this.generateKey(password);
-      const encoder = new TextEncoder();
-      const iv = crypto.getRandomValues(new Uint8Array(12));
-      const encrypted = await crypto.subtle.encrypt(
-        { name: "AES-GCM", iv },
-        key,
-        encoder.encode(data)
-      );
-      const combined = new Uint8Array(iv.length + encrypted.byteLength);
-      combined.set(iv);
-      combined.set(new Uint8Array(encrypted), iv.length);
-      return btoa(String.fromCharCode(...combined));
-    } catch (error) {
-      console.error("Encryption failed:", error);
-      return data;
-    }
-  }
-  static async decrypt(encryptedData, password) {
-    if (!password) return encryptedData;
-    try {
-      const key = await this.generateKey(password);
-      const combined = Uint8Array.from(atob(encryptedData), (c) => c.charCodeAt(0));
-      const iv = combined.slice(0, 12);
-      const encrypted = combined.slice(12);
-      const decrypted = await crypto.subtle.decrypt(
-        { name: "AES-GCM", iv },
-        key,
-        encrypted
-      );
-      return new TextDecoder().decode(decrypted);
-    } catch (error) {
-      console.error("Decryption failed:", error);
-      return encryptedData;
-    }
-  }
-};
-var LocalStorageAdapter = class {
-  async get(key) {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : null;
-  }
-  async set(key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
-  }
-  async remove(key) {
-    localStorage.removeItem(key);
-  }
-  async clear() {
-    localStorage.clear();
-  }
-  async getQuota() {
-    var _a;
-    let used = 0;
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) {
-        used += ((_a = localStorage.getItem(key)) == null ? void 0 : _a.length) || 0;
-      }
-    }
-    const estimated = 5 * 1024 * 1024;
-    return { used, available: estimated - used };
-  }
-  async listKeys() {
-    const keys = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) keys.push(key);
-    }
-    return keys;
-  }
-};
-var SessionStorageAdapter = class {
-  async get(key) {
-    const value = sessionStorage.getItem(key);
-    return value ? JSON.parse(value) : null;
-  }
-  async set(key, value) {
-    sessionStorage.setItem(key, JSON.stringify(value));
-  }
-  async remove(key) {
-    sessionStorage.removeItem(key);
-  }
-  async clear() {
-    sessionStorage.clear();
-  }
-  async getQuota() {
-    var _a;
-    let used = 0;
-    for (let i = 0; i < sessionStorage.length; i++) {
-      const key = sessionStorage.key(i);
-      if (key) {
-        used += ((_a = sessionStorage.getItem(key)) == null ? void 0 : _a.length) || 0;
-      }
-    }
-    const estimated = 5 * 1024 * 1024;
-    return { used, available: estimated - used };
-  }
-  async listKeys() {
-    const keys = [];
-    for (let i = 0; i < sessionStorage.length; i++) {
-      const key = sessionStorage.key(i);
-      if (key) keys.push(key);
-    }
-    return keys;
-  }
-};
-var IndexedDBAdapter = class {
-  constructor(dbName = "StateDB", storeName = "state-store") {
-    this.db = null;
-    this.dbName = dbName;
-    this.storeName = storeName;
-  }
-  async initDB() {
-    if (this.db) return this.db;
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
-        this.db = request.result;
-        resolve(this.db);
-      };
-      request.onupgradeneeded = () => {
-        const db = request.result;
-        if (!db.objectStoreNames.contains(this.storeName)) {
-          db.createObjectStore(this.storeName);
-        }
-      };
-    });
-  }
-  async get(key) {
-    const db = await this.initDB();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([this.storeName], "readonly");
-      const store = transaction.objectStore(this.storeName);
-      const request = store.get(key);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => {
-        var _a;
-        return resolve(((_a = request.result) == null ? void 0 : _a.value) || null);
-      };
-    });
-  }
-  async set(key, value) {
-    const db = await this.initDB();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([this.storeName], "readwrite");
-      const store = transaction.objectStore(this.storeName);
-      const request = store.put({ key, value });
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve();
-    });
-  }
-  async remove(key) {
-    const db = await this.initDB();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([this.storeName], "readwrite");
-      const store = transaction.objectStore(this.storeName);
-      const request = store.delete(key);
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve();
-    });
-  }
-  async clear() {
-    const db = await this.initDB();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([this.storeName], "readwrite");
-      const store = transaction.objectStore(this.storeName);
-      const request = store.clear();
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve();
-    });
-  }
-  async getQuota() {
-    if ("storage" in navigator && "estimate" in navigator.storage) {
-      const estimate = await navigator.storage.estimate();
-      return {
-        used: estimate.usage || 0,
-        available: (estimate.quota || 0) - (estimate.usage || 0)
-      };
-    }
-    return { used: 0, available: 50 * 1024 * 1024 };
-  }
-  async listKeys() {
-    const db = await this.initDB();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction([this.storeName], "readonly");
-      const store = transaction.objectStore(this.storeName);
-      const request = store.getAllKeys();
-      request.onerror = () => reject(request.error);
-      request.onsuccess = () => resolve(request.result);
-    });
-  }
-};
-var MemoryAdapter = class {
-  constructor() {
-    this.store = /* @__PURE__ */ new Map();
-  }
-  async get(key) {
-    return this.store.get(key) || null;
-  }
-  async set(key, value) {
-    this.store.set(key, value);
-  }
-  async remove(key) {
-    this.store.delete(key);
-  }
-  async clear() {
-    this.store.clear();
-  }
-  async getQuota() {
-    let used = 0;
-    for (const [key, value] of this.store) {
-      used += key.length + JSON.stringify(value).length;
-    }
-    return { used, available: Number.MAX_SAFE_INTEGER };
-  }
-  async listKeys() {
-    return Array.from(this.store.keys());
-  }
-};
-var StateMigration = class {
-  static async migrate(data, config) {
-    const { migration } = config;
-    if (!migration) {
-      return { success: true, fromVersion: config.version, toVersion: config.version, dataMigrated: false };
-    }
-    try {
-      const dataVersion = data._version || 1;
-      if (dataVersion === migration.currentVersion) {
-        return { success: true, fromVersion: dataVersion, toVersion: migration.currentVersion, dataMigrated: false };
-      }
-      if (dataVersion > migration.currentVersion) {
-        console.warn(`Data version (${dataVersion}) is newer than expected (${migration.currentVersion})`);
-        return { success: true, fromVersion: dataVersion, toVersion: dataVersion, dataMigrated: false };
-      }
-      const errors = [];
-      let migratedData = { ...data };
-      for (let version = dataVersion; version < migration.currentVersion; version++) {
-        try {
-          migratedData = migration.migrate(migratedData, version, version + 1);
-          migratedData._version = version + 1;
-        } catch (error) {
-          const errorMsg = `Migration from v${version} to v${version + 1} failed: ${error}`;
-          errors.push(errorMsg);
-          console.error(errorMsg);
-        }
-      }
-      return {
-        success: errors.length === 0,
-        fromVersion: dataVersion,
-        toVersion: migration.currentVersion,
-        dataMigrated: errors.length === 0,
-        errors: errors.length > 0 ? errors : void 0
-      };
-    } catch (error) {
-      return {
-        success: false,
-        fromVersion: data._version || 1,
-        toVersion: migration.currentVersion,
-        dataMigrated: false,
-        errors: [`Migration failed: ${error}`]
-      };
-    }
-  }
-};
-var StateBackup = class {
-  static async createBackup(data, config, backupId) {
-    var _a, _b;
-    const id = backupId || this.generateBackupId();
-    const timestamp = Date.now();
-    const backupData = {
-      id,
-      timestamp,
-      version: config.version,
-      data,
-      metadata: {
-        compressed: config.compression || false,
-        encrypted: ((_a = config.encryption) == null ? void 0 : _a.enabled) || false,
-        size: JSON.stringify(data).length
-      }
-    };
-    const backupKey = this.BACKUP_KEY_PREFIX + id;
-    const adapter = this.getStorageAdapter(config.backend);
-    await adapter.set(backupKey, backupData);
-    const backupInfo = {
-      id,
-      timestamp,
-      version: config.version,
-      size: backupData.metadata.size,
-      compressed: backupData.metadata.compressed,
-      encrypted: backupData.metadata.encrypted
-    };
-    if ((_b = config.backup) == null ? void 0 : _b.maxBackups) {
-      await this.cleanupOldBackups(config.backend, config.backup.maxBackups);
-    }
-    return backupInfo;
-  }
-  static async restoreBackup(backupId, backend) {
-    const backupKey = this.BACKUP_KEY_PREFIX + backupId;
-    const adapter = this.getStorageAdapter(backend);
-    const backupData = await adapter.get(backupKey);
-    if (!backupData) {
-      throw new Error(`Backup '${backupId}' not found`);
-    }
-    return backupData.data;
-  }
-  static async listBackups(backend) {
-    const adapter = this.getStorageAdapter(backend);
-    const keys = await adapter.listKeys();
-    const backupKeys = keys.filter((key) => key.startsWith(this.BACKUP_KEY_PREFIX));
-    const backups = [];
-    for (const key of backupKeys) {
-      const backupData = await adapter.get(key);
-      if (backupData) {
-        backups.push({
-          id: backupData.id,
-          timestamp: backupData.timestamp,
-          version: backupData.version,
-          size: backupData.metadata.size,
-          compressed: backupData.metadata.compressed,
-          encrypted: backupData.metadata.encrypted
-        });
-      }
-    }
-    return backups.sort((a, b) => b.timestamp - a.timestamp);
-  }
-  static async deleteBackup(backupId, backend) {
-    const backupKey = this.BACKUP_KEY_PREFIX + backupId;
-    const adapter = this.getStorageAdapter(backend);
-    await adapter.remove(backupKey);
-  }
-  static generateBackupId() {
-    return `backup-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-  }
-  static async cleanupOldBackups(backend, maxBackups) {
-    const backups = await this.listBackups(backend);
-    if (backups.length <= maxBackups) return;
-    const backupsToDelete = backups.slice(maxBackups);
-    const adapter = this.getStorageAdapter(backend);
-    for (const backup of backupsToDelete) {
-      await this.deleteBackup(backup.id, backend);
-    }
-  }
-  static getStorageAdapter(backend) {
-    switch (backend) {
-      case "localStorage":
-        return new LocalStorageAdapter();
-      case "sessionStorage":
-        return new SessionStorageAdapter();
-      case "indexedDB":
-        return new IndexedDBAdapter();
-      case "memory":
-        return new MemoryAdapter();
-      default:
-        return new LocalStorageAdapter();
-    }
-  }
-};
-StateBackup.BACKUP_KEY_PREFIX = "state-backup-";
-var StatePersistenceManager = class {
-  constructor(config) {
-    this.config = config;
-    this.adapter = this.getStorageAdapter(config.backend);
-  }
-  async save(data) {
-    var _a, _b, _c;
-    try {
-      let processedData = {
-        _version: this.config.version,
-        _timestamp: Date.now(),
-        data
-      };
-      const migrationResult = await StateMigration.migrate(processedData, this.config);
-      if (!migrationResult.success && migrationResult.errors) {
-        console.error("State migration failed:", migrationResult.errors);
-        throw new Error("State migration failed");
-      }
-      processedData = migrationResult.dataMigrated ? processedData : data;
-      let serialized = JSON.stringify(processedData);
-      if (this.config.compression) {
-        serialized = await StateCompressor.compress(serialized);
-      }
-      if ((_a = this.config.encryption) == null ? void 0 : _a.enabled) {
-        serialized = await StateEncryptor.encrypt(serialized, this.config.encryption.key);
-      }
-      await this.adapter.set(this.config.key, {
-        compressed: this.config.compression || false,
-        encrypted: ((_b = this.config.encryption) == null ? void 0 : _b.enabled) || false,
-        data: serialized
-      });
-      if ((_c = this.config.backup) == null ? void 0 : _c.enabled) {
-        await this.createPeriodicBackup(processedData);
-      }
-    } catch (error) {
-      console.error("Failed to save state:", error);
-      throw error;
-    }
-  }
-  async load() {
-    var _a;
-    try {
-      const stored = await this.adapter.get(this.config.key);
-      if (!stored) return null;
-      let data = stored.data;
-      if (stored.encrypted && ((_a = this.config.encryption) == null ? void 0 : _a.enabled)) {
-        data = await StateEncryptor.decrypt(data, this.config.encryption.key);
-      }
-      if (stored.compressed && this.config.compression) {
-        data = await StateCompressor.decompress(data);
-      }
-      const parsedData = JSON.parse(data);
-      const migrationResult = await StateMigration.migrate(parsedData, this.config);
-      if (!migrationResult.success && migrationResult.errors) {
-        console.error("State migration failed during load:", migrationResult.errors);
-      }
-      return migrationResult.dataMigrated ? parsedData.data : parsedData.data || parsedData;
-    } catch (error) {
-      console.error("Failed to load state:", error);
-      return null;
-    }
-  }
-  async remove() {
-    await this.adapter.remove(this.config.key);
-  }
-  async clear() {
-    await this.adapter.clear();
-  }
-  async getQuota() {
-    const quota = await this.adapter.getQuota();
-    const percentage = quota.available > 0 ? quota.used / (quota.used + quota.available) * 100 : 100;
-    return { ...quota, percentage };
-  }
-  async createBackup(backupId) {
-    const data = await this.load();
-    if (!data) {
-      throw new Error("No data available to backup");
-    }
-    return StateBackup.createBackup(data, this.config, backupId);
-  }
-  async restoreBackup(backupId) {
-    const data = await StateBackup.restoreBackup(backupId, this.config.backend);
-    await this.save(data);
-  }
-  async listBackups() {
-    return StateBackup.listBackups(this.config.backend);
-  }
-  async deleteBackup(backupId) {
-    await StateBackup.deleteBackup(backupId, this.config.backend);
-  }
-  async createPeriodicBackup(data) {
-    var _a;
-    const lastBackupKey = `${this.config.key}-last-backup`;
-    const lastBackupTime = await this.adapter.get(lastBackupKey);
-    const now = Date.now();
-    const interval = (((_a = this.config.backup) == null ? void 0 : _a.interval) || 60) * 60 * 1e3;
-    if (!lastBackupTime || now - lastBackupTime > interval) {
-      await StateBackup.createBackup(data, this.config);
-      await this.adapter.set(lastBackupKey, now);
-    }
-  }
-  getStorageAdapter(backend) {
-    switch (backend) {
-      case "localStorage":
-        return new LocalStorageAdapter();
-      case "sessionStorage":
-        return new SessionStorageAdapter();
-      case "indexedDB":
-        return new IndexedDBAdapter();
-      case "memory":
-        return new MemoryAdapter();
-      default:
-        return new LocalStorageAdapter();
-    }
-  }
-};
-
-// src/ts/core/state-debug-tools.ts
-var StateInspector = class {
-  constructor(store, config) {
-    this.container = null;
-    this.isVisible = false;
-    this.store = store;
-    this.config = config;
-    this.createInspector();
-  }
-  createInspector() {
-    if (!this.config.visualInspector) return;
-    this.container = document.createElement("div");
-    this.container.id = "state-inspector";
-    this.container.innerHTML = `
-      <div class="state-inspector-header">
-        <h3>\u{1F5C4}\uFE0F State Inspector</h3>
-        <div class="inspector-controls">
-          <button id="inspector-toggle" title="Toggle Inspector">\u{1F441}\uFE0F</button>
-          <button id="inspector-minimize" title="Minimize">\u2796</button>
-          <button id="inspector-close" title="Close">\u2716\uFE0F</button>
-        </div>
-      </div>
-      <div class="state-inspector-content">
-        <div class="inspector-tabs">
-          <button class="tab active" data-tab="state">State</button>
-          <button class="tab" data-tab="actions">Actions</button>
-          <button class="tab" data-tab="performance">Performance</button>
-          <button class="tab" data-tab="tools">Tools</button>
-        </div>
-        <div class="inspector-panels">
-          <div class="panel active" id="state-panel">
-            <div class="state-view"></div>
-          </div>
-          <div class="panel" id="actions-panel">
-            <div class="actions-timeline"></div>
-          </div>
-          <div class="panel" id="performance-panel">
-            <div class="performance-metrics"></div>
-          </div>
-          <div class="panel" id="tools-panel">
-            <div class="debug-tools"></div>
-          </div>
-        </div>
-      </div>
-    `;
-    this.addStyles();
-    this.setupEventListeners();
-    document.body.appendChild(this.container);
-    this.hide();
-  }
-  addStyles() {
-    const style = document.createElement("style");
-    style.textContent = `
-      #state-inspector {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 400px;
-        max-height: 600px;
-        background: #1e1e1e;
-        border: 1px solid #444;
-        border-radius: 8px;
-        font-family: 'Monaco', 'Menlo', monospace;
-        font-size: 12px;
-        color: #fff;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
-      }
-
-      #state-inspector.minimized {
-        height: 40px;
-        overflow: hidden;
-      }
-
-      #state-inspector.hidden {
-        display: none;
-      }
-
-      .state-inspector-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 15px;
-        background: #2d2d2d;
-        border-bottom: 1px solid #444;
-        cursor: move;
-      }
-
-      .state-inspector-header h3 {
-        margin: 0;
-        font-size: 14px;
-        color: #4fc3f7;
-      }
-
-      .inspector-controls {
-        display: flex;
-        gap: 5px;
-      }
-
-      .inspector-controls button {
-        background: none;
-        border: none;
-        color: #ccc;
-        cursor: pointer;
-        padding: 5px;
-        border-radius: 3px;
-        transition: background 0.2s;
-      }
-
-      .inspector-controls button:hover {
-        background: #444;
-      }
-
-      .state-inspector-content {
-        max-height: 560px;
-        overflow-y: auto;
-      }
-
-      .inspector-tabs {
-        display: flex;
-        background: #2d2d2d;
-        border-bottom: 1px solid #444;
-      }
-
-      .inspector-tabs .tab {
-        flex: 1;
-        padding: 10px;
-        background: none;
-        border: none;
-        color: #ccc;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .inspector-tabs .tab:hover,
-      .inspector-tabs .tab.active {
-        background: #3d3d3d;
-        color: #4fc3f7;
-      }
-
-      .inspector-panels {
-        padding: 15px;
-      }
-
-      .panel {
-        display: none;
-      }
-
-      .panel.active {
-        display: block;
-      }
-
-      .state-view {
-        background: #1a1a1a;
-        padding: 10px;
-        border-radius: 4px;
-        overflow-x: auto;
-      }
-
-      .state-json {
-        color: #ccc;
-        white-space: pre-wrap;
-        font-family: 'Monaco', 'Menlo', monospace;
-        font-size: 11px;
-      }
-
-      .actions-timeline {
-        max-height: 400px;
-        overflow-y: auto;
-      }
-
-      .action-item {
-        background: #2a2a2a;
-        margin-bottom: 8px;
-        padding: 10px;
-        border-radius: 4px;
-        border-left: 3px solid #4fc3f7;
-      }
-
-      .action-item.error {
-        border-left-color: #f44336;
-      }
-
-      .action-type {
-        color: #4fc3f7;
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      .action-payload {
-        color: #ccc;
-        font-size: 11px;
-        margin-bottom: 5px;
-      }
-
-      .action-timestamp {
-        color: #888;
-        font-size: 10px;
-      }
-
-      .performance-metrics {
-        display: grid;
-        gap: 15px;
-      }
-
-      .metric-card {
-        background: #2a2a2a;
-        padding: 15px;
-        border-radius: 4px;
-        border-left: 3px solid #4fc3f7;
-      }
-
-      .metric-label {
-        color: #888;
-        font-size: 10px;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-      }
-
-      .metric-value {
-        color: #4fc3f7;
-        font-size: 18px;
-        font-weight: bold;
-      }
-
-      .debug-tools {
-        display: grid;
-        gap: 10px;
-      }
-
-      .tool-button {
-        background: #2a2a2a;
-        border: 1px solid #444;
-        color: #ccc;
-        padding: 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.2s;
-        text-align: left;
-      }
-
-      .tool-button:hover {
-        background: #3a3a3a;
-        border-color: #4fc3f7;
-      }
-
-      .tool-button .tool-name {
-        color: #4fc3f7;
-        font-weight: bold;
-        margin-bottom: 5px;
-      }
-
-      .tool-button .tool-description {
-        color: #888;
-        font-size: 10px;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-  setupEventListeners() {
-    if (!this.container) return;
-    this.container.querySelectorAll(".tab").forEach((tab) => {
-      tab.addEventListener("click", (e) => {
-        const tabName = e.target.dataset.tab;
-        this.switchTab(tabName);
-      });
-    });
-    const toggleBtn = this.container.querySelector("#inspector-toggle");
-    const minimizeBtn = this.container.querySelector("#inspector-minimize");
-    const closeBtn = this.container.querySelector("#inspector-close");
-    toggleBtn == null ? void 0 : toggleBtn.addEventListener("click", () => this.toggle());
-    minimizeBtn == null ? void 0 : minimizeBtn.addEventListener("click", () => this.toggleMinimize());
-    closeBtn == null ? void 0 : closeBtn.addEventListener("click", () => this.hide());
-    const header = this.container.querySelector(".state-inspector-header");
-    this.makeDraggable(header, this.container);
-    this.store.subscribe(() => this.updateStateView());
-  }
-  switchTab(tabName) {
-    if (!this.container) return;
-    this.container.querySelectorAll(".tab").forEach((tab) => {
-      tab.classList.remove("active");
-      if (tab.dataset.tab === tabName) {
-        tab.classList.add("active");
-      }
-    });
-    this.container.querySelectorAll(".panel").forEach((panel) => {
-      panel.classList.remove("active");
-    });
-    const activePanel = this.container.querySelector(`#${tabName}-panel`);
-    activePanel == null ? void 0 : activePanel.classList.add("active");
-    switch (tabName) {
-      case "state":
-        this.updateStateView();
-        break;
-      case "actions":
-        this.updateActionsView();
-        break;
-      case "performance":
-        this.updatePerformanceView();
-        break;
-      case "tools":
-        this.updateToolsView();
-        break;
-    }
-  }
-  updateStateView() {
-    if (!this.container) return;
-    const stateView = this.container.querySelector(".state-view");
-    const state = this.store.getState();
-    stateView.innerHTML = `
-      <div class="state-json">${JSON.stringify(state, null, 2)}</div>
-    `;
-  }
-  updateActionsView() {
-    if (!this.container) return;
-    const actionsTimeline = this.container.querySelector(".actions-timeline");
-    const debugInfo = this.store.getDebugInfo();
-    actionsTimeline.innerHTML = debugInfo.map((info) => `
-      <div class="action-item ${info.stackTrace ? "error" : ""}">
-        <div class="action-type">${info.action.type}</div>
-        <div class="action-payload">${JSON.stringify(info.action.payload)}</div>
-        <div class="action-timestamp">
-          ${new Date(info.timestamp).toLocaleTimeString()} (${info.duration.toFixed(2)}ms)
-        </div>
-      </div>
-    `).reverse().join("");
-  }
-  updatePerformanceView() {
-    if (!this.container) return;
-    const performanceMetrics = this.container.querySelector(".performance-metrics");
-    const metrics = this.store.getMetrics();
-    const debugInfo = this.store.getDebugInfo();
-    const slowestActions = debugInfo.filter((info) => info.duration > 5).sort((a, b) => b.duration - a.duration).slice(0, 5);
-    performanceMetrics.innerHTML = `
-      <div class="metric-card">
-        <div class="metric-label">Total Actions</div>
-        <div class="metric-value">${metrics.totalActions}</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Average Action Time</div>
-        <div class="metric-value">${metrics.averageActionTime.toFixed(2)}ms</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Memory Usage</div>
-        <div class="metric-value">${(metrics.memoryUsage / 1024).toFixed(1)}KB</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Active Subscribers</div>
-        <div class="metric-value">${metrics.totalSubscribers}</div>
-      </div>
-      ${slowestActions.length > 0 ? `
-        <div class="metric-card">
-          <div class="metric-label">Slowest Actions</div>
-          ${slowestActions.map((action) => `
-            <div style="margin-bottom: 5px; font-size: 11px;">
-              ${action.action.type}: ${action.duration.toFixed(2)}ms
-            </div>
-          `).join("")}
-        </div>
-      ` : ""}
-    `;
-  }
-  updateToolsView() {
-    if (!this.container) return;
-    const debugTools = this.container.querySelector(".debug-tools");
-    debugTools.innerHTML = `
-      <button class="tool-button" id="export-state">
-        <div class="tool-name">\u{1F4E4} Export State</div>
-        <div class="tool-description">Export current state to JSON</div>
-      </button>
-      <button class="tool-button" id="import-state">
-        <div class="tool-name">\u{1F4E5} Import State</div>
-        <div class="tool-description">Import state from JSON</div>
-      </button>
-      <button class="tool-button" id="create-backup">
-        <div class="tool-name">\u{1F4BE} Create Backup</div>
-        <div class="tool-description">Create state backup</div>
-      </button>
-      <button class="tool-button" id="clear-debug">
-        <div class="tool-name">\u{1F9F9} Clear Debug History</div>
-        <div class="tool-description">Clear debugging history</div>
-      </button>
-      <button class="tool-button" id="reset-state">
-        <div class="tool-name">\u{1F504} Reset State</div>
-        <div class="tool-description">Reset to initial state</div>
-      </button>
-    `;
-    this.setupToolListeners();
-  }
-  setupToolListeners() {
-    if (!this.container) return;
-    const exportBtn = this.container.querySelector("#export-state");
-    const importBtn = this.container.querySelector("#import-state");
-    const backupBtn = this.container.querySelector("#create-backup");
-    const clearBtn = this.container.querySelector("#clear-debug");
-    const resetBtn = this.container.querySelector("#reset-state");
-    exportBtn == null ? void 0 : exportBtn.addEventListener("click", () => this.exportState());
-    importBtn == null ? void 0 : importBtn.addEventListener("click", () => this.importState());
-    backupBtn == null ? void 0 : backupBtn.addEventListener("click", () => this.createBackup());
-    clearBtn == null ? void 0 : clearBtn.addEventListener("click", () => this.clearDebugHistory());
-    resetBtn == null ? void 0 : resetBtn.addEventListener("click", () => this.resetState());
-  }
-  makeDraggable(dragHandle, element) {
-    let isDragging = false;
-    let currentX;
-    let currentY;
-    let initialX;
-    let initialY;
-    dragHandle.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      initialX = e.clientX - element.offsetLeft;
-      initialY = e.clientY - element.offsetTop;
-    });
-    document.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      currentX = e.clientX - initialX;
-      currentY = e.clientY - initialY;
-      element.style.left = `${currentX}px`;
-      element.style.top = `${currentY}px`;
-    });
-    document.addEventListener("mouseup", () => {
-      isDragging = false;
-    });
-  }
-  exportState() {
-    const state = this.store.getState();
-    const dataStr = JSON.stringify(state, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `state-export-${Date.now()}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-  }
-  importState() {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = ".json";
-    input.onchange = (e) => {
-      var _a;
-      const file = (_a = e.target.files) == null ? void 0 : _a[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e2) => {
-        var _a2;
-        try {
-          const state = JSON.parse((_a2 = e2.target) == null ? void 0 : _a2.result);
-          this.store.reset(state);
-          alert("State imported successfully!");
-        } catch (error) {
-          alert("Failed to import state: Invalid JSON");
-        }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
-  }
-  async createBackup() {
-    try {
-      const state = this.store.getState();
-      const backupData = {
-        timestamp: Date.now(),
-        state,
-        debugInfo: this.store.getDebugInfo(),
-        metrics: this.store.getMetrics()
-      };
-      const dataStr = JSON.stringify(backupData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: "application/json" });
-      const url = URL.createObjectURL(dataBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `state-backup-${Date.now()}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
-      alert("Backup created successfully!");
-    } catch (error) {
-      alert("Failed to create backup");
-    }
-  }
-  clearDebugHistory() {
-    this.store.clearDebugHistory();
-    this.updateActionsView();
-    alert("Debug history cleared!");
-  }
-  resetState() {
-    if (confirm("Are you sure you want to reset the state? This cannot be undone.")) {
-      this.store.reset();
-      alert("State reset successfully!");
-    }
-  }
-  show() {
-    if (this.container) {
-      this.container.classList.remove("hidden");
-      this.isVisible = true;
-    }
-  }
-  hide() {
-    if (this.container) {
-      this.container.classList.add("hidden");
-      this.isVisible = false;
-    }
-  }
-  toggle() {
-    if (this.isVisible) {
-      this.hide();
-    } else {
-      this.show();
-    }
-  }
-  toggleMinimize() {
-    if (this.container) {
-      this.container.classList.toggle("minimized");
-    }
-  }
-  destroy() {
-    if (this.container) {
-      document.body.removeChild(this.container);
-      this.container = null;
-    }
-  }
-};
-var ActionTimeline = class {
-  constructor(maxSnapshots = 100) {
-    this.snapshots = [];
-    this.errors = [];
-    this.maxSnapshots = maxSnapshots;
-  }
-  recordSnapshot(action, state, metrics, performance2) {
-    const snapshot = {
-      timestamp: Date.now(),
-      state: JSON.parse(JSON.stringify(state)),
-      // Deep clone
-      action: { ...action },
-      metrics: { ...metrics },
-      performance: { ...performance2 }
-    };
-    this.snapshots.push(snapshot);
-    if (this.snapshots.length > this.maxSnapshots) {
-      this.snapshots = this.snapshots.slice(-this.maxSnapshots);
-    }
-  }
-  recordError(action, error) {
-    this.errors.push({
-      action: { ...action },
-      error: { ...error },
-      timestamp: Date.now(),
-      stackTrace: error.stack || ""
-    });
-  }
-  getTimeline() {
-    return {
-      actions: this.snapshots.map((s) => s.action).filter(Boolean),
-      snapshots: [...this.snapshots],
-      errors: [...this.errors]
-    };
-  }
-  getSnapshotsInRange(startTime, endTime) {
-    return this.snapshots.filter((s) => s.timestamp >= startTime && s.timestamp <= endTime);
-  }
-  clear() {
-    this.snapshots = [];
-    this.errors = [];
-  }
-  export() {
-    return JSON.stringify(this.getTimeline(), null, 2);
-  }
-  import(data) {
-    try {
-      const timeline = JSON.parse(data);
-      this.snapshots = timeline.snapshots || [];
-      this.errors = timeline.errors || [];
-    } catch (error) {
-      throw new Error("Invalid timeline data format");
-    }
-  }
-};
-var StatePerformanceMonitor = class {
-  constructor() {
-    this.actionTimes = [];
-    this.memorySnapshots = [];
-    this.errorCount = 0;
-  }
-  recordAction(action, duration) {
-    this.actionTimes.push({ action, duration, timestamp: Date.now() });
-    if (this.actionTimes.length > 1e3) {
-      this.actionTimes = this.actionTimes.slice(-1e3);
-    }
-  }
-  recordMemoryUsage() {
-    if ("memory" in performance) {
-      const memory = performance.memory;
-      this.memorySnapshots.push({
-        timestamp: Date.now(),
-        usage: memory.usedJSHeapSize
-      });
-      if (this.memorySnapshots.length > 100) {
-        this.memorySnapshots = this.memorySnapshots.slice(-100);
-      }
-    }
-  }
-  recordError() {
-    this.errorCount++;
-  }
-  generateReport() {
-    const totalActions = this.actionTimes.length;
-    const averageActionTime = totalActions > 0 ? this.actionTimes.reduce((sum, a) => sum + a.duration, 0) / totalActions : 0;
-    const slowestActions = [...this.actionTimes].sort((a, b) => b.duration - a.duration).slice(0, 10).map(({ action, duration, timestamp }) => ({ action, duration, timestamp }));
-    return {
-      totalActions,
-      averageActionTime,
-      slowestActions,
-      memoryTrend: this.memorySnapshots,
-      errors: this.errorCount
-    };
-  }
-  clear() {
-    this.actionTimes = [];
-    this.memorySnapshots = [];
-    this.errorCount = 0;
-  }
-};
-var StateDebugManager = class {
-  constructor(store, config) {
-    this.config = config;
-    this.inspector = new StateInspector(store, config);
-    this.timeline = new ActionTimeline(config.maxHistorySize || 100);
-    this.performanceMonitor = new StatePerformanceMonitor();
-    this.setupStoreMonitoring(store);
-    this.setupGlobalAccess();
-  }
-  setupStoreMonitoring(store) {
-    if (!this.config.enabled) return;
-    store.subscribe((state, previousState) => {
-      if (this.config.performanceMonitoring) {
-        this.performanceMonitor.recordMemoryUsage();
-      }
-      if (this.config.actionTimeline && previousState) {
-        const metrics = store.getMetrics();
-        const debugInfo = store.getDebugInfo();
-        const lastAction = debugInfo[debugInfo.length - 1];
-        if (lastAction) {
-          this.timeline.recordSnapshot(
-            lastAction.action,
-            state,
-            metrics,
-            {
-              actionTime: lastAction.duration,
-              renderTime: 0,
-              // Could be measured with requestAnimationFrame
-              memoryUsage: metrics.memoryUsage
-            }
-          );
-          if (this.config.performanceMonitoring) {
-            this.performanceMonitor.recordAction(lastAction.action.type, lastAction.duration);
-          }
-        }
-      }
-    });
-    this.setupErrorMonitoring(store);
-  }
-  setupErrorMonitoring(store) {
-    if (!this.config.errorTracking) return;
-    const originalDispatch = store.dispatch.bind(store);
-    store.dispatch = (...args) => {
-      try {
-        return originalDispatch(...args);
-      } catch (error) {
-        const action = args[0];
-        this.timeline.recordError(action, error);
-        this.performanceMonitor.recordError();
-        if (this.config.logLevel !== "none") {
-          console.error("State action error:", error);
-        }
-        throw error;
-      }
-    };
-  }
-  setupGlobalAccess() {
-    if (true) {
-      window.__STATE_DEBUG__ = {
-        inspector: this.inspector,
-        timeline: this.timeline,
-        performanceMonitor: this.performanceMonitor,
-        generateReport: () => this.performanceMonitor.generateReport(),
-        exportTimeline: () => this.timeline.export(),
-        clearHistory: () => this.clearAll()
-      };
-      console.group("\u{1F5C4}\uFE0F State Debug Tools Initialized");
-      console.log("Access via window.__STATE_DEBUG__");
-      console.log("Available methods:");
-      console.log("  - inspector: Visual state inspector");
-      console.log("  - timeline: Action timeline viewer");
-      console.log("  - performanceMonitor: Performance metrics");
-      console.log("  - generateReport(): Generate performance report");
-      console.log("  - exportTimeline(): Export action timeline");
-      console.log("  - clearHistory(): Clear all debug data");
-      console.groupEnd();
-    }
-  }
-  clearAll() {
-    this.timeline.clear();
-    this.performanceMonitor.clear();
-  }
-  destroy() {
-    this.inspector.destroy();
-    this.clearAll();
-  }
-};
-
-// src/ts/core/app-state.ts
-var getInitialState = () => ({
-  theme: {
-    mode: "system",
-    systemPreference: "light",
-    isTransitioning: false
-  },
-  navigation: {
-    isMobileMenuOpen: false,
-    isMobile: false,
-    activeSection: "",
-    scrollPosition: 0
-  },
-  ui: {
-    isLoading: false,
-    notifications: [],
-    modals: [],
-    sidebar: {
-      isOpen: false,
-      activeTab: "main"
-    }
-  },
-  user: {
-    preferences: {
-      language: "en",
-      timezone: "UTC",
-      dateFormat: "YYYY-MM-DD",
-      animationsEnabled: true,
-      reducedMotion: false
-    },
-    session: {
-      startTime: Date.now(),
-      pageViews: 1,
-      timeOnPage: 0,
-      lastActivity: Date.now()
-    }
-  },
-  app: {
-    version: "1.0.0",
-    buildNumber: process.env.BUILD_NUMBER || "dev",
-    environment: "development",
-    isFirstVisit: !localStorage.getItem("app-visited"),
-    hasSeenOnboarding: false,
-    lastVisit: 0
-  }
-});
-var themeReducers = {
-  SET_THEME: (state, action) => {
-    const newMode = action.payload;
-    return {
-      ...state,
-      mode: newMode,
-      isTransitioning: true
-    };
-  },
-  SET_SYSTEM_THEME: (state, action) => {
-    return {
-      ...state,
-      systemPreference: action.payload
-    };
-  },
-  THEME_TRANSITION_END: (state) => {
-    return {
-      ...state,
-      isTransitioning: false
-    };
-  }
-};
-var navigationReducers = {
-  TOGGLE_MOBILE_MENU: (state) => {
-    return {
-      ...state,
-      isMobileMenuOpen: !state.isMobileMenuOpen
-    };
-  },
-  SET_MOBILE_MENU_OPEN: (state, action) => {
-    return {
-      ...state,
-      isMobileMenuOpen: action.payload
-    };
-  },
-  SET_MOBILE: (state, action) => {
-    return {
-      ...state,
-      isMobile: action.payload
-    };
-  },
-  SET_ACTIVE_SECTION: (state, action) => {
-    return {
-      ...state,
-      activeSection: action.payload
-    };
-  },
-  SET_SCROLL_POSITION: (state, action) => {
-    return {
-      ...state,
-      scrollPosition: action.payload
-    };
-  }
-};
-var uiReducers = {
-  SET_LOADING: (state, action) => {
-    return {
-      ...state,
-      isLoading: action.payload
-    };
-  },
-  ADD_NOTIFICATION: (state, action) => {
-    const notification = action.payload;
-    return {
-      ...state,
-      notifications: [...state.notifications, notification]
-    };
-  },
-  REMOVE_NOTIFICATION: (state, action) => {
-    const id = action.payload;
-    return {
-      ...state,
-      notifications: state.notifications.filter((n) => n.id !== id)
-    };
-  },
-  CLEAR_NOTIFICATIONS: (state) => {
-    return {
-      ...state,
-      notifications: []
-    };
-  },
-  OPEN_MODAL: (state, action) => {
-    const { id, title, content } = action.payload;
-    const existingModalIndex = state.modals.findIndex((m) => m.id === id);
-    if (existingModalIndex !== -1) {
-      const updatedModals = [...state.modals];
-      updatedModals[existingModalIndex] = { id, isOpen: true, title, content };
-      return {
-        ...state,
-        modals: updatedModals
-      };
-    }
-    return {
-      ...state,
-      modals: [...state.modals, { id, isOpen: true, title, content }]
-    };
-  },
-  CLOSE_MODAL: (state, action) => {
-    const id = action.payload;
-    return {
-      ...state,
-      modals: state.modals.map(
-        (modal) => modal.id === id ? { ...modal, isOpen: false } : modal
-      )
-    };
-  },
-  TOGGLE_SIDEBAR: (state) => {
-    return {
-      ...state,
-      sidebar: {
-        ...state.sidebar,
-        isOpen: !state.sidebar.isOpen
-      }
-    };
-  },
-  SET_SIDEBAR_TAB: (state, action) => {
-    return {
-      ...state,
-      sidebar: {
-        ...state.sidebar,
-        activeTab: action.payload
-      }
-    };
-  }
-};
-var userReducers = {
-  UPDATE_PREFERENCES: (state, action) => {
-    return {
-      ...state,
-      preferences: {
-        ...state.preferences,
-        ...action.payload
-      }
-    };
-  },
-  UPDATE_SESSION: (state, action) => {
-    return {
-      ...state,
-      session: {
-        ...state.session,
-        ...action.payload,
-        lastActivity: Date.now()
-      }
-    };
-  },
-  INCREMENT_PAGE_VIEWS: (state) => {
-    return {
-      ...state,
-      session: {
-        ...state.session,
-        pageViews: state.session.pageViews + 1,
-        lastActivity: Date.now()
-      }
-    };
-  }
-};
-var appReducers = {
-  SET_ONBOARDING_COMPLETE: (state) => {
-    return {
-      ...state,
-      hasSeenOnboarding: true
-    };
-  },
-  UPDATE_LAST_VISIT: (state) => {
-    return {
-      ...state,
-      lastVisit: Date.now()
-    };
-  },
-  MARK_VISITED: (state) => {
-    return {
-      ...state,
-      isFirstVisit: false
-    };
-  }
-};
-var AppStateManager = class {
-  constructor(config) {
-    var _a;
-    const persistenceConfig = {
-      backend: "localStorage",
-      key: "app-state",
-      version: 1,
-      compression: true,
-      encryption: {
-        enabled: false
-      },
-      migration: {
-        currentVersion: 1,
-        migrate: (data, fromVersion, toVersion) => {
-          return data;
-        }
-      },
-      backup: {
-        enabled: true,
-        interval: 30,
-        // minutes
-        maxBackups: 5
-      },
-      cleanup: {
-        enabled: true,
-        maxAge: 7,
-        // days
-        maxQuota: 80
-        // percentage
-      },
-      ...config == null ? void 0 : config.persistence
-    };
-    const debugConfig = {
-      enabled: true,
-      visualInspector: true,
-      actionTimeline: true,
-      performanceMonitoring: true,
-      errorTracking: true,
-      stateDiff: true,
-      exportImport: true,
-      maxHistorySize: 100,
-      logLevel: "info",
-      ...config == null ? void 0 : config.debug
-    };
-    const allReducers = {
-      ...themeReducers,
-      ...navigationReducers,
-      ...uiReducers,
-      ...userReducers,
-      ...appReducers
-    };
-    this.store = createStore("app", {
-      initialState: getInitialState(),
-      reducers: allReducers,
-      config: {
-        persistence: {
-          enabled: !!(config == null ? void 0 : config.persistence),
-          ...persistenceConfig
-        },
-        debug: debugConfig
-      }
-    });
-    if (config == null ? void 0 : config.persistence) {
-      this.persistenceManager = new StatePersistenceManager(persistenceConfig);
-      this.setupPersistence();
-    }
-    if ((_a = config == null ? void 0 : config.debug) == null ? void 0 : _a.enabled) {
-      this.debugManager = new StateDebugManager(this.store, debugConfig);
-    }
-    this.initializeSessionTracking();
-    console.log("\u{1F5C4}\uFE0F App State Manager initialized");
-  }
-  setupPersistence() {
-    if (!this.persistenceManager) return;
-    this.store.subscribe(async (state) => {
-      try {
-        await this.persistenceManager.save(state);
-      } catch (error) {
-        console.error("Failed to persist state:", error);
-      }
-    });
-    this.loadPersistedState();
-  }
-  async loadPersistedState() {
-    if (!this.persistenceManager) return;
-    try {
-      const persistedState = await this.persistenceManager.load();
-      if (persistedState) {
-        this.store.reset(persistedState);
-        console.log("\u{1F5C4}\uFE0F Persisted state loaded");
-      }
-    } catch (error) {
-      console.error("Failed to load persisted state:", error);
-    }
-  }
-  initializeSessionTracking() {
-    const updateActivity = () => {
-      this.dispatch("UPDATE_SESSION", {
-        timeOnPage: Date.now() - this.getState().user.session.startTime
-      });
-    };
-    setInterval(updateActivity, 3e4);
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        updateActivity();
-      } else {
-        this.dispatch("INCREMENT_PAGE_VIEWS");
-      }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    if (this.getState().app.isFirstVisit) {
-      this.dispatch("MARK_VISITED");
-      localStorage.setItem("app-visited", "true");
-    }
-  }
-  // Public API
-  dispatch(action, payload, meta) {
-    if (typeof action === "string") {
-      this.store.dispatch({
-        type: action,
-        payload,
-        meta: meta || {},
-        timestamp: Date.now()
-      });
-    } else {
-      this.store.dispatch({
-        ...action,
-        timestamp: action.timestamp || Date.now()
-      });
-    }
-  }
-  getState() {
-    return this.store.getState();
-  }
-  subscribe(listener) {
-    return this.store.subscribe(listener);
-  }
-  select(selector) {
-    return this.store.select(selector);
-  }
-  // Convenience methods for common actions
-  setTheme(mode) {
-    this.dispatch("SET_THEME", mode);
-  }
-  toggleMobileMenu() {
-    this.dispatch("TOGGLE_MOBILE_MENU");
-  }
-  setMobileMenuOpen(open) {
-    this.dispatch("SET_MOBILE_MENU_OPEN", open);
-  }
-  addNotification(type, message, autoHide) {
-    const notification = {
-      id: Date.now().toString(),
-      type,
-      message,
-      timestamp: Date.now(),
-      autoHide
-    };
-    this.dispatch("ADD_NOTIFICATION", notification);
-    if (autoHide) {
-      setTimeout(() => {
-        this.removeNotification(notification.id);
-      }, autoHide);
-    }
-  }
-  removeNotification(id) {
-    this.dispatch("REMOVE_NOTIFICATION", id);
-  }
-  setLoading(loading) {
-    this.dispatch("SET_LOADING", loading);
-  }
-  openModal(id, title, content) {
-    this.dispatch("OPEN_MODAL", { id, title, content });
-  }
-  closeModal(id) {
-    this.dispatch("CLOSE_MODAL", id);
-  }
-  updateUserPreferences(preferences) {
-    this.dispatch("UPDATE_PREFERENCES", preferences);
-  }
-  // Get specific state slices
-  getThemeState() {
-    return this.getState().theme;
-  }
-  getNavigationState() {
-    return this.getState().navigation;
-  }
-  getUIState() {
-    return this.getState().ui;
-  }
-  getUserState() {
-    return this.getState().user;
-  }
-  getAppState() {
-    return this.getState().app;
-  }
-  // Debug and development methods
-  getDebugInfo() {
-    return this.store.getDebugInfo();
-  }
-  getMetrics() {
-    return this.store.getMetrics();
-  }
-  exportState() {
-    return JSON.stringify(this.getState(), null, 2);
-  }
-  importState(stateJson) {
-    try {
-      const state = JSON.parse(stateJson);
-      this.store.reset(state);
-      console.log("\u{1F5C4}\uFE0F State imported successfully");
-    } catch (error) {
-      console.error("Failed to import state:", error);
-      throw error;
-    }
-  }
-  async createBackup() {
-    if (!this.persistenceManager) {
-      throw new Error("Persistence not configured");
-    }
-    const backupInfo = await this.persistenceManager.createBackup();
-    return backupInfo.id;
-  }
-  async restoreBackup(backupId) {
-    if (!this.persistenceManager) {
-      throw new Error("Persistence not configured");
-    }
-    await this.persistenceManager.restoreBackup(backupId);
-  }
-  destroy() {
-    var _a;
-    (_a = this.debugManager) == null ? void 0 : _a.destroy();
-    this.store.destroy();
-  }
-};
-var appStateManager = new AppStateManager({
-  persistence: {
-    enabled: true,
-    backend: "localStorage",
-    compression: true
-  },
-  debug: {
-    enabled: true,
-    visualInspector: true,
-    actionTimeline: true
-  }
-});
-
 // src/ts/modules/theme.ts
 var STORAGE_KEY = "theme";
 var THEME_ATTRIBUTE = "data-theme";
@@ -4874,6 +2391,2492 @@ var ComponentRegistry = class _ComponentRegistry {
   }
 };
 var componentRegistry = ComponentRegistry.getInstance();
+
+// src/ts/core/performance-monitor.ts
+var PerformanceMonitor = class {
+  constructor(config = {}) {
+    this.observers = [];
+    this.startTime = 0;
+    this.config = {
+      enabled: true,
+      collectVitals: true,
+      collectRuntime: true,
+      collectBundle: true,
+      reportingEndpoint: null,
+      reportInterval: 3e4,
+      // 30 seconds
+      ...config
+    };
+    this.metrics = this.initializeMetrics();
+  }
+  /**
+   * Initialize performance monitoring
+   */
+  init() {
+    if (!this.config.enabled) {
+      console.log("\u{1F4CA} Performance monitoring disabled");
+      return;
+    }
+    this.startTime = performance.now();
+    console.log("\u{1F4CA} Performance monitoring initialized");
+    if (this.config.collectVitals) {
+      this.setupVitalsCollection();
+    }
+    if (this.config.collectRuntime) {
+      this.setupRuntimeCollection();
+    }
+    if (this.config.collectBundle) {
+      this.collectBundleMetrics();
+    }
+    this.setupPeriodicReporting();
+  }
+  /**
+   * Get current performance metrics
+   */
+  getMetrics() {
+    this.updateRuntimeMetrics();
+    return { ...this.metrics };
+  }
+  /**
+   * Record a custom performance metric
+   */
+  recordMetric(name, value) {
+    this.metrics.custom[name] = value;
+    console.log(`\u{1F4CA} Custom metric recorded: ${name} = ${value}ms`);
+  }
+  /**
+   * Mark a performance point
+   */
+  mark(name) {
+    if (performance.mark) {
+      performance.mark(name);
+      console.log(`\u{1F4CA} Performance mark: ${name}`);
+    }
+  }
+  /**
+   * Measure time between marks
+   */
+  measure(name, startMark, endMark) {
+    var _a;
+    if (performance.measure) {
+      try {
+        performance.measure(name, startMark, endMark);
+        const entries = performance.getEntriesByName(name, "measure");
+        if (entries.length > 0) {
+          const lastEntry = entries[entries.length - 1];
+          const duration = (_a = lastEntry == null ? void 0 : lastEntry.duration) != null ? _a : 0;
+          console.log(`\u{1F4CA} Performance measure: ${name} = ${duration.toFixed(2)}ms`);
+          return duration;
+        }
+      } catch (error) {
+        console.warn(`\u26A0\uFE0F Performance measure failed for ${name}:`, error);
+      }
+    }
+    return 0;
+  }
+  /**
+   * Generate performance report
+   */
+  generateReport() {
+    const metrics = this.getMetrics();
+    const timestamp = Date.now();
+    return {
+      timestamp,
+      url: window.location.href,
+      userAgent: navigator.userAgent,
+      metrics,
+      score: this.calculatePerformanceScore(metrics),
+      recommendations: this.generateRecommendations(metrics)
+    };
+  }
+  /**
+   * Cleanup performance monitoring
+   */
+  destroy() {
+    this.observers.forEach((observer) => observer.disconnect());
+    this.observers = [];
+    console.log("\u{1F4CA} Performance monitoring destroyed");
+  }
+  // ============================================================================
+  // Private Methods
+  // ============================================================================
+  initializeMetrics() {
+    return {
+      bundle: {
+        size: { raw: 0, gzipped: 0, brotli: 0 },
+        loadTime: 0,
+        parseTime: 0,
+        modules: 0
+      },
+      runtime: {
+        initTime: 0,
+        renderTime: 0,
+        interactiveTime: 0,
+        memoryUsage: 0,
+        domNodes: 0
+      },
+      vitals: {
+        lcp: 0,
+        fid: 0,
+        cls: 0,
+        fcp: 0,
+        ttfb: 0
+      },
+      custom: {}
+    };
+  }
+  setupVitalsCollection() {
+    this.observePerformanceObserver("largest-contentful-paint", (entries) => {
+      const lastEntry = entries[entries.length - 1];
+      this.metrics.vitals.lcp = lastEntry.startTime;
+      console.log(`\u{1F4CA} LCP: ${lastEntry.startTime.toFixed(2)}ms`);
+    });
+    this.observePerformanceObserver("first-input", (entries) => {
+      const firstEntry = entries[0];
+      if (firstEntry) {
+        this.metrics.vitals.fid = firstEntry.processingStart - firstEntry.startTime;
+        console.log(`\u{1F4CA} FID: ${this.metrics.vitals.fid.toFixed(2)}ms`);
+      }
+    });
+    let clsValue = 0;
+    this.observePerformanceObserver("layout-shift", (entries) => {
+      for (const entry of entries) {
+        if (!entry.hadRecentInput) {
+          clsValue += entry.value;
+        }
+      }
+      this.metrics.vitals.cls = clsValue;
+      console.log(`\u{1F4CA} CLS: ${clsValue.toFixed(4)}`);
+    });
+    this.observePerformanceObserver("paint", (entries) => {
+      const fcpEntry = entries.find((entry) => entry.name === "first-contentful-paint");
+      if (fcpEntry) {
+        this.metrics.vitals.fcp = fcpEntry.startTime;
+        console.log(`\u{1F4CA} FCP: ${fcpEntry.startTime.toFixed(2)}ms`);
+      }
+    });
+    if (performance.getEntriesByType) {
+      const navigationEntries = performance.getEntriesByType("navigation");
+      if (navigationEntries.length > 0) {
+        const navEntry = navigationEntries[0];
+        if ((navEntry == null ? void 0 : navEntry.responseStart) && (navEntry == null ? void 0 : navEntry.requestStart)) {
+          this.metrics.vitals.ttfb = navEntry.responseStart - navEntry.requestStart;
+          console.log(`\u{1F4CA} TTFB: ${this.metrics.vitals.ttfb.toFixed(2)}ms`);
+        }
+      }
+    }
+  }
+  observePerformanceObserver(type, callback) {
+    if (!("PerformanceObserver" in window)) {
+      return;
+    }
+    try {
+      const observer = new PerformanceObserver((list) => {
+        callback(list.getEntries());
+      });
+      observer.observe({ type, buffered: true });
+      this.observers.push(observer);
+    } catch (error) {
+      console.warn(`\u26A0\uFE0F Failed to observe ${type}:`, error);
+    }
+  }
+  setupRuntimeCollection() {
+    setTimeout(() => {
+      this.updateRuntimeMetrics();
+    }, 0);
+    if ("memory" in performance) {
+      setInterval(() => {
+        this.metrics.runtime.memoryUsage = performance.memory.usedJSHeapSize / 1024 / 1024;
+      }, 5e3);
+    }
+    const observer = new MutationObserver(() => {
+      this.metrics.runtime.domNodes = document.querySelectorAll("*").length;
+    });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    this.observers.push(observer);
+  }
+  updateRuntimeMetrics() {
+    this.metrics.runtime.initTime = performance.now() - this.startTime;
+    if (performance.getEntriesByType) {
+      const entries = performance.getEntriesByType("navigation");
+      if (entries.length > 0) {
+        const navEntry = entries[0];
+        if ((navEntry == null ? void 0 : navEntry.loadEventEnd) && (navEntry == null ? void 0 : navEntry.loadEventStart)) {
+          this.metrics.runtime.interactiveTime = navEntry.loadEventEnd - navEntry.loadEventStart;
+        }
+      }
+    }
+  }
+  collectBundleMetrics() {
+    const scripts = document.querySelectorAll("script[src]");
+    let totalSize = 0;
+    let moduleCount = 0;
+    scripts.forEach((script) => {
+      var _a;
+      if ((_a = script.src) == null ? void 0 : _a.includes("/assets/js/main.js")) {
+        moduleCount++;
+        totalSize += 64e3;
+      }
+    });
+    this.metrics.bundle.size.raw = totalSize;
+    this.metrics.bundle.modules = moduleCount;
+    if (performance.getEntriesByType) {
+      const entries = performance.getEntriesByType("resource");
+      const bundleEntry = entries.find(
+        (entry) => entry.name.includes("/assets/js/main.js")
+      );
+      if (bundleEntry && "responseEnd" in bundleEntry && "requestStart" in bundleEntry) {
+        const bundleTiming = bundleEntry;
+        this.metrics.bundle.loadTime = bundleTiming.responseEnd - bundleTiming.requestStart;
+      }
+    }
+    console.log(`\u{1F4CA} Bundle metrics collected: ${totalSize} bytes, ${moduleCount} modules`);
+  }
+  setupPeriodicReporting() {
+    if (!this.config.reportingEndpoint) {
+      return;
+    }
+    setInterval(() => {
+      this.sendReport();
+    }, this.config.reportInterval);
+  }
+  sendReport() {
+    if (!this.config.reportingEndpoint) {
+      return;
+    }
+    const report = this.generateReport();
+    fetch(this.config.reportingEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(report)
+    }).catch((error) => {
+      console.warn("\u26A0\uFE0F Failed to send performance report:", error);
+    });
+  }
+  calculatePerformanceScore(metrics) {
+    let score = 100;
+    if (metrics.vitals.lcp > 2500) score -= 20;
+    if (metrics.vitals.fid > 100) score -= 15;
+    if (metrics.vitals.cls > 0.1) score -= 15;
+    if (metrics.vitals.fcp > 1800) score -= 15;
+    if (metrics.vitals.ttfb > 800) score -= 10;
+    if (metrics.bundle.size.raw > 5e4) score -= 10;
+    if (metrics.runtime.initTime > 1e3) score -= 10;
+    return Math.max(0, score);
+  }
+  generateRecommendations(metrics) {
+    const recommendations = [];
+    if (metrics.vitals.lcp > 2500) {
+      recommendations.push("Optimize images and reduce server response time for better LCP");
+    }
+    if (metrics.vitals.fid > 100) {
+      recommendations.push("Reduce JavaScript execution time and break up long tasks");
+    }
+    if (metrics.vitals.cls > 0.1) {
+      recommendations.push("Ensure proper dimensions for images and avoid inserting content above existing content");
+    }
+    if (metrics.bundle.size.raw > 5e4) {
+      recommendations.push("Consider code splitting and tree shaking to reduce bundle size");
+    }
+    if (metrics.runtime.initTime > 1e3) {
+      recommendations.push("Optimize application initialization and load critical resources first");
+    }
+    if (metrics.runtime.memoryUsage > 50) {
+      recommendations.push("Monitor for memory leaks and optimize memory usage");
+    }
+    return recommendations;
+  }
+};
+var performanceMonitor = new PerformanceMonitor({
+  enabled: false,
+  collectVitals: true,
+  collectRuntime: true,
+  collectBundle: true,
+  reportingEndpoint: null,
+  // Configure as needed
+  reportInterval: 3e4
+});
+var initPerformanceMonitoring = () => {
+  performanceMonitor.init();
+};
+
+// src/ts/core/state-manager.ts
+var ReactiveStateImpl = class _ReactiveStateImpl {
+  constructor(initialValue, key, cleanupManager) {
+    this.listeners = /* @__PURE__ */ new Set();
+    this._value = initialValue;
+    this.key = key;
+    this.cleanupManager = cleanupManager;
+  }
+  get value() {
+    return this._value;
+  }
+  subscribe(listener) {
+    this.listeners.add(listener);
+    const cleanup = () => {
+      this.listeners.delete(listener);
+    };
+    this.cleanupManager.register(cleanup, {
+      id: `state-subscription-${this.key}`,
+      description: `State subscription cleanup for ${this.key}`,
+      priority: 5
+    });
+    return cleanup;
+  }
+  select(selector) {
+    const selectedValue = selector(this._value);
+    const selectedState = new _ReactiveStateImpl(selectedValue, `${this.key}-selected`, this.cleanupManager);
+    this.subscribe((newValue) => {
+      const newSelectedValue = selector(newValue);
+      if (JSON.stringify(newSelectedValue) !== JSON.stringify(selectedState._value)) {
+        selectedState._value = newSelectedValue;
+        selectedState.notify();
+      }
+    });
+    return selectedState;
+  }
+  get() {
+    return this._value;
+  }
+  set(value) {
+    const previousValue = this._value;
+    if (JSON.stringify(previousValue) !== JSON.stringify(value)) {
+      this._value = value;
+      this.notify();
+    }
+  }
+  update(updater) {
+    const newValue = updater(this._value);
+    this.set(newValue);
+  }
+  notify() {
+    for (const listener of this.listeners) {
+      try {
+        listener(this._value, this._value);
+      } catch (error) {
+        console.error(`Error in state listener for ${this.key}:`, error);
+      }
+    }
+  }
+  destroy() {
+    this.listeners.clear();
+  }
+};
+var StateStore = class {
+  constructor(config) {
+    this.debugHistory = [];
+    this.cleanupManager = CleanupManager.getInstance({
+      autoCleanupOnUnload: true,
+      logCleanupActivity: true
+    });
+    this.state = new ReactiveStateImpl(config.initialState, "root", this.cleanupManager);
+    this.reducers = config.reducers || {};
+    this.middleware = config.middleware || [];
+    this.config = this.mergeConfig(config.config);
+    this.metrics = {
+      totalActions: 0,
+      totalSubscribers: 0,
+      averageActionTime: 0,
+      memoryUsage: 0,
+      lastUpdated: Date.now()
+    };
+    this.initializePersistence();
+    this.setupDebugging();
+  }
+  // State Access Methods
+  get(key) {
+    if (key === void 0) {
+      return this.state.get();
+    }
+    return this.state.get()[key];
+  }
+  select(selector) {
+    return this.state.select(selector);
+  }
+  subscribe(listener) {
+    this.metrics.totalSubscribers++;
+    const cleanup = this.state.subscribe(listener);
+    return () => {
+      this.metrics.totalSubscribers--;
+      cleanup();
+    };
+  }
+  // State Mutation Methods
+  dispatch(action, payload, meta) {
+    var _a, _b;
+    const startTime = performance.now();
+    const fullAction = typeof action === "string" ? { type: action, payload, meta: meta || {}, timestamp: Date.now() } : action;
+    if ((_a = this.config.debug) == null ? void 0 : _a.enabled) {
+      this.logAction(fullAction);
+    }
+    const previousState = this.state.get();
+    let nextState = previousState;
+    try {
+      let index = 0;
+      const runMiddleware = () => {
+        var _a2, _b2;
+        if (index < this.middleware.length) {
+          const middleware = this.middleware[index];
+          index++;
+          middleware == null ? void 0 : middleware(() => runMiddleware(), fullAction);
+        } else {
+          if (this.reducers[fullAction.type]) {
+            nextState = this.reducers[fullAction.type](previousState, fullAction);
+          } else {
+            if (fullAction.payload !== void 0) {
+              if ((_a2 = fullAction.meta) == null ? void 0 : _a2.key) {
+                nextState = { ...previousState, [fullAction.meta.key]: fullAction.payload };
+              } else {
+                nextState = typeof fullAction.payload === "object" ? { ...previousState, ...fullAction.payload } : fullAction.payload;
+              }
+            }
+          }
+          this.state.set(nextState);
+          this.persistState(nextState);
+          const duration = performance.now() - startTime;
+          this.updateMetrics(duration);
+          if ((_b2 = this.config.debug) == null ? void 0 : _b2.enabled) {
+            this.recordDebugInfo(fullAction, previousState, nextState, duration);
+          }
+        }
+      };
+      runMiddleware();
+    } catch (error) {
+      console.error(`Error dispatching action ${fullAction.type}:`, error);
+      if ((_b = this.config.debug) == null ? void 0 : _b.enabled) {
+        this.recordDebugInfo(fullAction, previousState, previousState, performance.now() - startTime, error);
+      }
+    }
+  }
+  set(key, value) {
+    this.dispatch("SET_STATE", value, { key });
+  }
+  update(key, updater) {
+    const currentValue = this.get(key);
+    const newValue = updater(currentValue);
+    this.set(key, newValue);
+  }
+  reset(newState) {
+    const resetAction = {
+      type: "RESET",
+      payload: newState,
+      timestamp: Date.now()
+    };
+    this.dispatch(resetAction);
+  }
+  // Persistence Methods
+  initializePersistence() {
+    var _a;
+    if ((_a = this.config.persistence) == null ? void 0 : _a.enabled) {
+      const persistedState = this.loadPersistedState();
+      if (persistedState) {
+        this.state.set(persistedState);
+      }
+    }
+  }
+  persistState(state) {
+    var _a;
+    if (!((_a = this.config.persistence) == null ? void 0 : _a.enabled)) return;
+    try {
+      const { key = "app-state", storage = "localStorage", serialize, excludeKeys = [] } = this.config.persistence;
+      let stateToPersist = state;
+      if (excludeKeys.length > 0) {
+        stateToPersist = { ...state };
+        excludeKeys.forEach((excludeKey) => {
+          delete stateToPersist[excludeKey];
+        });
+      }
+      const serialized = serialize ? serialize(stateToPersist) : JSON.stringify(stateToPersist);
+      if (storage === "localStorage") {
+        localStorage.setItem(key, serialized);
+      } else if (storage === "sessionStorage") {
+        sessionStorage.setItem(key, serialized);
+      }
+    } catch (error) {
+      console.error("Failed to persist state:", error);
+    }
+  }
+  loadPersistedState() {
+    var _a;
+    if (!((_a = this.config.persistence) == null ? void 0 : _a.enabled)) return null;
+    try {
+      const { key = "app-state", storage = "localStorage", deserialize } = this.config.persistence;
+      let serialized = null;
+      if (storage === "localStorage") {
+        serialized = localStorage.getItem(key);
+      } else if (storage === "sessionStorage") {
+        serialized = sessionStorage.getItem(key);
+      }
+      if (serialized) {
+        return deserialize ? deserialize(serialized) : JSON.parse(serialized);
+      }
+    } catch (error) {
+      console.error("Failed to load persisted state:", error);
+    }
+    return null;
+  }
+  // Debugging Methods
+  setupDebugging() {
+    var _a;
+    if ((_a = this.config.debug) == null ? void 0 : _a.enabled) {
+      this.setupConsoleDebugging();
+      this.setupPerformanceTracking();
+    }
+  }
+  setupConsoleDebugging() {
+    if (true) {
+      window.__STATE_STORE__ = this;
+      console.group("\u{1F5C4}\uFE0F State Manager Debug Mode");
+      console.log("State Store initialized");
+      console.log("Access via window.__STATE_STORE__");
+      console.log("Available methods: getState(), getDebugInfo(), getMetrics()");
+      console.groupEnd();
+    }
+  }
+  setupPerformanceTracking() {
+    var _a;
+    if ((_a = this.config.performance) == null ? void 0 : _a.trackMetrics) {
+      performanceMonitor.recordMetric("state-store-init", Date.now());
+    }
+  }
+  logAction(action) {
+    var _a;
+    if ((_a = this.config.debug) == null ? void 0 : _a.logActions) {
+      console.group(`\u{1F3AC} Action: ${action.type}`);
+      console.log("Payload:", action.payload);
+      console.log("Meta:", action.meta);
+      console.log("Timestamp:", new Date(action.timestamp));
+      console.groupEnd();
+    }
+  }
+  recordDebugInfo(action, previousState, nextState, duration, error) {
+    var _a, _b;
+    const debugInfo = {
+      action,
+      previousState,
+      nextState,
+      timestamp: Date.now(),
+      duration,
+      stackTrace: (error == null ? void 0 : error.stack) || ""
+    };
+    this.debugHistory.push(debugInfo);
+    const maxHistorySize = ((_a = this.config.debug) == null ? void 0 : _a.maxHistorySize) || 50;
+    if (this.debugHistory.length > maxHistorySize) {
+      this.debugHistory = this.debugHistory.slice(-maxHistorySize);
+    }
+    if ((_b = this.config.debug) == null ? void 0 : _b.logStateChanges) {
+      console.group(`\u{1F504} State Change: ${action.type}`);
+      console.log("Duration:", `${duration.toFixed(2)}ms`);
+      console.log("Previous:", previousState);
+      console.log("Next:", nextState);
+      if (error) {
+        console.error("Error:", error);
+      }
+      console.groupEnd();
+    }
+  }
+  updateMetrics(duration) {
+    this.metrics.totalActions++;
+    this.metrics.lastUpdated = Date.now();
+    this.metrics.averageActionTime = (this.metrics.averageActionTime * (this.metrics.totalActions - 1) + duration) / this.metrics.totalActions;
+    this.metrics.memoryUsage = JSON.stringify(this.state.get()).length;
+  }
+  // Utility Methods
+  mergeConfig(userConfig) {
+    var _a, _b, _c, _d, _e, _f, _g, _h;
+    const defaultConfig = {
+      persistence: {
+        enabled: false,
+        key: "app-state",
+        storage: "localStorage"
+      },
+      debug: {
+        enabled: true,
+        logActions: true,
+        logStateChanges: false,
+        maxHistorySize: 50
+      },
+      performance: {
+        trackMetrics: true,
+        batchSize: 10,
+        batchTimeout: 16
+      }
+    };
+    return {
+      persistence: { ...defaultConfig.persistence, ...userConfig == null ? void 0 : userConfig.persistence, enabled: (_d = (_c = (_a = userConfig == null ? void 0 : userConfig.persistence) == null ? void 0 : _a.enabled) != null ? _c : (_b = defaultConfig.persistence) == null ? void 0 : _b.enabled) != null ? _d : false },
+      debug: { ...defaultConfig.debug, ...userConfig == null ? void 0 : userConfig.debug, enabled: (_h = (_g = (_e = userConfig == null ? void 0 : userConfig.debug) == null ? void 0 : _e.enabled) != null ? _g : (_f = defaultConfig.debug) == null ? void 0 : _f.enabled) != null ? _h : false },
+      performance: { ...defaultConfig.performance, ...userConfig == null ? void 0 : userConfig.performance }
+    };
+  }
+  // Public API Methods
+  getState() {
+    return this.state.get();
+  }
+  getDebugInfo() {
+    return [...this.debugHistory];
+  }
+  getMetrics() {
+    return { ...this.metrics };
+  }
+  clearDebugHistory() {
+    this.debugHistory = [];
+  }
+  clearPersistedState() {
+    var _a;
+    if ((_a = this.config.persistence) == null ? void 0 : _a.enabled) {
+      const { key = "app-state", storage = "localStorage" } = this.config.persistence;
+      if (storage === "localStorage") {
+        localStorage.removeItem(key);
+      } else if (storage === "sessionStorage") {
+        sessionStorage.removeItem(key);
+      }
+    }
+  }
+  destroy() {
+    this.debugHistory = [];
+    this.cleanupManager.cleanup();
+  }
+};
+var StateManager = class {
+  constructor() {
+    this.stores = /* @__PURE__ */ new Map();
+    this.cleanupManager = CleanupManager.getInstance({
+      autoCleanupOnUnload: true,
+      logCleanupActivity: true
+    });
+  }
+  createStore(name, config) {
+    if (this.stores.has(name)) {
+      throw new Error(`State store '${name}' already exists`);
+    }
+    const store = new StateStore(config);
+    this.stores.set(name, store);
+    this.cleanupManager.register(() => {
+      this.stores.delete(name);
+    }, {
+      id: `state-store-${name}`,
+      description: `State store cleanup for ${name}`,
+      priority: 3
+    });
+    return store;
+  }
+  getStore(name) {
+    return this.stores.get(name);
+  }
+  removeStore(name) {
+    const store = this.stores.get(name);
+    if (store) {
+      store.destroy();
+      this.stores.delete(name);
+      return true;
+    }
+    return false;
+  }
+  getAllStores() {
+    return new Map(this.stores);
+  }
+  getStoreNames() {
+    return Array.from(this.stores.keys());
+  }
+  // Utility method to create common store configurations
+  static createStoreConfig(initialState, options) {
+    return {
+      initialState,
+      ...options
+    };
+  }
+  destroy() {
+    for (const store of this.stores.values()) {
+      store.destroy();
+    }
+    this.stores.clear();
+    this.cleanupManager.cleanup();
+  }
+};
+var stateManager = new StateManager();
+var createStore = (name, config) => stateManager.createStore(name, config);
+
+// src/ts/core/state-persistence.ts
+var StateCompressor = class {
+  static async compress(data) {
+    if ("CompressionStream" in window) {
+      const stream = new CompressionStream("gzip");
+      const writer = stream.writable.getWriter();
+      const reader = stream.readable.getReader();
+      writer.write(new TextEncoder().encode(data));
+      writer.close();
+      const chunks = [];
+      let done = false;
+      while (!done) {
+        const { value, done: readerDone } = await reader.read();
+        done = readerDone;
+        if (value) chunks.push(value);
+      }
+      const compressed = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+      let offset = 0;
+      for (const chunk of chunks) {
+        compressed.set(chunk, offset);
+        offset += chunk.length;
+      }
+      return btoa(String.fromCharCode(...compressed));
+    }
+    return this.simpleCompress(data);
+  }
+  static async decompress(compressedData) {
+    if ("DecompressionStream" in window) {
+      try {
+        const compressed = Uint8Array.from(atob(compressedData), (c) => c.charCodeAt(0));
+        const stream = new DecompressionStream("gzip");
+        const writer = stream.writable.getWriter();
+        const reader = stream.readable.getReader();
+        writer.write(compressed);
+        writer.close();
+        const chunks = [];
+        let done = false;
+        while (!done) {
+          const { value, done: readerDone } = await reader.read();
+          done = readerDone;
+          if (value) chunks.push(value);
+        }
+        const decompressed = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+        let offset = 0;
+        for (const chunk of chunks) {
+          decompressed.set(chunk, offset);
+          offset += chunk.length;
+        }
+        return new TextDecoder().decode(decompressed);
+      } catch (error) {
+        console.warn("Failed to decompress with gzip, trying fallback:", error);
+      }
+    }
+    return this.simpleDecompress(compressedData);
+  }
+  static simpleCompress(data) {
+    const dict = {
+      "true": "1",
+      "false": "0",
+      "null": "n",
+      "undefined": "u",
+      '"': "'",
+      "{": "{",
+      "}": "}",
+      "[": "[",
+      "]": "]",
+      ",": ",",
+      ":": ":"
+    };
+    let compressed = data;
+    for (const [key, value] of Object.entries(dict)) {
+      compressed = compressed.split(key).join(value);
+    }
+    return compressed;
+  }
+  static simpleDecompress(compressedData) {
+    const dict = {
+      "1": "true",
+      "0": "false",
+      "n": "null",
+      "u": "undefined"
+    };
+    let decompressed = compressedData;
+    for (const [key, value] of Object.entries(dict)) {
+      decompressed = decompressed.split(key).join(value);
+    }
+    return decompressed;
+  }
+};
+var StateEncryptor = class {
+  static async generateKey(password) {
+    const encoder = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(password),
+      { name: "PBKDF2" },
+      false,
+      ["deriveBits", "deriveKey"]
+    );
+    return crypto.subtle.deriveKey(
+      {
+        name: "PBKDF2",
+        salt: encoder.encode("state-manager-salt"),
+        iterations: 1e5,
+        hash: "SHA-256"
+      },
+      keyMaterial,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["encrypt", "decrypt"]
+    );
+  }
+  static async encrypt(data, password) {
+    if (!password) return data;
+    try {
+      const key = await this.generateKey(password);
+      const encoder = new TextEncoder();
+      const iv = crypto.getRandomValues(new Uint8Array(12));
+      const encrypted = await crypto.subtle.encrypt(
+        { name: "AES-GCM", iv },
+        key,
+        encoder.encode(data)
+      );
+      const combined = new Uint8Array(iv.length + encrypted.byteLength);
+      combined.set(iv);
+      combined.set(new Uint8Array(encrypted), iv.length);
+      return btoa(String.fromCharCode(...combined));
+    } catch (error) {
+      console.error("Encryption failed:", error);
+      return data;
+    }
+  }
+  static async decrypt(encryptedData, password) {
+    if (!password) return encryptedData;
+    try {
+      const key = await this.generateKey(password);
+      const combined = Uint8Array.from(atob(encryptedData), (c) => c.charCodeAt(0));
+      const iv = combined.slice(0, 12);
+      const encrypted = combined.slice(12);
+      const decrypted = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv },
+        key,
+        encrypted
+      );
+      return new TextDecoder().decode(decrypted);
+    } catch (error) {
+      console.error("Decryption failed:", error);
+      return encryptedData;
+    }
+  }
+};
+var LocalStorageAdapter = class {
+  async get(key) {
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  }
+  async set(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+  async remove(key) {
+    localStorage.removeItem(key);
+  }
+  async clear() {
+    localStorage.clear();
+  }
+  async getQuota() {
+    var _a;
+    let used = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) {
+        used += ((_a = localStorage.getItem(key)) == null ? void 0 : _a.length) || 0;
+      }
+    }
+    const estimated = 5 * 1024 * 1024;
+    return { used, available: estimated - used };
+  }
+  async listKeys() {
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key) keys.push(key);
+    }
+    return keys;
+  }
+};
+var SessionStorageAdapter = class {
+  async get(key) {
+    const value = sessionStorage.getItem(key);
+    return value ? JSON.parse(value) : null;
+  }
+  async set(key, value) {
+    sessionStorage.setItem(key, JSON.stringify(value));
+  }
+  async remove(key) {
+    sessionStorage.removeItem(key);
+  }
+  async clear() {
+    sessionStorage.clear();
+  }
+  async getQuota() {
+    var _a;
+    let used = 0;
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key) {
+        used += ((_a = sessionStorage.getItem(key)) == null ? void 0 : _a.length) || 0;
+      }
+    }
+    const estimated = 5 * 1024 * 1024;
+    return { used, available: estimated - used };
+  }
+  async listKeys() {
+    const keys = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key) keys.push(key);
+    }
+    return keys;
+  }
+};
+var IndexedDBAdapter = class {
+  constructor(dbName = "StateDB", storeName = "state-store") {
+    this.db = null;
+    this.dbName = dbName;
+    this.storeName = storeName;
+  }
+  async initDB() {
+    if (this.db) return this.db;
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, 1);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        this.db = request.result;
+        resolve(this.db);
+      };
+      request.onupgradeneeded = () => {
+        const db = request.result;
+        if (!db.objectStoreNames.contains(this.storeName)) {
+          db.createObjectStore(this.storeName);
+        }
+      };
+    });
+  }
+  async get(key) {
+    const db = await this.initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([this.storeName], "readonly");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.get(key);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        var _a;
+        return resolve(((_a = request.result) == null ? void 0 : _a.value) || null);
+      };
+    });
+  }
+  async set(key, value) {
+    const db = await this.initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([this.storeName], "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.put({ key, value });
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve();
+    });
+  }
+  async remove(key) {
+    const db = await this.initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([this.storeName], "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.delete(key);
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve();
+    });
+  }
+  async clear() {
+    const db = await this.initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([this.storeName], "readwrite");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.clear();
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve();
+    });
+  }
+  async getQuota() {
+    if ("storage" in navigator && "estimate" in navigator.storage) {
+      const estimate = await navigator.storage.estimate();
+      return {
+        used: estimate.usage || 0,
+        available: (estimate.quota || 0) - (estimate.usage || 0)
+      };
+    }
+    return { used: 0, available: 50 * 1024 * 1024 };
+  }
+  async listKeys() {
+    const db = await this.initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([this.storeName], "readonly");
+      const store = transaction.objectStore(this.storeName);
+      const request = store.getAllKeys();
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => resolve(request.result);
+    });
+  }
+};
+var MemoryAdapter = class {
+  constructor() {
+    this.store = /* @__PURE__ */ new Map();
+  }
+  async get(key) {
+    return this.store.get(key) || null;
+  }
+  async set(key, value) {
+    this.store.set(key, value);
+  }
+  async remove(key) {
+    this.store.delete(key);
+  }
+  async clear() {
+    this.store.clear();
+  }
+  async getQuota() {
+    let used = 0;
+    for (const [key, value] of this.store) {
+      used += key.length + JSON.stringify(value).length;
+    }
+    return { used, available: Number.MAX_SAFE_INTEGER };
+  }
+  async listKeys() {
+    return Array.from(this.store.keys());
+  }
+};
+var StateMigration = class {
+  static async migrate(data, config) {
+    const { migration } = config;
+    if (!migration) {
+      return { success: true, fromVersion: config.version, toVersion: config.version, dataMigrated: false };
+    }
+    try {
+      const dataVersion = data._version || 1;
+      if (dataVersion === migration.currentVersion) {
+        return { success: true, fromVersion: dataVersion, toVersion: migration.currentVersion, dataMigrated: false };
+      }
+      if (dataVersion > migration.currentVersion) {
+        console.warn(`Data version (${dataVersion}) is newer than expected (${migration.currentVersion})`);
+        return { success: true, fromVersion: dataVersion, toVersion: dataVersion, dataMigrated: false };
+      }
+      const errors = [];
+      let migratedData = { ...data };
+      for (let version = dataVersion; version < migration.currentVersion; version++) {
+        try {
+          migratedData = migration.migrate(migratedData, version, version + 1);
+          migratedData._version = version + 1;
+        } catch (error) {
+          const errorMsg = `Migration from v${version} to v${version + 1} failed: ${error}`;
+          errors.push(errorMsg);
+          console.error(errorMsg);
+        }
+      }
+      return {
+        success: errors.length === 0,
+        fromVersion: dataVersion,
+        toVersion: migration.currentVersion,
+        dataMigrated: errors.length === 0,
+        errors: errors.length > 0 ? errors : []
+      };
+    } catch (error) {
+      return {
+        success: false,
+        fromVersion: data._version || 1,
+        toVersion: migration.currentVersion,
+        dataMigrated: false,
+        errors: [`Migration failed: ${error}`]
+      };
+    }
+  }
+};
+var StateBackup = class {
+  static async createBackup(data, config, backupId) {
+    var _a, _b;
+    const id = backupId || this.generateBackupId();
+    const timestamp = Date.now();
+    const backupData = {
+      id,
+      timestamp,
+      version: config.version,
+      data,
+      metadata: {
+        compressed: config.compression || false,
+        encrypted: ((_a = config.encryption) == null ? void 0 : _a.enabled) || false,
+        size: JSON.stringify(data).length
+      }
+    };
+    const backupKey = this.BACKUP_KEY_PREFIX + id;
+    const adapter = this.getStorageAdapter(config.backend);
+    await adapter.set(backupKey, backupData);
+    const backupInfo = {
+      id,
+      timestamp,
+      version: config.version,
+      size: backupData.metadata.size,
+      compressed: backupData.metadata.compressed,
+      encrypted: backupData.metadata.encrypted
+    };
+    if ((_b = config.backup) == null ? void 0 : _b.maxBackups) {
+      await this.cleanupOldBackups(config.backend, config.backup.maxBackups);
+    }
+    return backupInfo;
+  }
+  static async restoreBackup(backupId, backend) {
+    const backupKey = this.BACKUP_KEY_PREFIX + backupId;
+    const adapter = this.getStorageAdapter(backend);
+    const backupData = await adapter.get(backupKey);
+    if (!backupData) {
+      throw new Error(`Backup '${backupId}' not found`);
+    }
+    return backupData.data;
+  }
+  static async listBackups(backend) {
+    const adapter = this.getStorageAdapter(backend);
+    const keys = await adapter.listKeys();
+    const backupKeys = keys.filter((key) => key.startsWith(this.BACKUP_KEY_PREFIX));
+    const backups = [];
+    for (const key of backupKeys) {
+      const backupData = await adapter.get(key);
+      if (backupData) {
+        backups.push({
+          id: backupData.id,
+          timestamp: backupData.timestamp,
+          version: backupData.version,
+          size: backupData.metadata.size,
+          compressed: backupData.metadata.compressed,
+          encrypted: backupData.metadata.encrypted
+        });
+      }
+    }
+    return backups.sort((a, b) => b.timestamp - a.timestamp);
+  }
+  static async deleteBackup(backupId, backend) {
+    const backupKey = this.BACKUP_KEY_PREFIX + backupId;
+    const adapter = this.getStorageAdapter(backend);
+    await adapter.remove(backupKey);
+  }
+  static generateBackupId() {
+    return `backup-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+  static async cleanupOldBackups(backend, maxBackups) {
+    const backups = await this.listBackups(backend);
+    if (backups.length <= maxBackups) return;
+    const backupsToDelete = backups.slice(maxBackups);
+    for (const backup of backupsToDelete) {
+      await this.deleteBackup(backup.id, backend);
+    }
+  }
+  static getStorageAdapter(backend) {
+    switch (backend) {
+      case "localStorage":
+        return new LocalStorageAdapter();
+      case "sessionStorage":
+        return new SessionStorageAdapter();
+      case "indexedDB":
+        return new IndexedDBAdapter();
+      case "memory":
+        return new MemoryAdapter();
+      default:
+        return new LocalStorageAdapter();
+    }
+  }
+};
+StateBackup.BACKUP_KEY_PREFIX = "state-backup-";
+var StatePersistenceManager = class {
+  constructor(config) {
+    this.config = config;
+    this.adapter = this.getStorageAdapter(config.backend);
+  }
+  async save(data) {
+    var _a, _b, _c;
+    try {
+      if (data === void 0) {
+        throw new Error("Cannot save undefined state");
+      }
+      let processedData = {
+        _version: this.config.version,
+        _timestamp: Date.now(),
+        data
+      };
+      const migrationResult = await StateMigration.migrate(processedData, this.config);
+      if (!migrationResult.success && migrationResult.errors) {
+        console.error("State migration failed:", migrationResult.errors);
+        throw new Error("State migration failed");
+      }
+      processedData = migrationResult.dataMigrated && processedData ? processedData : data;
+      let serialized = JSON.stringify(processedData);
+      if (this.config.compression) {
+        serialized = await StateCompressor.compress(serialized);
+      }
+      if ((_a = this.config.encryption) == null ? void 0 : _a.enabled) {
+        serialized = await StateEncryptor.encrypt(serialized, this.config.encryption.key);
+      }
+      await this.adapter.set(this.config.key, {
+        compressed: this.config.compression || false,
+        encrypted: ((_b = this.config.encryption) == null ? void 0 : _b.enabled) || false,
+        data: serialized
+      });
+      if ((_c = this.config.backup) == null ? void 0 : _c.enabled) {
+        await this.createPeriodicBackup(processedData);
+      }
+    } catch (error) {
+      console.error("Failed to save state:", error);
+      throw error;
+    }
+  }
+  async load() {
+    var _a;
+    try {
+      const stored = await this.adapter.get(this.config.key);
+      if (!stored) return null;
+      let data = stored.data;
+      if (stored.encrypted && ((_a = this.config.encryption) == null ? void 0 : _a.enabled)) {
+        data = await StateEncryptor.decrypt(data, this.config.encryption.key);
+      }
+      if (stored.compressed && this.config.compression) {
+        data = await StateCompressor.decompress(data);
+      }
+      const parsedData = JSON.parse(data);
+      const migrationResult = await StateMigration.migrate(parsedData, this.config);
+      if (!migrationResult.success && migrationResult.errors) {
+        console.error("State migration failed during load:", migrationResult.errors);
+      }
+      return migrationResult.dataMigrated ? parsedData.data : parsedData.data || parsedData;
+    } catch (error) {
+      console.error("Failed to load state:", error);
+      return null;
+    }
+  }
+  async remove() {
+    await this.adapter.remove(this.config.key);
+  }
+  async clear() {
+    await this.adapter.clear();
+  }
+  async getQuota() {
+    const quota = await this.adapter.getQuota();
+    const percentage = quota.available > 0 ? quota.used / (quota.used + quota.available) * 100 : 100;
+    return { ...quota, percentage };
+  }
+  async createBackup(backupId) {
+    const data = await this.load();
+    if (!data) {
+      throw new Error("No data available to backup");
+    }
+    return StateBackup.createBackup(data, this.config, backupId);
+  }
+  async restoreBackup(backupId) {
+    const data = await StateBackup.restoreBackup(backupId, this.config.backend);
+    await this.save(data);
+  }
+  async listBackups() {
+    return StateBackup.listBackups(this.config.backend);
+  }
+  async deleteBackup(backupId) {
+    await StateBackup.deleteBackup(backupId, this.config.backend);
+  }
+  async createPeriodicBackup(data) {
+    var _a;
+    const lastBackupKey = `${this.config.key}-last-backup`;
+    const lastBackupTime = await this.adapter.get(lastBackupKey);
+    const now = Date.now();
+    const interval = (((_a = this.config.backup) == null ? void 0 : _a.interval) || 60) * 60 * 1e3;
+    if (!lastBackupTime || now - lastBackupTime > interval) {
+      await StateBackup.createBackup(data, this.config);
+      await this.adapter.set(lastBackupKey, now);
+    }
+  }
+  getStorageAdapter(backend) {
+    switch (backend) {
+      case "localStorage":
+        return new LocalStorageAdapter();
+      case "sessionStorage":
+        return new SessionStorageAdapter();
+      case "indexedDB":
+        return new IndexedDBAdapter();
+      case "memory":
+        return new MemoryAdapter();
+      default:
+        return new LocalStorageAdapter();
+    }
+  }
+};
+
+// src/ts/core/state-debug-tools.ts
+var StateInspector = class {
+  constructor(store, config) {
+    this.container = null;
+    this.isVisible = false;
+    this.store = store;
+    this.config = config;
+    this.createInspector();
+  }
+  createInspector() {
+    if (!this.config.visualInspector) return;
+    this.container = document.createElement("div");
+    this.container.id = "state-inspector";
+    this.container.innerHTML = `
+      <div class="state-inspector-header">
+        <h3>\u{1F5C4}\uFE0F State Inspector</h3>
+        <div class="inspector-controls">
+          <button id="inspector-toggle" title="Toggle Inspector">\u{1F441}\uFE0F</button>
+          <button id="inspector-minimize" title="Minimize">\u2796</button>
+          <button id="inspector-close" title="Close">\u2716\uFE0F</button>
+        </div>
+      </div>
+      <div class="state-inspector-content">
+        <div class="inspector-tabs">
+          <button class="tab active" data-tab="state">State</button>
+          <button class="tab" data-tab="actions">Actions</button>
+          <button class="tab" data-tab="performance">Performance</button>
+          <button class="tab" data-tab="tools">Tools</button>
+        </div>
+        <div class="inspector-panels">
+          <div class="panel active" id="state-panel">
+            <div class="state-view"></div>
+          </div>
+          <div class="panel" id="actions-panel">
+            <div class="actions-timeline"></div>
+          </div>
+          <div class="panel" id="performance-panel">
+            <div class="performance-metrics"></div>
+          </div>
+          <div class="panel" id="tools-panel">
+            <div class="debug-tools"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    this.addStyles();
+    this.setupEventListeners();
+    document.body.appendChild(this.container);
+    this.hide();
+  }
+  addStyles() {
+    const style = document.createElement("style");
+    style.textContent = `
+      #state-inspector {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 400px;
+        max-height: 600px;
+        background: #1e1e1e;
+        border: 1px solid #444;
+        border-radius: 8px;
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-size: 12px;
+        color: #fff;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      #state-inspector.minimized {
+        height: 40px;
+        overflow: hidden;
+      }
+
+      #state-inspector.hidden {
+        display: none;
+      }
+
+      .state-inspector-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        background: #2d2d2d;
+        border-bottom: 1px solid #444;
+        cursor: move;
+      }
+
+      .state-inspector-header h3 {
+        margin: 0;
+        font-size: 14px;
+        color: #4fc3f7;
+      }
+
+      .inspector-controls {
+        display: flex;
+        gap: 5px;
+      }
+
+      .inspector-controls button {
+        background: none;
+        border: none;
+        color: #ccc;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 3px;
+        transition: background 0.2s;
+      }
+
+      .inspector-controls button:hover {
+        background: #444;
+      }
+
+      .state-inspector-content {
+        max-height: 560px;
+        overflow-y: auto;
+      }
+
+      .inspector-tabs {
+        display: flex;
+        background: #2d2d2d;
+        border-bottom: 1px solid #444;
+      }
+
+      .inspector-tabs .tab {
+        flex: 1;
+        padding: 10px;
+        background: none;
+        border: none;
+        color: #ccc;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .inspector-tabs .tab:hover,
+      .inspector-tabs .tab.active {
+        background: #3d3d3d;
+        color: #4fc3f7;
+      }
+
+      .inspector-panels {
+        padding: 15px;
+      }
+
+      .panel {
+        display: none;
+      }
+
+      .panel.active {
+        display: block;
+      }
+
+      .state-view {
+        background: #1a1a1a;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+
+      .state-json {
+        color: #ccc;
+        white-space: pre-wrap;
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-size: 11px;
+      }
+
+      .actions-timeline {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .action-item {
+        background: #2a2a2a;
+        margin-bottom: 8px;
+        padding: 10px;
+        border-radius: 4px;
+        border-left: 3px solid #4fc3f7;
+      }
+
+      .action-item.error {
+        border-left-color: #f44336;
+      }
+
+      .action-type {
+        color: #4fc3f7;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .action-payload {
+        color: #ccc;
+        font-size: 11px;
+        margin-bottom: 5px;
+      }
+
+      .action-timestamp {
+        color: #888;
+        font-size: 10px;
+      }
+
+      .performance-metrics {
+        display: grid;
+        gap: 15px;
+      }
+
+      .metric-card {
+        background: #2a2a2a;
+        padding: 15px;
+        border-radius: 4px;
+        border-left: 3px solid #4fc3f7;
+      }
+
+      .metric-label {
+        color: #888;
+        font-size: 10px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+      }
+
+      .metric-value {
+        color: #4fc3f7;
+        font-size: 18px;
+        font-weight: bold;
+      }
+
+      .debug-tools {
+        display: grid;
+        gap: 10px;
+      }
+
+      .tool-button {
+        background: #2a2a2a;
+        border: 1px solid #444;
+        color: #ccc;
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+      }
+
+      .tool-button:hover {
+        background: #3a3a3a;
+        border-color: #4fc3f7;
+      }
+
+      .tool-button .tool-name {
+        color: #4fc3f7;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .tool-button .tool-description {
+        color: #888;
+        font-size: 10px;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  setupEventListeners() {
+    if (!this.container) return;
+    this.container.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", (e) => {
+        const tabName = e.target.dataset.tab;
+        if (tabName) {
+          this.switchTab(tabName);
+        }
+      });
+    });
+    const toggleBtn = this.container.querySelector("#inspector-toggle");
+    const minimizeBtn = this.container.querySelector("#inspector-minimize");
+    const closeBtn = this.container.querySelector("#inspector-close");
+    toggleBtn == null ? void 0 : toggleBtn.addEventListener("click", () => this.toggle());
+    minimizeBtn == null ? void 0 : minimizeBtn.addEventListener("click", () => this.toggleMinimize());
+    closeBtn == null ? void 0 : closeBtn.addEventListener("click", () => this.hide());
+    const header = this.container.querySelector(".state-inspector-header");
+    this.makeDraggable(header, this.container);
+    this.store.subscribe(() => this.updateStateView());
+  }
+  switchTab(tabName) {
+    if (!this.container) return;
+    this.container.querySelectorAll(".tab").forEach((tab) => {
+      tab.classList.remove("active");
+      if (tab.dataset.tab === tabName) {
+        tab.classList.add("active");
+      }
+    });
+    this.container.querySelectorAll(".panel").forEach((panel) => {
+      panel.classList.remove("active");
+    });
+    const activePanel = this.container.querySelector(`#${tabName}-panel`);
+    activePanel == null ? void 0 : activePanel.classList.add("active");
+    switch (tabName) {
+      case "state":
+        this.updateStateView();
+        break;
+      case "actions":
+        this.updateActionsView();
+        break;
+      case "performance":
+        this.updatePerformanceView();
+        break;
+      case "tools":
+        this.updateToolsView();
+        break;
+    }
+  }
+  updateStateView() {
+    if (!this.container) return;
+    const stateView = this.container.querySelector(".state-view");
+    const state = this.store.getState();
+    stateView.innerHTML = `
+      <div class="state-json">${JSON.stringify(state, null, 2)}</div>
+    `;
+  }
+  updateActionsView() {
+    if (!this.container) return;
+    const actionsTimeline = this.container.querySelector(".actions-timeline");
+    const debugInfo = this.store.getDebugInfo();
+    actionsTimeline.innerHTML = debugInfo.map((info) => `
+      <div class="action-item ${info.stackTrace ? "error" : ""}">
+        <div class="action-type">${info.action.type}</div>
+        <div class="action-payload">${JSON.stringify(info.action.payload)}</div>
+        <div class="action-timestamp">
+          ${new Date(info.timestamp).toLocaleTimeString()} (${info.duration.toFixed(2)}ms)
+        </div>
+      </div>
+    `).reverse().join("");
+  }
+  updatePerformanceView() {
+    if (!this.container) return;
+    const performanceMetrics = this.container.querySelector(".performance-metrics");
+    const metrics = this.store.getMetrics();
+    const debugInfo = this.store.getDebugInfo();
+    const slowestActions = debugInfo.filter((info) => info.duration > 5).sort((a, b) => b.duration - a.duration).slice(0, 5);
+    performanceMetrics.innerHTML = `
+      <div class="metric-card">
+        <div class="metric-label">Total Actions</div>
+        <div class="metric-value">${metrics.totalActions}</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Average Action Time</div>
+        <div class="metric-value">${metrics.averageActionTime.toFixed(2)}ms</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Memory Usage</div>
+        <div class="metric-value">${(metrics.memoryUsage / 1024).toFixed(1)}KB</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Active Subscribers</div>
+        <div class="metric-value">${metrics.totalSubscribers}</div>
+      </div>
+      ${slowestActions.length > 0 ? `
+        <div class="metric-card">
+          <div class="metric-label">Slowest Actions</div>
+          ${slowestActions.map((action) => `
+            <div style="margin-bottom: 5px; font-size: 11px;">
+              ${action.action.type}: ${action.duration.toFixed(2)}ms
+            </div>
+          `).join("")}
+        </div>
+      ` : ""}
+    `;
+  }
+  updateToolsView() {
+    if (!this.container) return;
+    const debugTools = this.container.querySelector(".debug-tools");
+    debugTools.innerHTML = `
+      <button class="tool-button" id="export-state">
+        <div class="tool-name">\u{1F4E4} Export State</div>
+        <div class="tool-description">Export current state to JSON</div>
+      </button>
+      <button class="tool-button" id="import-state">
+        <div class="tool-name">\u{1F4E5} Import State</div>
+        <div class="tool-description">Import state from JSON</div>
+      </button>
+      <button class="tool-button" id="create-backup">
+        <div class="tool-name">\u{1F4BE} Create Backup</div>
+        <div class="tool-description">Create state backup</div>
+      </button>
+      <button class="tool-button" id="clear-debug">
+        <div class="tool-name">\u{1F9F9} Clear Debug History</div>
+        <div class="tool-description">Clear debugging history</div>
+      </button>
+      <button class="tool-button" id="reset-state">
+        <div class="tool-name">\u{1F504} Reset State</div>
+        <div class="tool-description">Reset to initial state</div>
+      </button>
+    `;
+    this.setupToolListeners();
+  }
+  setupToolListeners() {
+    if (!this.container) return;
+    const exportBtn = this.container.querySelector("#export-state");
+    const importBtn = this.container.querySelector("#import-state");
+    const backupBtn = this.container.querySelector("#create-backup");
+    const clearBtn = this.container.querySelector("#clear-debug");
+    const resetBtn = this.container.querySelector("#reset-state");
+    exportBtn == null ? void 0 : exportBtn.addEventListener("click", () => this.exportState());
+    importBtn == null ? void 0 : importBtn.addEventListener("click", () => this.importState());
+    backupBtn == null ? void 0 : backupBtn.addEventListener("click", () => this.createBackup());
+    clearBtn == null ? void 0 : clearBtn.addEventListener("click", () => this.clearDebugHistory());
+    resetBtn == null ? void 0 : resetBtn.addEventListener("click", () => this.resetState());
+  }
+  makeDraggable(dragHandle, element) {
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    dragHandle.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      initialX = e.clientX - element.offsetLeft;
+      initialY = e.clientY - element.offsetTop;
+    });
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      currentX = e.clientX - initialX;
+      currentY = e.clientY - initialY;
+      element.style.left = `${currentX}px`;
+      element.style.top = `${currentY}px`;
+    });
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+    });
+  }
+  exportState() {
+    const state = this.store.getState();
+    const dataStr = JSON.stringify(state, null, 2);
+    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `state-export-${Date.now()}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+  importState() {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = (e) => {
+      var _a;
+      const file = (_a = e.target.files) == null ? void 0 : _a[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e2) => {
+        var _a2;
+        try {
+          const state = JSON.parse((_a2 = e2.target) == null ? void 0 : _a2.result);
+          this.store.reset(state);
+          alert("State imported successfully!");
+        } catch (error) {
+          alert("Failed to import state: Invalid JSON");
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
+  async createBackup() {
+    try {
+      const state = this.store.getState();
+      const backupData = {
+        timestamp: Date.now(),
+        state,
+        debugInfo: this.store.getDebugInfo(),
+        metrics: this.store.getMetrics()
+      };
+      const dataStr = JSON.stringify(backupData, null, 2);
+      const dataBlob = new Blob([dataStr], { type: "application/json" });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `state-backup-${Date.now()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      alert("Backup created successfully!");
+    } catch (error) {
+      alert("Failed to create backup");
+    }
+  }
+  clearDebugHistory() {
+    this.store.clearDebugHistory();
+    this.updateActionsView();
+    alert("Debug history cleared!");
+  }
+  resetState() {
+    if (confirm("Are you sure you want to reset the state? This cannot be undone.")) {
+      this.store.reset();
+      alert("State reset successfully!");
+    }
+  }
+  show() {
+    if (this.container) {
+      this.container.classList.remove("hidden");
+      this.isVisible = true;
+    }
+  }
+  hide() {
+    if (this.container) {
+      this.container.classList.add("hidden");
+      this.isVisible = false;
+    }
+  }
+  toggle() {
+    if (this.isVisible) {
+      this.hide();
+    } else {
+      this.show();
+    }
+  }
+  toggleMinimize() {
+    if (this.container) {
+      this.container.classList.toggle("minimized");
+    }
+  }
+  destroy() {
+    if (this.container) {
+      document.body.removeChild(this.container);
+      this.container = null;
+    }
+  }
+};
+var ActionTimeline = class {
+  constructor(maxSnapshots = 100) {
+    this._snapshots = [];
+    this._errors = [];
+    this.maxSnapshots = maxSnapshots;
+  }
+  recordSnapshot(action, state, metrics, performance2) {
+    const snapshot = {
+      timestamp: Date.now(),
+      state: JSON.parse(JSON.stringify(state)),
+      // Deep clone
+      action: { ...action },
+      metrics: { ...metrics },
+      performance: { ...performance2 }
+    };
+    this._snapshots.push(snapshot);
+    if (this._snapshots.length > this.maxSnapshots) {
+      this._snapshots = this._snapshots.slice(-this.maxSnapshots);
+    }
+  }
+  recordError(action, error) {
+    this._errors.push({
+      action: { ...action },
+      error: { ...error },
+      timestamp: Date.now(),
+      stackTrace: error.stack || ""
+    });
+  }
+  getTimeline() {
+    return {
+      actions: this._snapshots.map((s) => s.action).filter(Boolean),
+      snapshots: [...this._snapshots],
+      errors: [...this._errors]
+    };
+  }
+  getSnapshotsInRange(startTime, endTime) {
+    return this._snapshots.filter((s) => s.timestamp >= startTime && s.timestamp <= endTime);
+  }
+  clear() {
+    this._snapshots = [];
+    this._errors = [];
+  }
+  export() {
+    return JSON.stringify(this.getTimeline(), null, 2);
+  }
+  import(data) {
+    try {
+      const timeline = JSON.parse(data);
+      this._snapshots = timeline.snapshots || [];
+      this._errors = timeline.errors || [];
+    } catch (error) {
+      throw new Error("Invalid timeline data format");
+    }
+  }
+};
+var StatePerformanceMonitor = class {
+  constructor() {
+    this.actionTimes = [];
+    this.memorySnapshots = [];
+    this.errorCount = 0;
+  }
+  recordAction(action, duration) {
+    this.actionTimes.push({ action, duration, timestamp: Date.now() });
+    if (this.actionTimes.length > 1e3) {
+      this.actionTimes = this.actionTimes.slice(-1e3);
+    }
+  }
+  recordMemoryUsage() {
+    if ("memory" in performance) {
+      const memory = performance.memory;
+      this.memorySnapshots.push({
+        timestamp: Date.now(),
+        usage: memory.usedJSHeapSize
+      });
+      if (this.memorySnapshots.length > 100) {
+        this.memorySnapshots = this.memorySnapshots.slice(-100);
+      }
+    }
+  }
+  recordError() {
+    this.errorCount++;
+  }
+  generateReport() {
+    const totalActions = this.actionTimes.length;
+    const averageActionTime = totalActions > 0 ? this.actionTimes.reduce((sum, a) => sum + a.duration, 0) / totalActions : 0;
+    const slowestActions = [...this.actionTimes].sort((a, b) => b.duration - a.duration).slice(0, 10).map(({ action, duration, timestamp }) => ({ action, duration, timestamp }));
+    return {
+      totalActions,
+      averageActionTime,
+      slowestActions,
+      memoryTrend: this.memorySnapshots,
+      errors: this.errorCount
+    };
+  }
+  clear() {
+    this.actionTimes = [];
+    this.memorySnapshots = [];
+    this.errorCount = 0;
+  }
+};
+var StateDebugManager = class {
+  constructor(store, config) {
+    this.config = config;
+    this.inspector = new StateInspector(store, config);
+    this.timeline = new ActionTimeline(config.maxHistorySize || 100);
+    this.performanceMonitor = new StatePerformanceMonitor();
+    this.setupStoreMonitoring(store);
+    this.setupGlobalAccess();
+  }
+  setupStoreMonitoring(store) {
+    if (!this.config.enabled) return;
+    store.subscribe((state, previousState) => {
+      if (this.config.performanceMonitoring) {
+        this.performanceMonitor.recordMemoryUsage();
+      }
+      if (this.config.actionTimeline && previousState) {
+        const metrics = store.getMetrics();
+        const debugInfo = store.getDebugInfo();
+        const lastAction = debugInfo[debugInfo.length - 1];
+        if (lastAction) {
+          this.timeline.recordSnapshot(
+            lastAction.action,
+            state,
+            metrics,
+            {
+              actionTime: lastAction.duration,
+              renderTime: 0,
+              // Could be measured with requestAnimationFrame
+              memoryUsage: metrics.memoryUsage
+            }
+          );
+          if (this.config.performanceMonitoring) {
+            this.performanceMonitor.recordAction(lastAction.action.type, lastAction.duration);
+          }
+        }
+      }
+    });
+    this.setupErrorMonitoring(store);
+  }
+  setupErrorMonitoring(store) {
+    if (!this.config.errorTracking) return;
+    const originalDispatch = store.dispatch.bind(store);
+    store.dispatch = (...args) => {
+      try {
+        return originalDispatch(args[0], args[1], args[2]);
+      } catch (error) {
+        const action = args[0];
+        this.timeline.recordError(action, error);
+        this.performanceMonitor.recordError();
+        if (this.config.logLevel !== "none") {
+          console.error("State action error:", error);
+        }
+        throw error;
+      }
+    };
+  }
+  setupGlobalAccess() {
+    if (true) {
+      window.__STATE_DEBUG__ = {
+        inspector: this.inspector,
+        timeline: this.timeline,
+        performanceMonitor: this.performanceMonitor,
+        generateReport: () => this.performanceMonitor.generateReport(),
+        exportTimeline: () => this.timeline.export(),
+        clearHistory: () => this.clearAll()
+      };
+      console.group("\u{1F5C4}\uFE0F State Debug Tools Initialized");
+      console.log("Access via window.__STATE_DEBUG__");
+      console.log("Available methods:");
+      console.log("  - inspector: Visual state inspector");
+      console.log("  - timeline: Action timeline viewer");
+      console.log("  - performanceMonitor: Performance metrics");
+      console.log("  - generateReport(): Generate performance report");
+      console.log("  - exportTimeline(): Export action timeline");
+      console.log("  - clearHistory(): Clear all debug data");
+      console.groupEnd();
+    }
+  }
+  clearAll() {
+    this.timeline.clear();
+    this.performanceMonitor.clear();
+  }
+  destroy() {
+    this.inspector.destroy();
+    this.clearAll();
+  }
+};
+
+// src/ts/core/app-state.ts
+var getInitialState = () => ({
+  theme: {
+    mode: "system",
+    systemPreference: "light",
+    isTransitioning: false
+  },
+  navigation: {
+    isMobileMenuOpen: false,
+    isMobile: false,
+    activeSection: "",
+    scrollPosition: 0
+  },
+  ui: {
+    isLoading: false,
+    notifications: [],
+    modals: [],
+    sidebar: {
+      isOpen: false,
+      activeTab: "main"
+    }
+  },
+  user: {
+    preferences: {
+      language: "en",
+      timezone: "UTC",
+      dateFormat: "YYYY-MM-DD",
+      animationsEnabled: true,
+      reducedMotion: false
+    },
+    session: {
+      startTime: Date.now(),
+      pageViews: 1,
+      timeOnPage: 0,
+      lastActivity: Date.now()
+    }
+  },
+  app: {
+    version: "1.0.0",
+    buildNumber: process.env.BUILD_NUMBER || "dev",
+    environment: "development",
+    isFirstVisit: !localStorage.getItem("app-visited"),
+    hasSeenOnboarding: false,
+    lastVisit: 0
+  }
+});
+var themeReducers = {
+  SET_THEME: (state, action) => {
+    const newMode = action.payload;
+    return {
+      ...state,
+      mode: newMode,
+      isTransitioning: true
+    };
+  },
+  SET_SYSTEM_THEME: (state, action) => {
+    return {
+      ...state,
+      systemPreference: action.payload
+    };
+  },
+  THEME_TRANSITION_END: (state) => {
+    return {
+      ...state,
+      isTransitioning: false
+    };
+  }
+};
+var navigationReducers = {
+  TOGGLE_MOBILE_MENU: (state) => {
+    return {
+      ...state,
+      isMobileMenuOpen: !state.isMobileMenuOpen
+    };
+  },
+  SET_MOBILE_MENU_OPEN: (state, action) => {
+    return {
+      ...state,
+      isMobileMenuOpen: action.payload
+    };
+  },
+  SET_MOBILE: (state, action) => {
+    return {
+      ...state,
+      isMobile: action.payload
+    };
+  },
+  SET_ACTIVE_SECTION: (state, action) => {
+    return {
+      ...state,
+      activeSection: action.payload
+    };
+  },
+  SET_SCROLL_POSITION: (state, action) => {
+    return {
+      ...state,
+      scrollPosition: action.payload
+    };
+  }
+};
+var uiReducers = {
+  SET_LOADING: (state, action) => {
+    return {
+      ...state,
+      isLoading: action.payload
+    };
+  },
+  ADD_NOTIFICATION: (state, action) => {
+    const notification = action.payload;
+    return {
+      ...state,
+      notifications: [...state.notifications, notification]
+    };
+  },
+  REMOVE_NOTIFICATION: (state, action) => {
+    const id = action.payload;
+    return {
+      ...state,
+      notifications: state.notifications.filter((n) => n.id !== id)
+    };
+  },
+  CLEAR_NOTIFICATIONS: (state) => {
+    return {
+      ...state,
+      notifications: []
+    };
+  },
+  OPEN_MODAL: (state, action) => {
+    const { id, title, content } = action.payload;
+    const existingModalIndex = state.modals.findIndex((m) => m.id === id);
+    if (existingModalIndex !== -1) {
+      const updatedModals = [...state.modals];
+      updatedModals[existingModalIndex] = { id, isOpen: true, title, content };
+      return {
+        ...state,
+        modals: updatedModals
+      };
+    }
+    return {
+      ...state,
+      modals: [...state.modals, { id, isOpen: true, title, content }]
+    };
+  },
+  CLOSE_MODAL: (state, action) => {
+    const id = action.payload;
+    return {
+      ...state,
+      modals: state.modals.map(
+        (modal) => modal.id === id ? { ...modal, isOpen: false } : modal
+      )
+    };
+  },
+  TOGGLE_SIDEBAR: (state) => {
+    return {
+      ...state,
+      sidebar: {
+        ...state.sidebar,
+        isOpen: !state.sidebar.isOpen
+      }
+    };
+  },
+  SET_SIDEBAR_TAB: (state, action) => {
+    return {
+      ...state,
+      sidebar: {
+        ...state.sidebar,
+        activeTab: action.payload
+      }
+    };
+  }
+};
+var userReducers = {
+  UPDATE_PREFERENCES: (state, action) => {
+    return {
+      ...state,
+      preferences: {
+        ...state.preferences,
+        ...action.payload
+      }
+    };
+  },
+  UPDATE_SESSION: (state, action) => {
+    return {
+      ...state,
+      session: {
+        ...state.session,
+        ...action.payload,
+        lastActivity: Date.now()
+      }
+    };
+  },
+  INCREMENT_PAGE_VIEWS: (state) => {
+    return {
+      ...state,
+      session: {
+        ...state.session,
+        pageViews: state.session.pageViews + 1,
+        lastActivity: Date.now()
+      }
+    };
+  }
+};
+var appReducers = {
+  SET_ONBOARDING_COMPLETE: (state) => {
+    return {
+      ...state,
+      hasSeenOnboarding: true
+    };
+  },
+  UPDATE_LAST_VISIT: (state) => {
+    return {
+      ...state,
+      lastVisit: Date.now()
+    };
+  },
+  MARK_VISITED: (state) => {
+    return {
+      ...state,
+      isFirstVisit: false
+    };
+  }
+};
+var AppStateManager = class {
+  constructor(config) {
+    var _a;
+    const persistenceConfig = {
+      backend: "localStorage",
+      key: "app-state",
+      version: 1,
+      compression: true,
+      encryption: {
+        enabled: false
+      },
+      migration: {
+        currentVersion: 1,
+        migrate: (data, _fromVersion, _toVersion) => {
+          return data;
+        }
+      },
+      backup: {
+        enabled: true,
+        interval: 30,
+        // minutes
+        maxBackups: 5
+      },
+      cleanup: {
+        enabled: true,
+        maxAge: 7,
+        // days
+        maxQuota: 80
+        // percentage
+      },
+      ...config == null ? void 0 : config.persistence
+    };
+    const debugConfig = {
+      enabled: true,
+      visualInspector: true,
+      actionTimeline: true,
+      performanceMonitoring: true,
+      errorTracking: true,
+      stateDiff: true,
+      exportImport: true,
+      maxHistorySize: 100,
+      logLevel: "info",
+      ...config == null ? void 0 : config.debug
+    };
+    const allReducers = {
+      ...themeReducers,
+      ...navigationReducers,
+      ...uiReducers,
+      ...userReducers,
+      ...appReducers
+    };
+    this.store = createStore("app", {
+      initialState: getInitialState(),
+      reducers: allReducers,
+      config: {
+        persistence: {
+          enabled: !!(config == null ? void 0 : config.persistence),
+          ...persistenceConfig
+        },
+        debug: debugConfig
+      }
+    });
+    if (config == null ? void 0 : config.persistence) {
+      this.persistenceManager = new StatePersistenceManager(persistenceConfig);
+      this.setupPersistence();
+    }
+    if ((_a = config == null ? void 0 : config.debug) == null ? void 0 : _a.enabled) {
+      this.debugManager = new StateDebugManager(this.store, debugConfig);
+    }
+    this.initializeSessionTracking();
+    console.log("\u{1F5C4}\uFE0F App State Manager initialized");
+  }
+  setupPersistence() {
+    if (!this.persistenceManager) return;
+    this.store.subscribe(async (state) => {
+      try {
+        await this.persistenceManager.save(state);
+      } catch (error) {
+        console.error("Failed to persist state:", error);
+      }
+    });
+    this.loadPersistedState();
+  }
+  async loadPersistedState() {
+    if (!this.persistenceManager) return;
+    try {
+      const persistedState = await this.persistenceManager.load();
+      if (persistedState) {
+        this.store.reset(persistedState);
+        console.log("\u{1F5C4}\uFE0F Persisted state loaded");
+      }
+    } catch (error) {
+      console.error("Failed to load persisted state:", error);
+    }
+  }
+  initializeSessionTracking() {
+    const updateActivity = () => {
+      this.dispatch("UPDATE_SESSION", {
+        timeOnPage: Date.now() - this.getState().user.session.startTime
+      });
+    };
+    setInterval(updateActivity, 3e4);
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        updateActivity();
+      } else {
+        this.dispatch("INCREMENT_PAGE_VIEWS");
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    if (this.getState().app.isFirstVisit) {
+      this.dispatch("MARK_VISITED");
+      localStorage.setItem("app-visited", "true");
+    }
+  }
+  // Public API
+  dispatch(action, payload, meta) {
+    if (typeof action === "string") {
+      this.store.dispatch({
+        type: action,
+        payload,
+        meta: meta || {},
+        timestamp: Date.now()
+      });
+    } else {
+      this.store.dispatch({
+        ...action,
+        timestamp: action.timestamp || Date.now()
+      });
+    }
+  }
+  getState() {
+    return this.store.getState();
+  }
+  subscribe(listener) {
+    return this.store.subscribe(listener);
+  }
+  select(selector) {
+    return this.store.select(selector);
+  }
+  // Convenience methods for common actions
+  setTheme(mode) {
+    this.dispatch("SET_THEME", mode);
+  }
+  toggleMobileMenu() {
+    this.dispatch("TOGGLE_MOBILE_MENU");
+  }
+  setMobileMenuOpen(open) {
+    this.dispatch("SET_MOBILE_MENU_OPEN", open);
+  }
+  addNotification(type, message, autoHide) {
+    const notification = {
+      id: Date.now().toString(),
+      type,
+      message,
+      timestamp: Date.now(),
+      autoHide
+    };
+    this.dispatch("ADD_NOTIFICATION", notification);
+    if (autoHide) {
+      setTimeout(() => {
+        this.removeNotification(notification.id);
+      }, autoHide);
+    }
+  }
+  removeNotification(id) {
+    this.dispatch("REMOVE_NOTIFICATION", id);
+  }
+  setLoading(loading) {
+    this.dispatch("SET_LOADING", loading);
+  }
+  openModal(id, title, content) {
+    this.dispatch("OPEN_MODAL", { id, title, content });
+  }
+  closeModal(id) {
+    this.dispatch("CLOSE_MODAL", id);
+  }
+  updateUserPreferences(preferences) {
+    this.dispatch("UPDATE_PREFERENCES", preferences);
+  }
+  // Get specific state slices
+  getThemeState() {
+    return this.getState().theme;
+  }
+  getNavigationState() {
+    return this.getState().navigation;
+  }
+  getUIState() {
+    return this.getState().ui;
+  }
+  getUserState() {
+    return this.getState().user;
+  }
+  getAppState() {
+    return this.getState().app;
+  }
+  // Debug and development methods
+  getDebugInfo() {
+    return this.store.getDebugInfo();
+  }
+  getMetrics() {
+    return this.store.getMetrics();
+  }
+  exportState() {
+    return JSON.stringify(this.getState(), null, 2);
+  }
+  importState(stateJson) {
+    try {
+      const state = JSON.parse(stateJson);
+      this.store.reset(state);
+      console.log("\u{1F5C4}\uFE0F State imported successfully");
+    } catch (error) {
+      console.error("Failed to import state:", error);
+      throw error;
+    }
+  }
+  async createBackup() {
+    if (!this.persistenceManager) {
+      throw new Error("Persistence not configured");
+    }
+    const backupInfo = await this.persistenceManager.createBackup();
+    return backupInfo.id;
+  }
+  async restoreBackup(backupId) {
+    if (!this.persistenceManager) {
+      throw new Error("Persistence not configured");
+    }
+    await this.persistenceManager.restoreBackup(backupId);
+  }
+  destroy() {
+    var _a;
+    (_a = this.debugManager) == null ? void 0 : _a.destroy();
+    this.store.destroy();
+  }
+};
+var appStateManager = new AppStateManager({
+  persistence: {
+    enabled: true,
+    backend: "localStorage",
+    compression: true
+  },
+  debug: {
+    enabled: true,
+    visualInspector: true,
+    actionTimeline: true
+  }
+});
 
 // src/ts/main.ts
 var loadExternalCSS = () => {

@@ -12,7 +12,6 @@
  */
 
 import { qsSafe, addEventListener } from './utils/dom';
-import { navigationStateIntegration } from '../core/app-state';
 
 const MOBILE_BREAKPOINT = 768; // px
 const ANIMATION_DURATION = 300; // ms

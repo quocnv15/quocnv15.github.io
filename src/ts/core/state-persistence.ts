@@ -9,7 +9,7 @@
  * - Automatic cleanup and quota management
  */
 
-import { StateValue, StateConfig } from './state-manager';
+import type { StateValue } from './state-manager';
 
 // ============================================================================
 // Type Definitions
@@ -530,7 +530,7 @@ export class StateMigration {
         fromVersion: dataVersion,
         toVersion: migration.currentVersion,
         dataMigrated: errors.length === 0,
-        errors: errors.length > 0 ? errors : undefined
+        errors: errors.length > 0 ? errors : []
       };
     } catch (error) {
       return {
@@ -643,7 +643,6 @@ export class StateBackup {
     if (backups.length <= maxBackups) return;
 
     const backupsToDelete = backups.slice(maxBackups);
-    const adapter = this.getStorageAdapter(backend);
 
     for (const backup of backupsToDelete) {
       await this.deleteBackup(backup.id, backend);
@@ -681,6 +680,10 @@ export class StatePersistenceManager {
 
   async save(data: StateValue): Promise<void> {
     try {
+      if (data === undefined) {
+        throw new Error('Cannot save undefined state');
+      }
+      
       let processedData = {
         _version: this.config.version,
         _timestamp: Date.now(),
@@ -694,7 +697,7 @@ export class StatePersistenceManager {
         throw new Error('State migration failed');
       }
 
-      processedData = migrationResult.dataMigrated ? processedData : data;
+      processedData = (migrationResult.dataMigrated && processedData ? processedData : data) as any;
 
       // Serialize data
       let serialized = JSON.stringify(processedData);

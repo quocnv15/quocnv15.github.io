@@ -11,9 +11,7 @@
  */
 
 import { StateStore } from './state-manager';
-import type { StateAction, StateDebugInfo, StateMetrics } from './state-manager';
-import { StatePersistenceManager } from './state-persistence';
-import type { BackupInfo } from './state-persistence';
+import type { StateAction, StateMetrics } from './state-manager';
 
 // ============================================================================
 // Type Definitions
@@ -362,7 +360,9 @@ export class StateInspector {
     this.container.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', (e) => {
         const tabName = (e.target as HTMLElement).dataset.tab;
-        this.switchTab(tabName);
+        if (tabName) {
+          this.switchTab(tabName);
+        }
       });
     });
 
@@ -685,8 +685,8 @@ export class StateInspector {
 // ============================================================================
 
 export class ActionTimeline {
-  private snapshots: StateSnapshot[] = [];
-  private errors: Array<{
+  private _snapshots: StateSnapshot[] = [];
+  private _errors: Array<{
     action: StateAction;
     error: Error;
     timestamp: number;
@@ -712,16 +712,16 @@ export class ActionTimeline {
       performance: { ...performance }
     };
 
-    this.snapshots.push(snapshot);
+    this._snapshots.push(snapshot);
 
     // Maintain max size
-    if (this.snapshots.length > this.maxSnapshots) {
-      this.snapshots = this.snapshots.slice(-this.maxSnapshots);
+    if (this._snapshots.length > this.maxSnapshots) {
+      this._snapshots = this._snapshots.slice(-this.maxSnapshots);
     }
   }
 
   recordError(action: StateAction, error: Error): void {
-    this.errors.push({
+    this._errors.push({
       action: { ...action },
       error: { ...error },
       timestamp: Date.now(),
@@ -729,21 +729,30 @@ export class ActionTimeline {
     });
   }
 
-  getTimeline(): ActionTimeline {
+  getTimeline(): {
+    actions: StateAction[];
+    snapshots: StateSnapshot[];
+    errors: Array<{
+      action: StateAction;
+      error: Error;
+      timestamp: number;
+      stackTrace: string;
+    }>;
+  } {
     return {
-      actions: this.snapshots.map(s => s.action!).filter(Boolean),
-      snapshots: [...this.snapshots],
-      errors: [...this.errors]
+      actions: this._snapshots.map(s => s.action!).filter(Boolean),
+      snapshots: [...this._snapshots],
+      errors: [...this._errors]
     };
   }
 
   getSnapshotsInRange(startTime: number, endTime: number): StateSnapshot[] {
-    return this.snapshots.filter(s => s.timestamp >= startTime && s.timestamp <= endTime);
+    return this._snapshots.filter(s => s.timestamp >= startTime && s.timestamp <= endTime);
   }
 
   clear(): void {
-    this.snapshots = [];
-    this.errors = [];
+    this._snapshots = [];
+    this._errors = [];
   }
 
   export(): string {
@@ -752,9 +761,9 @@ export class ActionTimeline {
 
   import(data: string): void {
     try {
-      const timeline = JSON.parse(data) as ActionTimeline;
-      this.snapshots = timeline.snapshots || [];
-      this.errors = timeline.errors || [];
+      const timeline = JSON.parse(data) as any;
+      this._snapshots = timeline.snapshots || [];
+      this._errors = timeline.errors || [];
     } catch (error) {
       throw new Error('Invalid timeline data format');
     }
@@ -987,7 +996,7 @@ export class StateDebugManager {
     const originalDispatch = store.dispatch.bind(store);
     store.dispatch = (...args: any[]) => {
       try {
-        return originalDispatch(...args);
+        return originalDispatch(args[0], args[1], args[2]);
       } catch (error) {
         const action = args[0];
         this.timeline.recordError(action, error as Error);

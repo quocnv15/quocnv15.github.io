@@ -140,7 +140,11 @@ export class ComponentRegistry {
         element: config.element,
         autoCleanup: config.autoCleanup,
         cleanupManager: this.cleanupManager,
-        ...config
+        ...Object.fromEntries(
+          Object.entries(config).filter(([key]) =>
+            !['element', 'autoCleanup'].includes(key)
+          )
+        )
       });
 
       // Initialize the component
@@ -268,7 +272,7 @@ export class ComponentRegistry {
     const oldestRegistration = registeredDates.length > 0 ? new Date(Math.min(...registeredDates.map(d => d.getTime()))) : undefined;
     const newestRegistration = registeredDates.length > 0 ? new Date(Math.max(...registeredDates.map(d => d.getTime()))) : undefined;
 
-    return {
+    const stats: ComponentRegistryStats = {
       totalRegistered,
       totalInitialized,
       totalDestroyed,
@@ -276,10 +280,18 @@ export class ComponentRegistry {
         registered: this.getRegisteredNames(),
         initialized: this.getInitializedNames(),
         destroyed: this.getDestroyedNames()
-      },
-      oldestRegistration,
-      newestRegistration
+      }
     };
+
+    if (oldestRegistration) {
+      stats.oldestRegistration = oldestRegistration;
+    }
+
+    if (newestRegistration) {
+      stats.newestRegistration = newestRegistration;
+    }
+
+    return stats;
   }
 
   /**
@@ -365,6 +377,8 @@ export class ComponentRegistry {
     if (names.length === 0) return 0;
 
     const firstName = names[0];
+    if (!firstName) return 0;
+
     const registration = this.components.get(firstName);
     if (!registration?.registeredAt) return 0;
 

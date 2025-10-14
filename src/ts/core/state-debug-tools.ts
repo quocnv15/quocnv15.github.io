@@ -10,8 +10,10 @@
  * - Export/import functionality
  */
 
-import { StateStore, StateAction, StateDebugInfo, StateMetrics } from './state-manager';
-import { StatePersistenceManager, BackupInfo } from './state-persistence';
+import { StateStore } from './state-manager';
+import type { StateAction, StateDebugInfo, StateMetrics } from './state-manager';
+import { StatePersistenceManager } from './state-persistence';
+import type { BackupInfo } from './state-persistence';
 
 // ============================================================================
 // Type Definitions

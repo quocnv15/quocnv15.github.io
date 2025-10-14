@@ -198,7 +198,7 @@ export const initCopyCode = (): void => {
     return;
   }
 
-  codeBlocks.forEach((codeBlock, index) => {
+  codeBlocks.forEach((codeBlock) => {
     setupCopyButton(codeBlock);
   });
 
@@ -235,91 +235,10 @@ export const cleanupCopyCode = (): void => {
 };
 
 /**
- * Add CSS styles for copy buttons
+ * Copy button styles are now loaded from external CSS files
+ * This function is kept for backward compatibility but no longer does anything
  */
 export const addCopyButtonStyles = (): void => {
-  const styleId = 'copy-button-styles';
-
-  // Check if styles already exist
-  if (document.getElementById(styleId)) {
-    return;
-  }
-
-  const styles = `
-    .copy-button {
-      position: absolute;
-      top: 0.5rem;
-      right: 0.5rem;
-      padding: 0.25rem 0.5rem;
-      background: #3498db;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      z-index: 10;
-      opacity: 0.8;
-    }
-
-    .copy-button:hover {
-      background: #2980b9;
-      opacity: 1;
-      transform: translateY(-1px);
-    }
-
-    .copy-button:focus {
-      outline: 2px solid #3498db;
-      outline-offset: 2px;
-    }
-
-    .copy-button:disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .copy-button.copied {
-      background: #27ae60;
-    }
-
-    .copy-button.copy-error {
-      background: #e74c3c;
-    }
-
-    /* Ensure code blocks have relative positioning */
-    pre {
-      position: relative;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .copy-button {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.4rem;
-        top: 0.3rem;
-        right: 0.3rem;
-      }
-    }
-
-    /* Dark mode support */
-    @media (prefers-color-scheme: dark) {
-      .copy-button {
-        background: #4a9eff;
-      }
-
-      .copy-button:hover {
-        background: #3a8eed;
-      }
-
-      .copy-button.copied {
-        background: #2ecc71;
-      }
-    }
-  `;
-
-  const styleElement = document.createElement('style');
-  styleElement.id = styleId;
-  styleElement.textContent = styles;
-  document.head.appendChild(styleElement);
+  // Styles are now in src/css/components.css and loaded via the build system
+  console.log('📋 Copy button styles loaded from external CSS file');
 };

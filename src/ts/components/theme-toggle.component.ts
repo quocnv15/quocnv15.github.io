@@ -5,16 +5,14 @@
  */
 
 import { SELECTORS, CSS_CLASSES, DATA_ATTRIBUTES, STORAGE_KEYS } from '../constants';
-import { ConfigService } from '../services/config.service';
-import type { ThemeMode } from '../types';
+import type { ThemeMode } from '../core/types';
 
 export class ThemeToggleComponent {
   private element: HTMLElement | null = null;
   private cleanupFunctions: (() => void)[] = [];
-  private configService: ConfigService;
 
   constructor() {
-    this.configService = ConfigService.getInstance();
+    // Constructor simplified - no external dependencies needed
   }
 
   /**

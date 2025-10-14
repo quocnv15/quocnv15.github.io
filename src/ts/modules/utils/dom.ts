@@ -6,7 +6,10 @@
  * - Null-checked element access
  * - Performance-optimized DOM operations
  * - Cross-browser compatibility helpers
+ * - Memory leak prevention through automatic cleanup
  */
+
+import { registerCleanup } from '../../core/cleanup-manager';
 
 /**
  * Query selector with guaranteed return type
@@ -152,6 +155,31 @@ export const addEventListener = <K extends keyof HTMLElementEventMap>(
 ): (() => void) => {
   element.addEventListener(event, handler, options);
 
+  const cleanup = () => {
+    element.removeEventListener(event, handler, options);
+  };
+
+  // Auto-register with cleanup manager for memory leak prevention
+  registerCleanup(cleanup, {
+    description: `Event listener: ${event} on ${element.tagName.toLowerCase()}${element.id ? '#' + element.id : ''}`,
+    priority: 1 // Event listeners are high priority
+  });
+
+  return cleanup;
+};
+
+/**
+ * Add event listener with manual cleanup (doesn't auto-register)
+ * Use when you want to manage cleanup manually
+ */
+export const addEventListenerManual = <K extends keyof HTMLElementEventMap>(
+  element: HTMLElement,
+  event: K,
+  handler: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
+  options?: boolean | AddEventListenerOptions
+): (() => void) => {
+  element.addEventListener(event, handler, options);
+
   return () => {
     element.removeEventListener(event, handler, options);
   };
@@ -185,4 +213,211 @@ export const loadScript = (src: string): Promise<void> => {
 
     document.head.appendChild(script);
   });
+};
+
+/**
+ * Create MutationObserver with automatic cleanup
+ */
+export const createMutationObserver = (
+  callback: MutationCallback,
+  options?: MutationObserverInit
+): {
+  observer: MutationObserver;
+  disconnect: () => void;
+  observe: (target: Node, options?: MutationObserverInit) => void;
+} => {
+  const observer = new MutationObserver(callback);
+
+  const disconnect = () => observer.disconnect();
+
+  // Register cleanup
+  registerCleanup(disconnect, {
+    description: 'MutationObserver',
+    priority: 2 // Observers are high priority
+  });
+
+  return {
+    observer,
+    disconnect,
+    observe: (target: Node, observeOptions?: MutationObserverInit) => {
+      observer.observe(target, observeOptions || options);
+    }
+  };
+};
+
+/**
+ * Create IntersectionObserver with automatic cleanup
+ */
+export const createIntersectionObserver = (
+  callback: IntersectionObserverCallback,
+  options?: IntersectionObserverInit
+): {
+  observer: IntersectionObserver;
+  disconnect: () => void;
+  observe: (target: Element) => void;
+  unobserve: (target: Element) => void;
+} => {
+  const observer = new IntersectionObserver(callback, options);
+
+  const disconnect = () => observer.disconnect();
+
+  // Register cleanup
+  registerCleanup(disconnect, {
+    description: 'IntersectionObserver',
+    priority: 2 // Observers are high priority
+  });
+
+  return {
+    observer,
+    disconnect,
+    observe: (target: Element) => observer.observe(target),
+    unobserve: (target: Element) => observer.unobserve(target)
+  };
+};
+
+/**
+ * Create ResizeObserver with automatic cleanup
+ */
+export const createResizeObserver = (
+  callback: ResizeObserverCallback
+): {
+  observer: ResizeObserver;
+  disconnect: () => void;
+  observe: (target: Element) => void;
+  unobserve: (target: Element) => void;
+} => {
+  const observer = new ResizeObserver(callback);
+
+  const disconnect = () => observer.disconnect();
+
+  // Register cleanup
+  registerCleanup(disconnect, {
+    description: 'ResizeObserver',
+    priority: 2 // Observers are high priority
+  });
+
+  return {
+    observer,
+    disconnect,
+    observe: (target: Element) => observer.observe(target),
+    unobserve: (target: Element) => observer.unobserve(target)
+  };
+};
+
+/**
+ * Add interval with automatic cleanup
+ */
+export const setIntervalWithCleanup = (
+  callback: () => void,
+  delay: number,
+  description?: string
+): {
+  intervalId: ReturnType<typeof setInterval>;
+  clear: () => void;
+} => {
+  const intervalId = setInterval(callback, delay);
+
+  const clear = () => clearInterval(intervalId);
+
+  // Register cleanup
+  registerCleanup(clear, {
+    description: description || `Interval: ${delay}ms`,
+    priority: 1 // Intervals are high priority
+  });
+
+  return {
+    intervalId,
+    clear
+  };
+};
+
+/**
+ * Add timeout with automatic cleanup
+ */
+export const setTimeoutWithCleanup = (
+  callback: () => void,
+  delay: number,
+  description?: string
+): {
+  timeoutId: ReturnType<typeof setTimeout>;
+  clear: () => void;
+} => {
+  const timeoutId = setTimeout(callback, delay);
+
+  const clear = () => clearTimeout(timeoutId);
+
+  // Register cleanup with lower priority since timeouts are often one-time
+  registerCleanup(clear, {
+    description: description || `Timeout: ${delay}ms`,
+    priority: 0 // Timeouts are lower priority
+  });
+
+  return {
+    timeoutId,
+    clear
+  };
+};
+
+/**
+ * Add multiple event listeners to an element with batch cleanup
+ */
+export const addEventListeners = (
+  element: HTMLElement,
+  events: Array<{
+    event: keyof HTMLElementEventMap;
+    handler: (event: Event) => void;
+    options?: boolean | AddEventListenerOptions;
+  }>
+): (() => void) => {
+  const cleanupFunctions = events.map(({ event, handler, options }) =>
+    addEventListener(element, event, handler as any, options)
+  );
+
+  const cleanupAll = () => {
+    cleanupFunctions.forEach(cleanup => cleanup());
+  };
+
+  // Register batch cleanup
+  registerCleanup(cleanupAll, {
+    description: `Multiple event listeners on ${element.tagName.toLowerCase()}${element.id ? '#' + element.id : ''}`,
+    priority: 1
+  });
+
+  return cleanupAll;
+};
+
+/**
+ * Create DOM element with automatic cleanup of children
+ */
+export const createWithCleanup = <K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  attributes?: Record<string, string>,
+  textContent?: string,
+  cleanupChildren: boolean = true
+): HTMLElementTagNameMap[K] => {
+  const element = document.createElement(tag);
+
+  if (attributes) {
+    Object.entries(attributes).forEach(([key, value]) => {
+      element.setAttribute(key, value);
+    });
+  }
+
+  if (textContent !== undefined) {
+    element.textContent = textContent;
+  }
+
+  if (cleanupChildren) {
+    // Register cleanup to remove element from DOM
+    registerCleanup(() => {
+      if (element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
+    }, {
+      description: `Remove element: ${tag.toLowerCase()}${element.id ? '#' + element.id : ''}`,
+      priority: 0 // Element removal is lower priority
+    });
+  }
+
+  return element;
 };

@@ -2,8 +2,30 @@
  * Global type definitions for the Jekyll TypeScript frontend
  */
 
-// Re-export from interfaces
-export * from '../interfaces/types';
+// Re-export from core types with selective imports to avoid conflicts
+export type {
+  LoadingState,
+  UIState
+} from '../core/types';
+
+// Re-export from interfaces with selective imports to avoid conflicts
+export type {
+  AsyncEventHandler,
+  ErrorInfo,
+  EventHandler,
+  LoadingState as InterfaceLoadingState,
+  NavigationItem as InterfaceNavigationItem,
+  PerformanceMetrics,
+  SearchRecord,
+  SearchResult,
+  ShareConfig,
+  SharePlatform,
+  SiteConfig as InterfaceSiteConfig,
+  StorageItem,
+  ThemeMode as InterfaceThemeMode,
+  TocItem as InterfaceTocItem,
+  UIState as InterfaceUIState
+} from '../interfaces/types';
 
 // Additional global types
 export interface Window {
@@ -22,24 +44,3 @@ export type DeviceType = 'mobile' | 'tablet' | 'desktop';
 
 // Animation states
 export type AnimationState = 'idle' | 'entering' | 'entered' | 'exiting' | 'exited';
-
-// Feature flags
-export interface FeatureFlags {
-  searchEnabled: boolean;
-  tocEnabled: boolean;
-  copyCodeEnabled: boolean;
-  shareButtonsEnabled: boolean;
-  analyticsEnabled: boolean;
-  commentsEnabled: boolean;
-}
-
-// Site configuration
-export interface SiteConfig {
-  theme: ThemeMode;
-  environment: Environment;
-  isPost: boolean;
-  isHomePage: boolean;
-  language: string;
-  baseUrl: string;
-  features: FeatureFlags;
-}

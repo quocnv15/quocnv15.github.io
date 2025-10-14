@@ -110,9 +110,9 @@ export interface SourceMetadata {
   podcastName?: string;
 
   // Course metadata
-  platform?: string;
+  coursePlatform?: string;
   instructor?: string;
-  duration?: string;
+  courseDuration?: string;
   modules?: number;
 }
 

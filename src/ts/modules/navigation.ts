@@ -12,6 +12,7 @@
  */
 
 import { qsSafe, addEventListener } from './utils/dom';
+import { navigationStateIntegration } from '../core/app-state';
 
 const MOBILE_BREAKPOINT = 768; // px
 const ANIMATION_DURATION = 300; // ms
@@ -68,6 +69,11 @@ const closeMobileMenu = (): void => {
   // Restore body scroll
   toggleBodyScrollLock(false);
 
+  // Update state manager
+  if (typeof window !== 'undefined' && (window as any).__APP_STATE_MANAGER__) {
+    (window as any).__APP_STATE_MANAGER__.setMobileMenuOpen(false);
+  }
+
   // Focus back to toggle button
   setTimeout(() => {
     toggle.focus();
@@ -95,6 +101,11 @@ const openMobileMenu = (): void => {
   // Prevent body scroll
   toggleBodyScrollLock(true);
 
+  // Update state manager
+  if (typeof window !== 'undefined' && (window as any).__APP_STATE_MANAGER__) {
+    (window as any).__APP_STATE_MANAGER__.setMobileMenuOpen(true);
+  }
+
   // Focus first menu item
   setTimeout(() => {
     const firstMenuItem = menu.querySelector(FOCUSABLE_ELEMENTS) as HTMLElement;
@@ -110,15 +121,21 @@ const openMobileMenu = (): void => {
  * Toggle mobile menu
  */
 const toggleMobileMenu = (): void => {
-  const toggle = qsSafe('.nav-toggle') as HTMLElement;
-  if (!toggle) return;
-
-  const isOpen = toggle.classList.contains('active');
-
-  if (isOpen) {
-    closeMobileMenu();
+  // Use state manager if available
+  if (typeof window !== 'undefined' && (window as any).__APP_STATE_MANAGER__) {
+    (window as any).__APP_STATE_MANAGER__.toggleMobileMenu();
   } else {
-    openMobileMenu();
+    // Fallback to DOM-based toggle
+    const toggle = qsSafe('.nav-toggle') as HTMLElement;
+    if (!toggle) return;
+
+    const isOpen = toggle.classList.contains('active');
+
+    if (isOpen) {
+      closeMobileMenu();
+    } else {
+      openMobileMenu();
+    }
   }
 };
 
@@ -398,166 +415,10 @@ export const cleanupMobileNav = (): void => {
 export { initNavigation as initMobileNav };
 
 /**
- * Add CSS styles for mobile navigation
+ * Mobile navigation styles are now loaded from external CSS files
+ * This function is kept for backward compatibility but no longer does anything
  */
 export const addMobileNavStyles = (): void => {
-  const styleId = 'mobile-nav-styles';
-
-  // Check if styles already exist
-  if (document.getElementById(styleId)) {
-    return;
-  }
-
-  const styles = `
-    /* Mobile navigation toggle */
-    .nav-toggle {
-      display: none;
-      background: transparent;
-      border: none;
-      padding: 0.5rem;
-      cursor: pointer;
-      z-index: 1001;
-    }
-
-    .nav-toggle:focus {
-      outline: 2px solid #3498db;
-      outline-offset: 2px;
-    }
-
-    .hamburger {
-      display: flex;
-      flex-direction: column;
-      width: 24px;
-      height: 20px;
-      justify-content: space-between;
-    }
-
-    .hamburger-line {
-      width: 100%;
-      height: 2px;
-      background: #2c3e50;
-      border-radius: 1px;
-      transition: all 0.3s ease;
-      transform-origin: center;
-    }
-
-    /* Active state */
-    .nav-toggle.active .hamburger-line:nth-child(1) {
-      transform: rotate(45deg) translate(6px, 6px);
-    }
-
-    .nav-toggle.active .hamburger-line:nth-child(2) {
-      opacity: 0;
-    }
-
-    .nav-toggle.active .hamburger-line:nth-child(3) {
-      transform: rotate(-45deg) translate(7px, -6px);
-    }
-
-    /* Mobile navigation menu */
-    .nav-mobile {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: #fff;
-      border-bottom: 1px solid #e8e8e8;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      z-index: 1000;
-      max-height: 100vh;
-      overflow-y: auto;
-      opacity: 0;
-      transform: translateY(-100%);
-      transition: all 0.3s ease;
-    }
-
-    .nav-mobile.active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .nav-mobile .nav-links {
-      display: flex;
-      flex-direction: column;
-      padding: 1rem 0;
-      gap: 0;
-      margin: 0;
-      list-style: none;
-      border-left: none;
-      padding-left: 0;
-    }
-
-    .nav-mobile .nav-link {
-      display: block;
-      width: 100%;
-      padding: 0.75rem 1.5rem;
-      text-decoration: none;
-      color: #2c3e50;
-      font-weight: 500;
-      transition: background-color 0.3s ease;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .nav-mobile .nav-link:hover,
-    .nav-mobile .nav-link:focus {
-      background-color: #f8f9fa;
-      color: #3498db;
-    }
-
-    .nav-mobile .nav-link:last-child {
-      border-bottom: none;
-    }
-
-    /* Body scroll lock */
-    .nav-open {
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-    }
-
-    /* Responsive styles */
-    @media (max-width: 768px) {
-      .nav-toggle {
-        display: block;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .site-nav-inner {
-        gap: 1rem;
-      }
-    }
-
-    /* Dark theme support */
-    [data-theme="dark"] .nav-mobile {
-      background: #2d2d2d;
-      border-bottom-color: #404040;
-    }
-
-    [data-theme="dark"] .hamburger-line {
-      background: #ffffff;
-    }
-
-    [data-theme="dark"] .nav-mobile .nav-link {
-      color: #ffffff;
-      border-bottom-color: #404040;
-    }
-
-    [data-theme="dark"] .nav-mobile .nav-link:hover,
-    [data-theme="dark"] .nav-mobile .nav-link:focus {
-      background-color: #404040;
-      color: #4a9eff;
-    }
-  `;
-
-  const styleElement = document.createElement('style');
-  styleElement.id = styleId;
-  styleElement.textContent = styles;
-  document.head.appendChild(styleElement);
-
-  console.log('📱 Mobile navigation styles added to document');
+  // Styles are now in src/css/components.css and loaded via the build system
+  console.log('📱 Mobile navigation styles loaded from external CSS file');
 };

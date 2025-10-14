@@ -1,0 +1,379 @@
+/**
+ * Component styles
+ *
+ * Contains styles for copy buttons, mobile navigation, table of contents,
+ * and other UI components.
+ */
+
+/* ========================================
+   COPY BUTTON COMPONENTS
+   ======================================== */
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  opacity: 0.8;
+}
+
+.copy-button:hover {
+  background: var(--accent-hover);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+.copy-button:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.copy-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.copy-button.copied {
+  background: var(--success);
+}
+
+.copy-button.copy-error {
+  background: var(--error);
+}
+
+/* Ensure code blocks have relative positioning */
+pre {
+  position: relative;
+}
+
+/* Responsive copy button adjustments */
+@media (max-width: 768px) {
+  .copy-button {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.4rem;
+    top: 0.3rem;
+    right: 0.3rem;
+  }
+}
+
+/* ========================================
+   MOBILE NAVIGATION COMPONENTS
+   ======================================== */
+
+/* Mobile navigation toggle */
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.nav-toggle:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  width: 24px;
+  height: 20px;
+  justify-content: space-between;
+}
+
+.hamburger-line {
+  width: 100%;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Active hamburger animation */
+.nav-toggle.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.nav-toggle.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Mobile navigation menu */
+.nav-mobile {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 100vh;
+  overflow-y: auto;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: all 0.3s ease;
+}
+
+.nav-mobile.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav-mobile .nav-links {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+  gap: 0;
+  margin: 0;
+  list-style: none;
+  border-left: none;
+  padding-left: 0;
+}
+
+.nav-mobile .nav-link {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-mobile .nav-link:hover,
+.nav-mobile .nav-link:focus {
+  background-color: var(--bg-secondary);
+  color: var(--accent);
+}
+
+.nav-mobile .nav-link:last-child {
+  border-bottom: none;
+}
+
+/* Body scroll lock when nav is open */
+.nav-open {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* Responsive navigation */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .site-nav-inner {
+    gap: 1rem;
+  }
+}
+
+/* ========================================
+   TABLE OF CONTENTS COMPONENTS
+   ======================================== */
+
+.toc-container {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.toc-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: var(--text-primary);
+}
+
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.toc-item {
+  margin-bottom: 0.5rem;
+}
+
+.toc-link {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.toc-link:hover,
+.toc-link:focus {
+  color: var(--accent);
+  background: var(--accent-light);
+  text-decoration: none;
+}
+
+.toc-link.toc-active {
+  color: var(--accent);
+  background: var(--accent-medium);
+  font-weight: 500;
+}
+
+/* Nested TOC items */
+.toc-list-1 {
+  margin-left: 1rem;
+  padding-left: 0;
+}
+
+.toc-list-1 .toc-link {
+  font-size: 0.85rem;
+}
+
+.toc-list-2 {
+  margin-left: 2rem;
+  padding-left: 0;
+}
+
+.toc-list-2 .toc-link {
+  font-size: 0.8rem;
+}
+
+.toc-list-3 {
+  margin-left: 3rem;
+  padding-left: 0;
+}
+
+.toc-list-3 .toc-link {
+  font-size: 0.75rem;
+}
+
+/* Empty state */
+.toc-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin: 0;
+}
+
+/* Responsive TOC */
+@media (max-width: 768px) {
+  .toc-container {
+    margin: 1rem 0;
+    padding: 1rem;
+  }
+
+  .toc-title {
+    font-size: 1.1rem;
+  }
+
+  .toc-link {
+    font-size: 0.85rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .toc-list-1 {
+    margin-left: 0.5rem;
+  }
+
+  .toc-list-2 {
+    margin-left: 1rem;
+  }
+
+  .toc-list-3 {
+    margin-left: 1.5rem;
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ======================================== */
+
+/* Focus styles for better keyboard navigation */
+@media (prefers-reduced-motion: no-preference) {
+  .copy-button:focus,
+  .nav-toggle:focus,
+  .toc-link:focus {
+    animation: focus-pulse 0.3s ease-out;
+  }
+}
+
+@keyframes focus-pulse {
+  0% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  70% {
+    box-shadow: 0 0 0 3px currentColor;
+  }
+  100% {
+    box-shadow: 0 0 0 0 currentColor;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .copy-button,
+  .nav-toggle {
+    border: 2px solid currentColor;
+  }
+
+  .toc-container {
+    border-width: 2px;
+  }
+
+  .toc-link:hover,
+  .toc-link:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .copy-button,
+  .nav-toggle,
+  .nav-mobile,
+  .toc-link {
+    transition: none;
+  }
+
+  .copy-button:hover,
+  .nav-toggle:hover,
+  .toc-link:hover {
+    transform: none;
+  }
+
+  .hamburger-line {
+    transition: none;
+  }
+
+  /* Keep essential transitions but remove decorative ones */
+  .nav-mobile {
+    transition: opacity 0.1s ease;
+  }
+}

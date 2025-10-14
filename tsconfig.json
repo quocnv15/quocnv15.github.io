@@ -42,6 +42,8 @@
     "paths": {
       "@/*": ["*"],
       "@/types/*": ["types/*"],
+      "@/core/*": ["core/*"],
+      "@/core/types/*": ["core/types/*"],
       "@/constants/*": ["constants/*"],
       "@/components/*": ["components/*"],
       "@/services/*": ["services/*"],

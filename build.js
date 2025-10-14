@@ -20,6 +20,21 @@ const buildConfig = {
     '.ts': 'ts'
   },
   plugins: [
+    // Path resolution plugin
+    {
+      name: 'path-resolution',
+      setup(build) {
+        build.onResolve({ filter: /^@/ }, (args) => {
+          const importPath = args.path.replace(/^@\//, '');
+          const resolvedPath = path.resolve(__dirname, 'src', importPath);
+          return {
+            path: resolvedPath,
+            external: false
+          };
+        });
+      }
+    },
+
     // TypeScript checking plugin
     {
       name: 'typescript-checker',

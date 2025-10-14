@@ -83,7 +83,7 @@ const renderTOC = (container: Element, toc: TocItem[]): void => {
  * Render TOC items recursively
  */
 const renderTOCItems = (parentElement: Element, items: TocItem[], depth: number): void => {
-  items.forEach((item, index) => {
+  items.forEach((item) => {
     const listItem = create('li', { class: 'toc-item' });
 
     // Create link
@@ -94,7 +94,7 @@ const renderTOCItems = (parentElement: Element, items: TocItem[], depth: number)
     }, item.text);
 
     // Add click handler for smooth scroll
-    const linkCleanup = addEventListener(link, 'click', (e) => {
+    addEventListener(link, 'click', (e) => {
       e.preventDefault();
       const targetElement = document.getElementById(item.id);
       if (targetElement) {
@@ -320,165 +320,10 @@ export const cleanupTOC = (): void => {
 };
 
 /**
- * Add CSS styles for TOC
+ * TOC styles are now loaded from external CSS files
+ * This function is kept for backward compatibility but no longer does anything
  */
 export const addTOCStyles = (): void => {
-  const styleId = 'toc-styles';
-
-  // Check if styles already exist
-  if (document.getElementById(styleId)) {
-    return;
-  }
-
-  const styles = `
-    .toc-container {
-      margin: 2rem 0;
-      padding: 1.5rem;
-      background: #f8f9fa;
-      border: 1px solid #e8e8e8;
-      border-radius: 8px;
-    }
-
-    .toc-title {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 0 0 1rem 0;
-      color: #2c3e50;
-    }
-
-    .toc-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .toc-item {
-      margin-bottom: 0.5rem;
-    }
-
-    .toc-link {
-      display: block;
-      padding: 0.25rem 0.5rem;
-      text-decoration: none;
-      color: #5a6c7d;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-      font-size: 0.9rem;
-      line-height: 1.4;
-    }
-
-    .toc-link:hover,
-    .toc-link:focus {
-      color: #3498db;
-      background: rgba(52, 152, 219, 0.1);
-      text-decoration: none;
-    }
-
-    .toc-link.toc-active {
-      color: #3498db;
-      background: rgba(52, 152, 219, 0.15);
-      font-weight: 500;
-    }
-
-    /* Nested TOC items */
-    .toc-list-1 {
-      margin-left: 1rem;
-      padding-left: 0;
-    }
-
-    .toc-list-1 .toc-link {
-      font-size: 0.85rem;
-    }
-
-    .toc-list-2 {
-      margin-left: 2rem;
-      padding-left: 0;
-    }
-
-    .toc-list-2 .toc-link {
-      font-size: 0.8rem;
-    }
-
-    .toc-list-3 {
-      margin-left: 3rem;
-      padding-left: 0;
-    }
-
-    .toc-list-3 .toc-link {
-      font-size: 0.75rem;
-    }
-
-    /* Empty state */
-    .toc-empty {
-      text-align: center;
-      color: #7f8c8d;
-      font-style: italic;
-      margin: 0;
-    }
-
-    /* Responsive design */
-    @media (max-width: 768px) {
-      .toc-container {
-        margin: 1rem 0;
-        padding: 1rem;
-      }
-
-      .toc-title {
-        font-size: 1.1rem;
-      }
-
-      .toc-link {
-        font-size: 0.85rem;
-        padding: 0.2rem 0.4rem;
-      }
-
-      .toc-list-1 {
-        margin-left: 0.5rem;
-      }
-
-      .toc-list-2 {
-        margin-left: 1rem;
-      }
-
-      .toc-list-3 {
-        margin-left: 1.5rem;
-      }
-    }
-
-    /* Dark theme support */
-    [data-theme="dark"] .toc-container {
-      background: #2d2d2d;
-      border-color: #404040;
-    }
-
-    [data-theme="dark"] .toc-title {
-      color: #ffffff;
-    }
-
-    [data-theme="dark"] .toc-link {
-      color: #b0b0b0;
-    }
-
-    [data-theme="dark"] .toc-link:hover,
-    [data-theme="dark"] .toc-link:focus {
-      color: #4a9eff;
-      background: rgba(74, 158, 255, 0.1);
-    }
-
-    [data-theme="dark"] .toc-link.toc-active {
-      color: #4a9eff;
-      background: rgba(74, 158, 255, 0.15);
-    }
-
-    [data-theme="dark"] .toc-empty {
-      color: #666666;
-    }
-  `;
-
-  const styleElement = document.createElement('style');
-  styleElement.id = styleId;
-  styleElement.textContent = styles;
-  document.head.appendChild(styleElement);
-
-  console.log('📑 TOC styles added to document');
+  // Styles are now in src/css/components.css and loaded via the build system
+  console.log('📑 TOC styles loaded from external CSS file');
 };

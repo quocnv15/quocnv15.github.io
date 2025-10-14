@@ -1,0 +1,11 @@
+---
+layout: default
+---
+
+<!-- HMR Client Script for Development -->
+{% if site.environment == 'development' %}
+<script src="/hmr-client.js"></script>
+{% endif %}
+
+<!-- Main Content -->
+{{ content }}

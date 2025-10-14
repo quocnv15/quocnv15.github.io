@@ -9,55 +9,85 @@
  */
 
 // Feature modules
-import { initTheme, type ThemeMode } from './modules/theme';
+import { initTheme } from './modules/theme';
+import type { AppConfig } from './core/types';
+
+// Services
+import { createConfigService } from './services/config.service';
 import { initNavigation } from './modules/navigation';
 import { initCopyCode } from './modules/copy-code';
 import { initTOC } from './modules/toc';
 // import { initSearch } from './modules/search';
 // import { initShareButtons } from './modules/share';
 
+// Core infrastructure
+import { CleanupManager } from './core/cleanup-manager';
+import { registerService, getService, serviceFactory } from './core/service-factory';
+import { pluginSystem } from './core/plugin-system';
+import { componentRegistry } from './components/component-registry';
+import { performanceMonitor, initPerformanceMonitoring } from './core/performance-monitor';
+import { appStateManager } from './core/app-state';
+
 // Utilities
 import { ready as domReady } from './modules/utils/dom';
 // import { initErrorHandling, initPerformanceMonitoring } from './modules/utils/errors';
 
-/**
- * Application configuration interface
- */
-interface AppConfig {
-  theme: 'light' | 'dark' | 'system';
-  searchEnabled: boolean;
-  tocEnabled: boolean;
-  copyCodeEnabled: boolean;
-  shareButtonsEnabled: boolean;
-  isPost: boolean;
-  isHomePage: boolean;
-  environment: 'development' | 'production';
-}
+// AppConfig interface is now imported from @/core/types
 
 /**
- * Get configuration from page data or environment
+ * Load external CSS files
+ */
+const loadExternalCSS = (): void => {
+  const cssFiles = [
+    '/assets/css/theme.css',
+    '/assets/css/components.css',
+    '/assets/css/utilities.css'
+  ];
+
+  cssFiles.forEach(cssFile => {
+    // Check if CSS file is already loaded
+    const existingLink = document.querySelector(`link[href="${cssFile}"]`);
+    if (existingLink) {
+      return;
+    }
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = cssFile;
+    link.media = 'screen';
+
+    // Add error handling
+    link.onerror = () => {
+      console.warn(`⚠️ Failed to load CSS file: ${cssFile}`);
+    };
+
+    link.onload = () => {
+      console.log(`✅ CSS file loaded: ${cssFile}`);
+    };
+
+    document.head.appendChild(link);
+  });
+
+  console.log('🎨 External CSS files loading initiated');
+};
+
+/**
+ * Get configuration using the service factory
  */
 const getAppConfig = (): AppConfig => {
-  const script = document.querySelector<HTMLScriptElement>('#site-config');
+  const configService = getService('config');
+  const siteConfig = configService.getSiteConfig();
 
-  if (script?.textContent) {
-    try {
-      return JSON.parse(script.textContent);
-    } catch (error) {
-      console.warn('Failed to parse site config:', error);
-    }
-  }
-
-  // Fallback configuration based on DOM inspection
+  // Convert SiteConfig to AppConfig for backward compatibility
   return {
-    theme: 'system',
-    searchEnabled: !!document.querySelector('#search-input'),
-    tocEnabled: document.body.classList.contains('post'),
-    copyCodeEnabled: !!document.querySelector('pre code'),
-    shareButtonsEnabled: !!document.querySelector('.share-links'),
-    isPost: document.body.classList.contains('post'),
-    isHomePage: document.body.classList.contains('home'),
-    environment: (process.env.NODE_ENV as AppConfig['environment']) || 'development'
+    theme: siteConfig.theme,
+    searchEnabled: siteConfig.features.searchEnabled,
+    tocEnabled: siteConfig.features.tocEnabled,
+    copyCodeEnabled: siteConfig.features.copyCodeEnabled,
+    shareButtonsEnabled: siteConfig.features.shareButtonsEnabled,
+    isPost: siteConfig.isPost,
+    isHomePage: siteConfig.isHomePage,
+    environment: siteConfig.environment
   };
 };
 
@@ -67,11 +97,66 @@ const getAppConfig = (): AppConfig => {
 const initializeApp = async (): Promise<void> => {
   const config = getAppConfig();
 
+  // Mark initialization start
+  performanceMonitor.mark('app-init-start');
+
   try {
     console.log('🚀 Jekyll TypeScript Frontend Starting...');
     console.log('📊 Config:', config);
 
+    // Load external CSS files
+    loadExternalCSS();
+
     // Initialize core infrastructure
+    const cleanupManager = CleanupManager.getInstance({
+      autoCleanupOnUnload: true,
+      logCleanupActivity: process.env.NODE_ENV === 'development'
+    });
+
+    console.log('🧹 Cleanup manager initialized');
+
+    // Register configuration service with factory
+    registerService('config', createConfigService, true);
+
+    // Register plugin system with factory
+    registerService('plugins', () => pluginSystem, true);
+
+    // Register component registry with factory
+    registerService('components', () => componentRegistry, true);
+
+    // Initialize configuration service
+    const configService = getService('config');
+    const siteConfig = configService.getSiteConfig();
+
+    console.log('📋 Configuration service initialized with factory pattern');
+    console.log('📊 Site config:', {
+      theme: siteConfig.theme,
+      environment: siteConfig.environment,
+      features: siteConfig.features,
+      isPost: siteConfig.isPost
+    });
+
+    // Initialize state management system
+    console.log('🗄️ State management system initialized');
+
+    // Make app state manager globally available
+    if (typeof window !== 'undefined') {
+      (window as any).__APP_STATE_MANAGER__ = appStateManager;
+    }
+
+    // Register state manager with service factory
+    registerService('stateManager', () => appStateManager, true);
+
+    console.log('📊 App state metrics:', appStateManager.getMetrics());
+
+    // Initialize plugin system
+    console.log('🔌 Plugin system initialized');
+    console.log('📊 Plugin system stats:', pluginSystem.getStats());
+
+    // Initialize component registry
+    console.log('📋 Component registry initialized');
+    console.log('📊 Component registry stats:', componentRegistry.getStats());
+
     // initErrorHandling();
     // initPerformanceMonitoring();
 
@@ -101,7 +186,38 @@ const initializeApp = async (): Promise<void> => {
     document.body.classList.add('js-enabled');
     document.body.classList.remove('js-loading');
 
+    // Mark initialization complete
+    performanceMonitor.mark('app-init-end');
+    const initTime = performanceMonitor.measure('app-init', 'app-init-start', 'app-init-end');
+    performanceMonitor.recordMetric('app-initialization', initTime);
+
+    // Initialize performance monitoring
+    initPerformanceMonitoring();
+
     console.log('✅ Jekyll TypeScript frontend initialized successfully (Phase 2 complete)');
+    console.log(`⚡ Initialization time: ${initTime.toFixed(2)}ms`);
+
+    // Log statistics in development
+    if (process.env.NODE_ENV === 'development') {
+      setTimeout(() => {
+        const cleanupStats = cleanupManager.getStats();
+        console.log('📊 Cleanup Manager Stats:', cleanupStats);
+
+        const configStats = configService.getCacheStats();
+        console.log('📊 Configuration Service Stats:', configStats);
+
+        const serviceStats = serviceFactory.getStats();
+        console.log('📊 Service Factory Stats:', serviceStats);
+
+        const plugins = getService('plugins');
+        const pluginStats = plugins.getStats();
+        console.log('📊 Plugin System Stats:', pluginStats);
+
+        const components = getService('components');
+        const componentStats = components.getStats();
+        console.log('📊 Component Registry Stats:', componentStats);
+      }, 100);
+    }
 
   } catch (error) {
     console.error('❌ Failed to initialize app:', error);
@@ -130,4 +246,3 @@ domReady(() => {
 
 // Export for external use and testing
 export { initializeApp, getAppConfig };
-export type { AppConfig };

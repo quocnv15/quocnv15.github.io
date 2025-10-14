@@ -33,6 +33,20 @@
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "dev:cli": "node scripts/dev-cli.js",
+    "dev:health": "node scripts/dev-cli.js health",
+    "dev:size": "node scripts/dev-cli.js size",
+    "dev:check": "node scripts/dev-cli.js check",
+    "dev:analyze": "node scripts/dev-cli.js analyze",
+    "dev:docs": "node scripts/generate-docs.js",
+    "dev:docs:api": "node scripts/generate-docs.js api",
+    "dev:docs:arch": "node scripts/generate-docs.js architecture",
+    "dev:hmr": "node scripts/dev-server.js start",
+    "dev:hmr:stop": "node scripts/dev-server.js stop",
+    "dev:hmr:status": "node scripts/dev-server.js status",
+    "dev:enhanced": "node scripts/enhanced-dev.js start",
+    "dev:full": "concurrently \"npm run dev:hmr\" \"npm run serve:dev\"",
+    "test:hmr": "node scripts/test-hmr.js run",
     "prepare": "npm run build"
   },
   "keywords": [],
@@ -40,10 +54,12 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^24.7.2",
-    "esbuild": "^0.25.10",
-    "typescript": "^5.9.3",
+    "chokidar": "^3.6.0",
     "concurrently": "^8.2.2",
-    "vitest": "^1.0.4",
-    "jsdom": "^23.0.1"
+    "esbuild": "^0.25.10",
+    "jsdom": "^23.2.0",
+    "typescript": "^5.9.3",
+    "vitest": "^1.6.1",
+    "ws": "^8.18.3"
   }
 }

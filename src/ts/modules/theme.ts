@@ -11,7 +11,9 @@
  */
 
 import { qsSafe, addEventListener } from './utils/dom';
-import type { ThemeMode } from '../interfaces/types';
+import { registerCleanup } from '../core/cleanup-manager';
+import { themeStateIntegration } from '../core/app-state';
+import type { ThemeMode } from '../core/types';
 
 export type { ThemeMode };
 
@@ -71,6 +73,10 @@ export const applyTheme = (theme: ThemeMode): void => {
   // Remove transition class after animation completes
   setTimeout(() => {
     document.documentElement.classList.remove('theme-transitioning');
+    // Notify state manager that transition is complete
+    if (typeof window !== 'undefined' && (window as any).__APP_STATE_MANAGER__) {
+      (window as any).__APP_STATE_MANAGER__.dispatch('THEME_TRANSITION_END');
+    }
   }, THEME_TRANSITION_DURATION);
 
   console.log(`🎨 Theme applied: ${actualTheme} (stored: ${theme})`);
@@ -94,18 +100,29 @@ export const toggleTheme = (): void => {
   const current = getCurrentTheme();
   const next: ThemeMode = current === 'light' ? 'dark' : 'light';
 
-  // If current stored theme is 'system', update it to the actual theme
-  const stored = getStoredTheme();
-  storeTheme(stored === 'system' ? next : 'system');
-  applyTheme(stored === 'system' ? next : 'system');
+  // Use state manager if available
+  if (typeof window !== 'undefined' && (window as any).__APP_STATE_MANAGER__) {
+    (window as any).__APP_STATE_MANAGER__.setTheme(next);
+  } else {
+    // Fallback to localStorage
+    const stored = getStoredTheme();
+    storeTheme(stored === 'system' ? next : 'system');
+    applyTheme(stored === 'system' ? next : 'system');
+  }
 };
 
 /**
  * Set specific theme
  */
 export const setTheme = (theme: ThemeMode): void => {
-  storeTheme(theme);
-  applyTheme(theme);
+  // Use state manager if available
+  if (typeof window !== 'undefined' && (window as any).__APP_STATE_MANAGER__) {
+    (window as any).__APP_STATE_MANAGER__.setTheme(theme);
+  } else {
+    // Fallback to localStorage
+    storeTheme(theme);
+    applyTheme(theme);
+  }
 };
 
 /**
@@ -144,11 +161,32 @@ export const watchSystemTheme = (): void => {
     }
   };
 
-  // Modern browsers
+  // Modern browsers - addEventListener is automatically cleaned up
   if (mediaQuery.addEventListener) {
+    // Since this is a native browser API, we need manual cleanup registration
+    const cleanup = () => {
+      mediaQuery.removeEventListener('change', handleChange);
+    };
+
+    // Register with cleanup manager
+    registerCleanup(cleanup, {
+      description: 'System theme watcher',
+      priority: 2 // High priority - system watchers should be cleaned up early
+    });
+
     mediaQuery.addEventListener('change', handleChange);
   } else {
-    // Legacy support
+    // Legacy support - addListener is automatically cleaned up
+    const cleanup = () => {
+      mediaQuery.removeListener(handleChange);
+    };
+
+    // Register with cleanup manager
+    registerCleanup(cleanup, {
+      description: 'System theme watcher (legacy)',
+      priority: 2
+    });
+
     mediaQuery.addListener(handleChange);
   }
 
@@ -242,101 +280,10 @@ export const cleanupTheme = (): void => {
 };
 
 /**
- * Add CSS styles for theme toggle
+ * Theme styles are now loaded from external CSS files
+ * This function is kept for backward compatibility but no longer does anything
  */
 export const addThemeStyles = (): void => {
-  const styleId = 'theme-styles';
-
-  // Check if styles already exist
-  if (document.getElementById(styleId)) {
-    return;
-  }
-
-  const styles = `
-    /* Theme toggle button */
-    .theme-toggle {
-      background: transparent;
-      border: 1px solid #ddd;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      margin: 0 0.5rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      font-size: 1.2rem;
-      background: white;
-    }
-
-    .theme-toggle:hover {
-      border-color: #3498db;
-      transform: scale(1.1);
-    }
-
-    .theme-toggle:focus {
-      outline: 2px solid #3498db;
-      outline-offset: 2px;
-    }
-
-    .theme-toggle:active {
-      transform: scale(0.95);
-    }
-
-    .theme-toggle .theme-icon {
-      font-size: 1.2rem;
-      transition: opacity 0.3s ease;
-    }
-
-    /* Theme transitions */
-    .theme-transitioning,
-    .theme-transitioning * {
-      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
-    }
-
-    /* Dark theme */
-    [data-theme="dark"] {
-      color-scheme: dark;
-    }
-
-    /* Light theme (default) */
-    :root {
-      --bg-primary: #ffffff;
-      --bg-secondary: #f8f9fa;
-      --text-primary: #2c3e50;
-      --text-secondary: #5a6c7d;
-      --border-color: #e8e8e8;
-      --code-bg: #f6f8fa;
-      --accent: #3498db;
-    }
-
-    /* Dark theme */
-    [data-theme="dark"] {
-      --bg-primary: #1a1a1a;
-      --bg-secondary: #2d2d2d;
-      --text-primary: #ffffff;
-      --text-secondary: #b0b0b0;
-      --border-color: #404040;
-      --code-bg: #2d2d2d;
-      --accent: #4a9eff;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .theme-toggle {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-      }
-    }
-  `;
-
-  const styleElement = document.createElement('style');
-  styleElement.id = styleId;
-  styleElement.textContent = styles;
-  document.head.appendChild(styleElement);
-
-  console.log('🎨 Theme styles added to document');
+  // Styles are now in src/css/theme.css and loaded via the build system
+  console.log('🎨 Theme styles loaded from external CSS file');
 };

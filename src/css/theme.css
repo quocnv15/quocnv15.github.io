@@ -1,0 +1,122 @@
+/**
+ * Theme-related styles
+ *
+ * Contains theme toggle button styles, CSS custom properties for themes,
+ * and theme transition effects.
+ */
+
+/* Theme toggle button */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  background: white;
+}
+
+.theme-toggle:hover {
+  border-color: #3498db;
+  transform: scale(1.1);
+}
+
+.theme-toggle:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle .theme-icon {
+  font-size: 1.2rem;
+  transition: opacity 0.3s ease;
+}
+
+/* Theme transitions */
+.theme-transitioning,
+.theme-transitioning * {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Theme definitions with CSS custom properties */
+
+/* Light theme (default) */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #2c3e50;
+  --text-secondary: #5a6c7d;
+  --border-color: #e8e8e8;
+  --code-bg: #f6f8fa;
+  --accent: #3498db;
+  --accent-hover: #2980b9;
+  --accent-light: rgba(52, 152, 219, 0.1);
+  --accent-medium: rgba(52, 152, 219, 0.15);
+  --success: #27ae60;
+  --error: #e74c3c;
+  --warning: #f39c12;
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --border-color: #404040;
+  --code-bg: #2d2d2d;
+  --accent: #4a9eff;
+  --accent-hover: #3a8eed;
+  --accent-light: rgba(74, 158, 255, 0.1);
+  --accent-medium: rgba(74, 158, 255, 0.15);
+  --success: #2ecc71;
+  --error: #e74c3c;
+  --warning: #f39c12;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .theme-toggle {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .theme-toggle {
+    border-width: 2px;
+  }
+
+  .theme-toggle:focus {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .theme-toggle .theme-icon,
+  .theme-transitioning,
+  .theme-transitioning * {
+    transition: none;
+  }
+
+  .theme-toggle:hover,
+  .theme-toggle:active {
+    transform: none;
+  }
+}

@@ -2727,11 +2727,14 @@ var AppStateManager = class {
       this.store.dispatch({
         type: action,
         payload,
-        meta,
+        meta: meta || {},
         timestamp: Date.now()
       });
     } else {
-      this.store.dispatch(action);
+      this.store.dispatch({
+        ...action,
+        timestamp: action.timestamp || Date.now()
+      });
     }
   }
   getState() {
@@ -4649,7 +4652,11 @@ var ComponentRegistry = class _ComponentRegistry {
         element: config.element,
         autoCleanup: config.autoCleanup,
         cleanupManager: this.cleanupManager,
-        ...config
+        ...Object.fromEntries(
+          Object.entries(config).filter(
+            ([key]) => !["element", "autoCleanup"].includes(key)
+          )
+        )
       });
       await component.init();
       registration.instance = component;
@@ -4767,7 +4774,7 @@ var ComponentRegistry = class _ComponentRegistry {
     const registeredDates = components.map((c) => c.registeredAt);
     const oldestRegistration = registeredDates.length > 0 ? new Date(Math.min(...registeredDates.map((d) => d.getTime()))) : void 0;
     const newestRegistration = registeredDates.length > 0 ? new Date(Math.max(...registeredDates.map((d) => d.getTime()))) : void 0;
-    return {
+    const stats = {
       totalRegistered,
       totalInitialized,
       totalDestroyed,
@@ -4775,10 +4782,15 @@ var ComponentRegistry = class _ComponentRegistry {
         registered: this.getRegisteredNames(),
         initialized: this.getInitializedNames(),
         destroyed: this.getDestroyedNames()
-      },
-      oldestRegistration,
-      newestRegistration
+      }
     };
+    if (oldestRegistration) {
+      stats.oldestRegistration = oldestRegistration;
+    }
+    if (newestRegistration) {
+      stats.newestRegistration = newestRegistration;
+    }
+    return stats;
   }
   /**
    * Get detailed component information
@@ -4855,6 +4867,7 @@ var ComponentRegistry = class _ComponentRegistry {
     const names = this.getRegisteredNames();
     if (names.length === 0) return 0;
     const firstName = names[0];
+    if (!firstName) return 0;
     const registration = this.components.get(firstName);
     if (!(registration == null ? void 0 : registration.registeredAt)) return 0;
     return Date.now() - registration.registeredAt.getTime();

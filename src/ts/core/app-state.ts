@@ -9,10 +9,13 @@
  * - Application settings
  */
 
-import { createStore, StateStore, StateConfig } from './state-manager';
-import { StatePersistenceManager, PersistenceConfig } from './state-persistence';
-import { StateDebugManager, DebugConfig } from './state-debug-tools';
-import type { ThemeMode } from '../types';
+import { createStore, StateStore } from './state-manager';
+import type { StateConfig } from './state-manager';
+import { StatePersistenceManager } from './state-persistence';
+import type { PersistenceConfig } from './state-persistence';
+import { StateDebugManager } from './state-debug-tools';
+import type { DebugConfig } from './state-debug-tools';
+import type { ThemeMode } from './types';
 
 // ============================================================================
 // Type Definitions
@@ -390,7 +393,7 @@ export class AppStateManager {
     // Create state store
     this.store = createStore('app', {
       initialState: getInitialState(),
-      reducers: allReducers,
+      reducers: allReducers as any,
       config: {
         persistence: {
           enabled: !!config?.persistence,
@@ -482,11 +485,14 @@ export class AppStateManager {
       this.store.dispatch({
         type: action,
         payload,
-        meta,
+        meta: meta || {},
         timestamp: Date.now()
       });
     } else {
-      this.store.dispatch(action);
+      this.store.dispatch({
+        ...action,
+        timestamp: action.timestamp || Date.now()
+      });
     }
   }
 
@@ -630,7 +636,7 @@ export const appStateManager = new AppStateManager({
     enabled: true,
     backend: 'localStorage',
     compression: true
-  },
+  } as any,
   debug: {
     enabled: process.env.NODE_ENV === 'development',
     visualInspector: true,

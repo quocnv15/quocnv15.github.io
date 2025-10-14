@@ -231,7 +231,7 @@ export class StateStore<T = Record<string, any>> {
     const startTime = performance.now();
 
     const fullAction: StateAction = typeof action === 'string'
-      ? { type: action, payload, meta, timestamp: Date.now() }
+      ? { type: action, payload, meta: meta || {}, timestamp: Date.now() }
       : action;
 
     if (this.config.debug?.enabled) {
@@ -248,16 +248,16 @@ export class StateStore<T = Record<string, any>> {
         if (index < this.middleware.length) {
           const middleware = this.middleware[index];
           index++;
-          middleware(() => runMiddleware(), fullAction);
+          middleware?.(() => runMiddleware(), fullAction);
         } else {
           // Apply reducer
           if (this.reducers[fullAction.type]) {
-            nextState = this.reducers[fullAction.type](previousState, fullAction);
+            nextState = this.reducers[fullAction.type]!(previousState, fullAction);
           } else {
             // Default reducer for simple updates
             if (fullAction.payload !== undefined) {
-              if (meta?.key) {
-                nextState = { ...previousState, [meta.key]: fullAction.payload };
+              if (fullAction.meta?.key) {
+                nextState = { ...previousState, [fullAction.meta.key]: fullAction.payload };
               } else {
                 nextState = typeof fullAction.payload === 'object'
                   ? { ...previousState, ...fullAction.payload }
@@ -292,19 +292,19 @@ export class StateStore<T = Record<string, any>> {
   }
 
   set<K extends keyof T>(key: K, value: T[K]): void {
-    this.dispatch('SET_STATE', value, { key: key as string });
+    this.dispatch('SET_STATE', value as StateValue, { key: key as string });
   }
 
-  update<K extends keyof T>(key: K, updater: (current: T[K]) => T[K]): void {
-    const currentValue = this.get(key);
+  update(key: keyof T, updater: (current: any) => any): void {
+    const currentValue = this.get(key as any);
     const newValue = updater(currentValue);
-    this.set(key, newValue);
+    this.set(key as any, newValue);
   }
 
   reset(newState?: Partial<T>): void {
     const resetAction: StateAction = {
       type: 'RESET',
-      payload: newState,
+      payload: newState as StateValue,
       timestamp: Date.now()
     };
     this.dispatch(resetAction);
@@ -412,7 +412,7 @@ export class StateStore<T = Record<string, any>> {
       nextState,
       timestamp: Date.now(),
       duration,
-      stackTrace: error?.stack
+      stackTrace: error?.stack || ''
     };
 
     this.debugHistory.push(debugInfo);
@@ -468,8 +468,8 @@ export class StateStore<T = Record<string, any>> {
     };
 
     return {
-      persistence: { ...defaultConfig.persistence, ...userConfig?.persistence },
-      debug: { ...defaultConfig.debug, ...userConfig?.debug },
+      persistence: { ...defaultConfig.persistence, ...userConfig?.persistence, enabled: userConfig?.persistence?.enabled ?? defaultConfig.persistence?.enabled ?? false },
+      debug: { ...defaultConfig.debug, ...userConfig?.debug, enabled: userConfig?.debug?.enabled ?? defaultConfig.debug?.enabled ?? false },
       performance: { ...defaultConfig.performance, ...userConfig?.performance }
     };
   }
@@ -504,9 +504,8 @@ export class StateStore<T = Record<string, any>> {
   }
 
   destroy(): void {
-    this.state.destroy();
     this.debugHistory = [];
-    this.cleanupManager.cleanupAll();
+    this.cleanupManager.cleanup();
   }
 }
 
@@ -533,12 +532,11 @@ class StateManager {
       throw new Error(`State store '${name}' already exists`);
     }
 
-    const store = new StateStore(config);
+    const store = new StateStore(config) as any;
     this.stores.set(name, store);
 
     // Cleanup store on page unload
     this.cleanupManager.register(() => {
-      store.destroy();
       this.stores.delete(name);
     }, {
       id: `state-store-${name}`,
@@ -587,7 +585,7 @@ class StateManager {
       store.destroy();
     }
     this.stores.clear();
-    this.cleanupManager.cleanupAll();
+    this.cleanupManager.cleanup();
   }
 }
 

@@ -10,7 +10,6 @@
  */
 
 import { createStore, StateStore } from './state-manager';
-import type { StateConfig } from './state-manager';
 import { StatePersistenceManager } from './state-persistence';
 import type { PersistenceConfig } from './state-persistence';
 import { StateDebugManager } from './state-debug-tools';
@@ -86,6 +85,7 @@ export interface AppAction {
     analytics?: boolean;
     undoable?: boolean;
   };
+  timestamp?: number;
 }
 
 // ============================================================================
@@ -349,7 +349,7 @@ export class AppStateManager {
       },
       migration: {
         currentVersion: 1,
-        migrate: (data: any, fromVersion: number, toVersion: number) => {
+        migrate: (data: any, _fromVersion: number, _toVersion: number) => {
           // Handle future migrations here
           return data;
         }
@@ -411,7 +411,7 @@ export class AppStateManager {
 
     // Setup debugging
     if (config?.debug?.enabled) {
-      this.debugManager = new StateDebugManager(this.store, debugConfig);
+      this.debugManager = new StateDebugManager(this.store as any, debugConfig);
     }
 
     // Initialize session tracking
@@ -442,7 +442,7 @@ export class AppStateManager {
     try {
       const persistedState = await this.persistenceManager.load();
       if (persistedState) {
-        this.store.reset(persistedState);
+        this.store.reset(persistedState as any);
         console.log('🗄️ Persisted state loaded');
       }
     } catch (error) {
@@ -487,7 +487,7 @@ export class AppStateManager {
         payload,
         meta: meta || {},
         timestamp: Date.now()
-      });
+      } as any);
     } else {
       this.store.dispatch({
         ...action,

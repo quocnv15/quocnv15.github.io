@@ -12,7 +12,6 @@
 
 import { qsSafe, addEventListener } from './utils/dom';
 import { registerCleanup } from '../core/cleanup-manager';
-import { themeStateIntegration } from '../core/app-state';
 import type { ThemeMode } from '../core/types';
 
 export type { ThemeMode };

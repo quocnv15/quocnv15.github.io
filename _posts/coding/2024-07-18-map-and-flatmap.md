@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Swift Operators Containing map"
+date: 2024-07-18 10:00:00 +0700
+categories: [Swift, iOS]
+tags: [Swift, Functional Programming, Operators]
+---
+
 ### Swift Operators Containing "map"
 
 1. **`map`**

@@ -1,6 +1,6 @@
 # DOCS
 We keep all important docs in agent folder and keep updating them, structure like below
-• agent
+.agent
 - Tasks: PRD & implementation plan for each feature
 - System: Document the current state of the system (project structure, tech stack, integration points,
 database

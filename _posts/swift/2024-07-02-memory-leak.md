@@ -1,3 +1,11 @@
+---
+layout: post
+title: "How to debug memory leaks in iOS applications?"
+date: 2024-07-02 10:00:00 +0700
+categories: [Swift, iOS]
+tags: [Swift, iOS, Memory Management, Debugging]
+---
+
 # How to debug memory leaks in iOS applications?
 
 ## Why is this question important?

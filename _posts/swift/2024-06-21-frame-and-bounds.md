@@ -1,3 +1,11 @@
+---
+layout: post
+title: "What is the difference between the frame and bounds properties?"
+date: 2024-06-21 10:00:00 +0700
+categories: [Swift, iOS]
+tags: [Swift, iOS, UIKit, Views]
+---
+
 ## What is the difference between the frame and bounds properties?
 
 ---

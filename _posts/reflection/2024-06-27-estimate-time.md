@@ -1,3 +1,11 @@
+---
+layout: post
+title: "How do you estimate development time for a task?"
+date: 2024-06-27 10:00:00 +0700
+categories: [iOS, Best Practices]
+tags: [iOS, Planning, Project Management]
+---
+
 # How do you estimate development time for a task?
 
 ## Why is this question important?

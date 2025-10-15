@@ -1,4 +1,10 @@
-
+---
+layout: post
+title: "Clean Architecture of Uncle Bob"
+date: 2024-07-26 10:00:00 +0700
+categories: [Architecture, iOS]
+tags: [Architecture, Clean Architecture, SOLID, Design Patterns]
+---
 
 ### What is Clean Architecture?
 

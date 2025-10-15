@@ -1,0 +1,42 @@
+{% comment %}
+  Post Metadata Include
+  
+  Usage: {% include post-metadata.html post=post %}
+  
+  Returns standardized metadata for a post including:
+  - Read time (calculated based on categories)
+  - Categories as data attribute
+  - Date formatted
+{% endcomment %}
+
+{% assign post_item = include.post %}
+
+{% comment %} Calculate read time based on post categories {% endcomment %}
+{% assign read_time = 5 %}
+{% if post_item.read_time %}
+  {% assign read_time = post_item.read_time %}
+{% elsif post_item.categories contains 'Architecture' or post_item.categories contains 'Flutter' %}
+  {% assign read_time = 20 %}
+{% elsif post_item.categories contains 'Interview' %}
+  {% assign read_time = 15 %}
+{% elsif post_item.categories contains 'AI' or post_item.categories contains 'Strategy' %}
+  {% assign read_time = 12 %}
+{% elsif post_item.categories contains 'iOS' %}
+  {% assign read_time = 10 %}
+{% elsif post_item.categories contains 'Data Structures' %}
+  {% assign read_time = 8 %}
+{% elsif post_item.categories contains 'Swift' %}
+  {% assign read_time = 6 %}
+{% endif %}
+
+{% comment %} Build categories string for data attribute {% endcomment %}
+{% assign categories_str = "" %}
+{% if post_item.categories %}
+  {% assign categories_str = post_item.categories | join: ' ' | downcase %}
+{% endif %}
+
+{% comment %} Store in variables for parent to use {% endcomment %}
+{% assign calculated_read_time = read_time %}
+{% assign categories_data = categories_str %}
+{% assign formatted_date = post_item.date | date: "%b %-d, %Y" %}
+{% assign formatted_date_sort = post_item.date | date: "%Y%m%d" %}

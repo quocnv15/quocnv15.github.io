@@ -1,0 +1,29 @@
+{% comment %}
+  Category Badge Include
+  
+  Usage: {% include category-badge.html post=post %}
+  
+  Displays category badge with icon based on category type
+{% endcomment %}
+
+{% assign post_item = include.post %}
+
+{% if post_item.categories %}
+  {% if post_item.categories contains 'AI' %}
+    <span class="post-tag">🤖 AI</span>
+  {% elsif post_item.categories contains 'Interview' %}
+    <span class="post-tag">💼 Interview</span>
+  {% elsif post_item.categories contains 'Architecture' %}
+    <span class="post-tag">🏗️ Architecture</span>
+  {% elsif post_item.categories contains 'iOS' %}
+    <span class="post-tag">📱 iOS</span>
+  {% elsif post_item.categories contains 'Swift' %}
+    <span class="post-tag">💻 Swift</span>
+  {% elsif post_item.categories contains 'Data Structures' %}
+    <span class="post-tag">🔧 Data</span>
+  {% else %}
+    {% for category in post_item.categories limit: 2 %}
+      <span class="post-tag">{{ category }}</span>
+    {% endfor %}
+  {% endif %}
+{% endif %}

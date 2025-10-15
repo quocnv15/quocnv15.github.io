@@ -1,3 +1,11 @@
+---
+layout: post
+title: "How do you create a technical design document for an iOS task?"
+date: 2024-06-27 10:00:00 +0700
+categories: [iOS, Best Practices]
+tags: [iOS, Design, Documentation, Planning]
+---
+
 # How do you create a technical design document for an iOS task?
 
 ## Why is this question important?

@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Elementary Data Structures - Array"
+date: 2024-07-02 10:00:00 +0700
+categories: [Data Structures, Swift]
+tags: [Data Structures, Algorithms, Swift, Arrays]
+---
+
 # Elementary Data Structures - Array
 
 ## Array

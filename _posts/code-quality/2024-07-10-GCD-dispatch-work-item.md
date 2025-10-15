@@ -1,3 +1,11 @@
+---
+layout: post
+title: "Dispatch Queues in Swift"
+date: 2024-07-10 10:00:00 +0700
+categories: [iOS, Concurrency]
+tags: [iOS, Swift, GCD, Concurrency, Threading]
+---
+
 # Dispatch Queues in Swift
 Dispatch Queues, introduced as part of Apple’s Grand Central Dispatch (GCD) was introduced in 2009, offer an alternative to threads, allowing you to perform work asynchronously. Let’s explore their features and differences compared to operation queues and threads.
 

@@ -19,7 +19,7 @@ title: Home
           <option value="swift">💻 Swift Programming</option>
           <option value="ai">🤖 AI & Strategy</option>
           <option value="interview">💼 Interview Prep</option>
-          <option value="app">🏛️ App Architecture</option>
+          <option value="concurrency">⚡ Concurrency</option>
           <option value="notes">📝 Knowledge Curation</option>
         </select>
       </div>
@@ -42,17 +42,21 @@ title: Home
     <div class="featured-slider">
       {% assign featured_posts = site.posts | sort: 'date' | reverse %}
       {% for post in featured_posts limit: 4 %}
-      <article class="featured-card" data-categories="{% if post.categories %}{{ post.categories | join: ' ' }}{% endif %}" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %}">
+      {% include post-metadata.html post=post %}
+      <article class="featured-card" 
+               data-categories="{{ categories_data }}" 
+               data-date="{{ formatted_date_sort }}" 
+               data-read-time="{{ calculated_read_time }}">
         <div class="featured-content">
           <div class="featured-badge">
-            {% if post.categories contains 'AI' %}🤖 AI{% elsif post.categories contains 'Interview' %}💼 Interview{% elsif post.categories contains 'Architecture' %}🏗️ Architecture{% else %}📱 iOS{% endif %}
+            {% include category-badge.html post=post %}
           </div>
           <h3 class="featured-title">
             <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
           </h3>
           <div class="featured-meta">
-            <time class="featured-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-            <span class="featured-read-time">{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %} min read</span>
+            <time class="featured-date">{{ formatted_date }}</time>
+            <span class="featured-read-time">{{ calculated_read_time }} min read</span>
           </div>
           <p class="featured-excerpt">
             {% if post.content %}
@@ -80,7 +84,7 @@ title: Home
           <span class="post-count">
             {% assign ios_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.path contains 'GCD' or post.path contains 'memory-leak' or post.path contains 'testing' or post.categories contains 'iOS' %}
+              {% if post.categories contains 'iOS' %}
                 {% assign ios_count = ios_count | plus: 1 %}
               {% endif %}
             {% endfor %}
@@ -92,30 +96,8 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.path contains 'GCD' or post.path contains 'memory-leak' or post.path contains 'testing' or post.categories contains 'iOS' %}
-          <article class="post-card" data-categories="{% if post.categories %}{{ post.categories | join: ' ' }}{% endif %} ios" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %}">
-            <div class="post-content">
-              <div class="post-tags">
-                {% if post.categories %}
-                  {% for category in post.categories limit: 2 %}
-                    <span class="post-tag">{{ category }}</span>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <h3 class="post-title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <div class="post-meta">
-                <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-                <span class="post-read-time">{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %} min read</span>
-              </div>
-              <p class="post-excerpt">
-                {% if post.content %}
-                  {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
-                {% endif %}
-              </p>
-            </div>
-          </article>
+          {% if post.categories contains 'iOS' %}
+            {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}
       </div>
@@ -132,7 +114,7 @@ title: Home
           <span class="post-count">
             {% assign data_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.path contains 'data-structure' %}
+              {% if post.categories contains 'Data Structures' %}
                 {% assign data_count = data_count | plus: 1 %}
               {% endif %}
             {% endfor %}
@@ -144,30 +126,8 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.path contains 'data-structure' %}
-          <article class="post-card" data-categories="{% if post.categories %}{{ post.categories | join: ' ' }}{% endif %} data" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="8">
-            <div class="post-content">
-              <div class="post-tags">
-                {% if post.categories %}
-                  {% for category in post.categories limit: 2 %}
-                    <span class="post-tag">{{ category }}</span>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <h3 class="post-title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <div class="post-meta">
-                <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-                <span class="post-read-time">8 min read</span>
-              </div>
-              <p class="post-excerpt">
-                {% if post.content %}
-                  {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
-                {% endif %}
-              </p>
-            </div>
-          </article>
+          {% if post.categories contains 'Data Structures' %}
+            {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}
       </div>
@@ -184,7 +144,7 @@ title: Home
           <span class="post-count">
             {% assign arch_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' or post.categories contains 'Architecture' %}
+              {% if post.categories contains 'Architecture' %}
                 {% assign arch_count = arch_count | plus: 1 %}
               {% endif %}
             {% endfor %}
@@ -196,30 +156,8 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' or post.categories contains 'Architecture' %}
-          <article class="post-card" data-categories="{% if post.categories %}{{ post.categories | join: ' ' }}{% endif %} architecture" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %}">
-            <div class="post-content">
-              <div class="post-tags">
-                {% if post.categories %}
-                  {% for category in post.categories limit: 2 %}
-                    <span class="post-tag">{{ category }}</span>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <h3 class="post-title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <div class="post-meta">
-                <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-                <span class="post-read-time">{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %} min read</span>
-              </div>
-              <p class="post-excerpt">
-                {% if post.content %}
-                  {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
-                {% endif %}
-              </p>
-            </div>
-          </article>
+          {% if post.categories contains 'Architecture' %}
+            {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}
       </div>
@@ -236,7 +174,7 @@ title: Home
           <span class="post-count">
             {% assign swift_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.path contains 'map' %}
+              {% if post.categories contains 'Swift' %}
                 {% assign swift_count = swift_count | plus: 1 %}
               {% endif %}
             {% endfor %}
@@ -248,30 +186,8 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.path contains 'map' %}
-          <article class="post-card" data-categories="swift" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="6">
-            <div class="post-content">
-              <div class="post-tags">
-                {% if post.categories %}
-                  {% for category in post.categories limit: 2 %}
-                    <span class="post-tag">{{ category }}</span>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <h3 class="post-title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <div class="post-meta">
-                <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-                <span class="post-read-time">6 min read</span>
-              </div>
-              <p class="post-excerpt">
-                {% if post.content %}
-                  {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
-                {% endif %}
-              </p>
-            </div>
-          </article>
+          {% if post.categories contains 'Swift' %}
+            {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}
       </div>
@@ -288,7 +204,7 @@ title: Home
           <span class="post-count">
             {% assign ai_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.categories contains 'AI' or post.categories contains 'Strategy' or post.path contains 'ai-coding' %}
+              {% if post.categories contains 'AI' or post.categories contains 'Strategy' %}
                 {% assign ai_count = ai_count | plus: 1 %}
               {% endif %}
             {% endfor %}
@@ -300,30 +216,8 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.categories contains 'AI' or post.categories contains 'Strategy' or post.path contains 'ai-coding' %}
-          <article class="post-card" data-categories="{% if post.categories %}{{ post.categories | join: ' ' }}{% endif %} ai" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %}">
-            <div class="post-content">
-              <div class="post-tags">
-                {% if post.categories %}
-                  {% for category in post.categories limit: 2 %}
-                    <span class="post-tag">{{ category }}</span>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <h3 class="post-title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <div class="post-meta">
-                <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-                <span class="post-read-time">{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %} min read</span>
-              </div>
-              <p class="post-excerpt">
-                {% if post.content %}
-                  {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
-                {% endif %}
-              </p>
-            </div>
-          </article>
+          {% if post.categories contains 'AI' or post.categories contains 'Strategy' %}
+            {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}
       </div>
@@ -340,7 +234,7 @@ title: Home
           <span class="post-count">
             {% assign interview_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.categories contains 'Interview' or post.path contains 'interview' or post.path contains 'prepare' %}
+              {% if post.categories contains 'Interview' %}
                 {% assign interview_count = interview_count | plus: 1 %}
               {% endif %}
             {% endfor %}
@@ -352,51 +246,29 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.categories contains 'Interview' or post.path contains 'interview' or post.path contains 'prepare' %}
-          <article class="post-card" data-categories="{% if post.categories %}{{ post.categories | join: ' ' }}{% endif %} interview" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %}">
-            <div class="post-content">
-              <div class="post-tags">
-                {% if post.categories %}
-                  {% for category in post.categories limit: 2 %}
-                    <span class="post-tag">{{ category }}</span>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <h3 class="post-title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <div class="post-meta">
-                <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-                <span class="post-read-time">{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %} min read</span>
-              </div>
-              <p class="post-excerpt">
-                {% if post.content %}
-                  {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
-                {% endif %}
-              </p>
-            </div>
-          </article>
+          {% if post.categories contains 'Interview' %}
+            {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}
       </div>
     </div>
 
-    <!-- App Architecture Section -->
-    <div class="category-section" data-category="app">
+    <!-- Concurrency Section -->
+    <div class="category-section" data-category="concurrency">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">🏛️</span>
-          App Architecture
+          <span class="category-icon">⚡</span>
+          Concurrency & Threading
         </h2>
         <div class="category-controls">
           <span class="post-count">
-            {% assign app_count = 0 %}
+            {% assign concurrency_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.categories contains 'Architecture' or post.categories contains 'Flutter' or post.path contains 'app-architecture' %}
-                {% assign app_count = app_count | plus: 1 %}
+              {% if post.categories contains 'Concurrency' %}
+                {% assign concurrency_count = concurrency_count | plus: 1 %}
               {% endif %}
             {% endfor %}
-            {{ app_count }} articles
+            {{ concurrency_count }} articles
           </span>
           <button class="expand-btn">+</button>
         </div>
@@ -404,30 +276,8 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.categories contains 'Architecture' or post.categories contains 'Flutter' or post.path contains 'app-architecture' %}
-          <article class="post-card" data-categories="{% if post.categories %}{{ post.categories | join: ' ' }}{% endif %} app" data-date="{{ post.date | date: '%Y%m%d' }}" data-read-time="{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %}">
-            <div class="post-content">
-              <div class="post-tags">
-                {% if post.categories %}
-                  {% for category in post.categories limit: 2 %}
-                    <span class="post-tag">{{ category }}</span>
-                  {% endfor %}
-                {% endif %}
-              </div>
-              <h3 class="post-title">
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <div class="post-meta">
-                <time class="post-date">{{ post.date | date: "%b %-d, %Y" }}</time>
-                <span class="post-read-time">{% if post.categories contains 'AI' or post.categories contains 'Strategy' %}12{% elsif post.categories contains 'Interview' %}15{% elsif post.categories contains 'Architecture' or post.categories contains 'Flutter' %}20{% elsif post.path contains 'Architecture' or post.path contains 'layers' or post.path contains 'technical-design' %}10{% elsif post.path contains 'data-structure' %}8{% elsif post.path contains 'map' %}6{% else %}5{% endif %} min read</span>
-              </div>
-              <p class="post-excerpt">
-                {% if post.content %}
-                  {{ post.content | strip_html | truncatewords: 20 | remove: '#' }}
-                {% endif %}
-              </p>
-            </div>
-          </article>
+          {% if post.categories contains 'Concurrency' %}
+            {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}
       </div>
@@ -452,17 +302,21 @@ title: Home
       <div class="posts-grid">
         {% assign sorted_notes = site.notes | sort: 'date' | reverse %}
         {% for note in sorted_notes %}
-        <article class="post-card" data-categories="notes" data-date="{{ note.date | date: '%Y%m%d' }}" data-read-time="5">
+        {% include post-metadata.html post=note %}
+        <article class="post-card" 
+                 data-categories="notes" 
+                 data-date="{{ formatted_date_sort }}" 
+                 data-read-time="{{ calculated_read_time }}">
           <div class="post-content">
             <div class="post-tags">
-              <span class="post-tag">{{ note.path | split: '/' | last | split: '-' | first | capitalize }}</span>
+              <span class="post-tag">📝 Notes</span>
             </div>
             <h3 class="post-title">
               <a href="{{ note.url | relative_url }}">{{ note.title }}</a>
             </h3>
             <div class="post-meta">
-              <time class="post-date">{{ note.date | date: "%b %-d, %Y" }}</time>
-              <span class="post-read-time">5 min read</span>
+              <time class="post-date">{{ formatted_date }}</time>
+              <span class="post-read-time">{{ calculated_read_time }} min read</span>
             </div>
             <p class="post-excerpt">
               {% if note.content %}
@@ -550,5 +404,3 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-
-  

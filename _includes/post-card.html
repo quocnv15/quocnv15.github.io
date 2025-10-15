@@ -1,0 +1,39 @@
+{% comment %}
+  Post Card Component
+  
+  Usage: {% include post-card.html post=post %}
+  
+  Displays a consistent post card with:
+  - Category badges
+  - Title with link
+  - Date and read time
+  - Excerpt
+{% endcomment %}
+
+{% assign post_item = include.post %}
+
+{% comment %} Calculate metadata {% endcomment %}
+{% include post-metadata.html post=post_item %}
+
+<article class="post-card" 
+         data-categories="{{ categories_data }}" 
+         data-date="{{ formatted_date_sort }}" 
+         data-read-time="{{ calculated_read_time }}">
+  <div class="post-content">
+    <div class="post-tags">
+      {% include category-badge.html post=post_item %}
+    </div>
+    <h3 class="post-title">
+      <a href="{{ post_item.url | relative_url }}">{{ post_item.title }}</a>
+    </h3>
+    <div class="post-meta">
+      <time class="post-date">{{ formatted_date }}</time>
+      <span class="post-read-time">{{ calculated_read_time }} min read</span>
+    </div>
+    <p class="post-excerpt">
+      {% if post_item.content %}
+        {{ post_item.content | strip_html | truncatewords: 20 | remove: '#' }}
+      {% endif %}
+    </p>
+  </div>
+</article>

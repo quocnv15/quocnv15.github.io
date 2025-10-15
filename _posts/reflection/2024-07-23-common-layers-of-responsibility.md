@@ -1,3 +1,11 @@
+---
+layout: post
+title: "What are the common layers of responsibility that an iOS application has?"
+date: 2024-07-23 10:00:00 +0700
+categories: [iOS, Architecture]
+tags: [iOS, Architecture, Best Practices, Layers]
+---
+
 ### What are the common layers of responsibility that an iOS application has?
 
 ## UI Layer, Service Layer, Storage Layer, and Business Logic Layer.

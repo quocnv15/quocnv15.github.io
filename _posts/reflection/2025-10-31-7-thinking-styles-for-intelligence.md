@@ -3,7 +3,12 @@ layout: post
 title: "Rèn luyện 7 kiểu tư duy giúp bạn thông minh hơn mỗi ngày"
 date: 2025-10-31 11:00:00 +0700
 categories: [Best Practices, Reflection]
-tags: [critical-thinking, analytical-thinking, creative-thinking, problem-solving, personal-development]
+tags: [critical-thinking, analytical-thinking, creative-thinking, problem-solving, personal-development, repost]
+author: Chu Quang Minh
+source: 
+  url: "https://chuquangminh.com/7-thinking-styles"
+  name: "Chu Quang Minh's Blog"
+  type: "repost"
 ---
 
 # Rèn luyện 7 kiểu tư duy giúp bạn thông minh hơn mỗi ngày

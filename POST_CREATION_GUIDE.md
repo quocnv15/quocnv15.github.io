@@ -29,6 +29,8 @@ _notes/
 ## 📝 Tạo Blog Post Mới
 
 ### 1. Front Matter Template
+
+**For Original Posts:**
 ```yaml
 ---
 layout: post
@@ -36,6 +38,23 @@ title: "Your Post Title"
 date: YYYY-MM-DD HH:MM:SS +0700
 tags: [tag1, tag2, tag3]
 categories: [Category]
+author: Your Name
+---
+```
+
+**For Reposted Content:**
+```yaml
+---
+layout: post
+title: "Post Title"
+date: YYYY-MM-DD HH:MM:SS +0700
+tags: [tag1, tag2, tag3, repost]
+categories: [Category]
+author: Original Author Name
+source: 
+  url: "https://original-url.com/post"
+  name: "Original Blog/Publication Name"
+  type: "repost"
 ---
 ```
 
@@ -112,6 +131,7 @@ tags: [tag1, tag2, tag3]
 - [ ] Use proper naming convention
 - [ ] Set correct layout (`post` vs `note`)
 - [ ] Add appropriate front matter
+- [ ] If reposting, add `source` field with original URL and `repost` tag
 - [ ] Use English tags only
 - [ ] Check for typos and grammar
 - [ ] Test local build: `bundle exec jekyll serve`
@@ -168,6 +188,8 @@ Co-Authored-By: Claude <noreply@anthropic.com>"
 ## 📋 Templates
 
 ### Blog Post Template
+
+**Original Post Template:**
 ```markdown
 ---
 layout: post
@@ -175,6 +197,7 @@ title: "Post Title Here"
 date: 2025-10-02 10:00:00 +0700
 tags: [tag1, tag2, tag3]
 categories: [Category]
+author: Your Name
 ---
 
 > Hook sentence that grabs attention
@@ -192,6 +215,30 @@ Your detailed content here...
 
 ## Conclusion
 Summary and call to action.
+```
+
+**Repost Template:**
+```markdown
+---
+layout: post
+title: "Original Post Title"
+date: 2025-10-02 10:00:00 +0700
+tags: [tag1, tag2, tag3, repost]
+categories: [Category]
+author: Original Author Name
+source: 
+  url: "https://original-blog.com/post-url"
+  name: "Original Blog Name"
+  type: "repost"
+---
+
+> [Optional: Add your own intro/context for why you're sharing this]
+
+[Original content starts here...]
+
+---
+
+*Originally posted by [Author Name] on [Blog Name]. Read the original at [Original URL].*
 ```
 
 ### Video Note Template
@@ -272,6 +319,36 @@ Brief summary of the book's main premise.
 
 ---
 
+## 🔄 Reposting Guidelines
+
+### When to Repost:
+- Content from other blogs that provides significant value
+- Articles you want to preserve and reference later
+- Posts from thought leaders that align with your blog's themes
+- Content that might be useful to your audience
+
+### Best Practices for Reposting:
+1. **Always Credit:** Include original author and source information
+2. **Add Context:** Explain why you're sharing this content
+3. **Use `repost` tag:** Add `repost` to tags for filtering
+4. **Complete Front Matter:** Fill in all `source` fields
+5. **Preserve Original:** Don't modify the original content significantly
+6. **Add Attribution:** Include attribution at the end of the post
+
+### Front Matter for Reposts:
+```yaml
+source:
+  url: "https://original-url.com/post"      # Required
+  name: "Original Blog Name"                # Required  
+  type: "repost"                            # Required
+```
+
+### Example Use Cases:
+- Sharing insightful articles from industry leaders
+- Preserving valuable content that might be removed
+- Building a knowledge base of external resources
+- Curating content for your audience's benefit
+
 ## 🚀 Pro Tips
 
 1. **Consistency is Key:** Stick to the same format and style
@@ -281,8 +358,9 @@ Brief summary of the book's main premise.
 5. **Visual Elements:** Use emojis, formatting, and structure
 6. **Call to Action:** End with what readers should do next
 7. **Review Before Publishing:** Always proofread and test locally
+8. **Proper Attribution:** Always credit original sources when reposting
 
 ---
 
-*Last Updated: 2025-10-02*
+*Last Updated: 2025-11-03*
 *Maintained by: NGUYEN VAN QUOC*

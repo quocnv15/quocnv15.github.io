@@ -2,9 +2,13 @@
 layout: post
 title: "Building is Hard"
 date: 2025-11-03 10:00:00 +0700
-tags: [building, character, family, business, life, vietnamese]
+tags: [building, character, family, business, life, vietnamese, repost]
 categories: [thoughts]
 author: Loi Luu
+source: 
+  url: "https://loiluu.com/loi-luus-blog/latest-posts/building-is-hard"
+  name: "Loi Luu's Blog"
+  type: "repost"
 ---
 
 > Building anything meaningful is hard, whether it's a person, a family, or a business. From the smallest unit of society to the biggest institutions, everything valuable we see around us comes from years of effort, discipline, and resilience.

@@ -8,8 +8,34 @@ title: Home
     <h1 class="page-title">Technical Articles & Insights</h1>
     <p class="page-description">Explore my collection of mobile development and AI integration articles, architecture patterns, and programming best practices</p>
     
-    <!-- Category Filter -->
-    <div class="category-filter">
+    <!-- Search Bar -->
+    <div class="search-section">
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
+            placeholder="Search articles by title, content, tags, or author..."
+            aria-label="Search articles"
+          >
+          <button class="search-clear" id="searchClear" aria-label="Clear search" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="search-status" id="searchStatus"></div>
+      </div>
+    </div>
+
+    <!-- Filter Controls -->
+    <div class="filter-controls">
       <div class="filter-dropdown-container">
         <select class="filter-dropdown" id="filterDropdown" aria-label="Filter articles by category">
           <option value="all">All Articles</option>
@@ -22,6 +48,37 @@ title: Home
           <option value="concurrency">⚡ Concurrency</option>
           <option value="notes">📝 Knowledge Curation</option>
         </select>
+      </div>
+      
+      <div class="content-type-filter">
+        <button class="filter-chip active" data-type="all">All</button>
+        <button class="filter-chip" data-type="original">Original</button>
+        <button class="filter-chip" data-type="repost">Reposts</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Results -->
+  <div class="search-results" id="searchResults" style="display: none;">
+    <div class="search-results-header">
+      <h2 class="search-results-title">
+        Search Results <span class="results-count" id="resultsCount"></span>
+      </h2>
+      <button class="clear-search-btn" id="clearSearchBtn">Clear Search</button>
+    </div>
+    <div class="search-results-grid" id="searchResultsGrid">
+      <!-- Search results will be dynamically added here -->
+    </div>
+    <div class="no-results" id="noResults" style="display: none;">
+      <div class="no-results-content">
+        <svg class="no-results-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+          <path d="M8 11h6"></path>
+        </svg>
+        <h3>No articles found</h3>
+        <p>Try searching with different keywords or browse all articles.</p>
+        <button class="browse-all-btn" id="browseAllBtn">Browse All Articles</button>
       </div>
     </div>
   </div>
@@ -346,14 +403,243 @@ title: Home
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+  // Search functionality
+  const searchInput = document.getElementById('searchInput');
+  const searchClear = document.getElementById('searchClear');
+  const searchResults = document.getElementById('searchResults');
+  const searchResultsGrid = document.getElementById('searchResultsGrid');
+  const searchStatus = document.getElementById('searchStatus');
+  const resultsCount = document.getElementById('resultsCount');
+  const noResults = document.getElementById('noResults');
+  const clearSearchBtn = document.getElementById('clearSearchBtn');
+  const browseAllBtn = document.getElementById('browseAllBtn');
+  
+  // Filter functionality
   const filterDropdown = document.getElementById('filterDropdown');
   const categorySections = document.querySelectorAll('.category-section');
   const featuredSection = document.querySelector('.featured-section');
+  const filterChips = document.querySelectorAll('.filter-chip');
   
-  // Dropdown functionality
+  // Search state
+  let searchTimeout;
+  let currentSearch = '';
+  let currentContentType = 'all';
+  
+  // Get all posts data
+  function getAllPosts() {
+    const posts = [];
+    const postElements = document.querySelectorAll('.post-card, .featured-card');
+    
+    postElements.forEach(element => {
+      const titleElement = element.querySelector('.post-title a, .featured-title a');
+      const contentElement = element.querySelector('.post-excerpt, .featured-excerpt');
+      const tagsElement = element.querySelector('.post-tags, .post-tag, .featured-badge');
+      const metaElement = element.querySelector('.post-meta, .featured-meta');
+      
+      // Get author from multiple possible sources
+      let author = '';
+      const authorElement = element.querySelector('[data-author]');
+      if (authorElement) {
+        author = authorElement.getAttribute('data-author');
+      } else {
+        // Try to get author from meta or content
+        const authorText = element.querySelector('.post-author, .author');
+        if (authorText) {
+          author = authorText.textContent.trim();
+        }
+      }
+      
+      if (titleElement) {
+        posts.push({
+          element: element,
+          title: titleElement.textContent.trim(),
+          content: contentElement ? contentElement.textContent.trim() : '',
+          url: titleElement.getAttribute('href'),
+          tags: tagsElement ? tagsElement.textContent.trim() : '',
+          author: author,
+          date: metaElement ? metaElement.textContent.trim() : '',
+          categories: element.getAttribute('data-categories') || '',
+          isRepost: element.querySelector('.post-tag, .tag-repost, [data-repost], .repost-badge') !== null ||
+                    tagsElement.textContent.toLowerCase().includes('repost')
+        });
+      }
+    });
+    
+    return posts;
+  }
+  
+  // Search function
+  function performSearch(query) {
+    currentSearch = query.toLowerCase().trim();
+    
+    if (currentSearch === '') {
+      clearSearch();
+      return;
+    }
+    
+    const allPosts = getAllPosts();
+    const results = allPosts.filter(post => {
+      // Filter by content type
+      if (currentContentType !== 'all') {
+        if (currentContentType === 'original' && post.isRepost) return false;
+        if (currentContentType === 'repost' && !post.isRepost) return false;
+      }
+      
+      // Search in title, content, tags, author
+      const searchableText = [
+        post.title,
+        post.content,
+        post.tags,
+        post.author
+      ].join(' ').toLowerCase();
+      
+      return searchableText.includes(currentSearch);
+    });
+    
+    displaySearchResults(results, query);
+  }
+  
+  // Display search results
+  function displaySearchResults(results, query) {
+    // Hide regular content
+    featuredSection.style.display = 'none';
+    categorySections.forEach(section => section.style.display = 'none');
+    
+    // Show search results
+    searchResults.style.display = 'block';
+    resultsCount.textContent = `(${results.length})`;
+    
+    if (results.length === 0) {
+      searchResultsGrid.style.display = 'none';
+      noResults.style.display = 'block';
+    } else {
+      searchResultsGrid.style.display = 'grid';
+      noResults.style.display = 'none';
+      
+      // Clear previous results
+      searchResultsGrid.innerHTML = '';
+      
+      // Add results
+      results.forEach(post => {
+        const resultCard = createSearchResultCard(post, query);
+        searchResultsGrid.appendChild(resultCard);
+      });
+    }
+    
+    // Update status
+    searchStatus.textContent = `Found ${results.length} result${results.length !== 1 ? 's' : ''}`;
+    searchClear.style.display = 'block';
+  }
+  
+  // Create search result card
+  function createSearchResultCard(post, query) {
+    const card = post.element.cloneNode(true);
+    
+    // Highlight search terms
+    const titleElement = card.querySelector('.post-title a, .featured-title a');
+    const contentElement = card.querySelector('.post-excerpt, .featured-excerpt');
+    
+    if (titleElement) {
+      titleElement.innerHTML = highlightText(titleElement.textContent, query);
+    }
+    
+    if (contentElement) {
+      contentElement.innerHTML = highlightText(contentElement.textContent, query);
+    }
+    
+    // Add repost indicator if needed
+    if (post.isRepost) {
+      const repostBadge = document.createElement('span');
+      repostBadge.className = 'search-repost-badge';
+      repostBadge.textContent = 'Repost';
+      card.querySelector('.post-content, .featured-content').prepend(repostBadge);
+    }
+    
+    return card;
+  }
+  
+  // Highlight text
+  function highlightText(text, query) {
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+  
+  // Clear search
+  function clearSearch() {
+    searchInput.value = '';
+    searchClear.style.display = 'none';
+    searchResults.style.display = 'none';
+    searchStatus.textContent = '';
+    
+    // Show regular content
+    featuredSection.style.display = 'block';
+    categorySections.forEach(section => section.style.display = 'block');
+    
+    // Reset filter
+    currentSearch = '';
+    window.history.replaceState(null, null, window.location.pathname);
+  }
+  
+  // Event listeners
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      const query = this.value;
+      
+      if (query.trim() === '') {
+        clearSearch();
+        return;
+      }
+      
+      // Debounced search
+      searchTimeout = setTimeout(() => {
+        performSearch(query);
+        // Update URL
+        window.history.replaceState(null, null, `#search=${encodeURIComponent(query)}`);
+      }, 300);
+    });
+    
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        clearSearch();
+        this.blur();
+      }
+    });
+  }
+  
+  if (searchClear) {
+    searchClear.addEventListener('click', clearSearch);
+  }
+  
+  if (clearSearchBtn) {
+    clearSearchBtn.addEventListener('click', clearSearch);
+  }
+  
+  if (browseAllBtn) {
+    browseAllBtn.addEventListener('click', clearSearch);
+  }
+  
+  // Content type filter chips
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', function() {
+      filterChips.forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      currentContentType = this.getAttribute('data-type');
+      
+      if (currentSearch) {
+        performSearch(currentSearch);
+      }
+    });
+  });
+  
+  // Existing dropdown functionality
   if (filterDropdown) {
     filterDropdown.addEventListener('change', function() {
       const category = this.value;
+      if (currentSearch) {
+        // If searching, don't apply category filter
+        return;
+      }
       filterByCategory(category);
     });
   }
@@ -384,23 +670,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // Add URL hash support for deep linking
+  // Check URL hash for search
   const urlHash = window.location.hash.substring(1);
-  if (urlHash && filterDropdown) {
+  if (urlHash.startsWith('search=')) {
+    const query = decodeURIComponent(urlHash.substring(7));
+    if (query) {
+      searchInput.value = query;
+      performSearch(query);
+    }
+  } else if (urlHash && filterDropdown) {
     filterDropdown.value = urlHash;
     filterByCategory(urlHash);
   }
   
-  // Update URL hash when filter changes
-  if (filterDropdown) {
-    filterDropdown.addEventListener('change', function() {
-      const category = this.value;
-      if (category !== 'all') {
-        window.history.replaceState(null, null, `#${category}`);
-      } else {
-        window.history.replaceState(null, null, window.location.pathname);
-      }
-    });
-  }
+  // Add keyboard shortcuts
+  document.addEventListener('keydown', function(e) {
+    // Ctrl/Cmd + K to focus search
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    
+    // Escape to clear search
+    if (e.key === 'Escape' && currentSearch) {
+      clearSearch();
+    }
+  });
 });
 </script>

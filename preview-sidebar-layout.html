@@ -93,6 +93,16 @@
           </div>
         </div>
 
+        <!-- Filter Info Bar -->
+        <div class="filter-info-bar" id="filterInfoBar">
+          <div class="filter-active-info">
+            <span>🔍 Filtering:</span>
+            <span class="filter-badge" id="filterBadge"></span>
+            <span id="filterCount"></span>
+          </div>
+          <button class="clear-filter-btn" id="clearFilterBtn">Clear Filter</button>
+        </div>
+
         <!-- Featured Section -->
         <div class="featured-section">
           <div class="section-header">
@@ -286,6 +296,130 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Filter state
+      let currentFilter = {
+        type: null,
+        value: null
+      };
+      
+      // Filter functionality
+      function filterPosts(filterType, filterValue) {
+        currentFilter.type = filterType;
+        currentFilter.value = filterValue;
+        
+        const allPosts = document.querySelectorAll('.post-card');
+        const categorySections = document.querySelectorAll('.category-section');
+        const featuredSection = document.querySelector('.featured-section');
+        const filterInfoBar = document.getElementById('filterInfoBar');
+        const filterBadge = document.getElementById('filterBadge');
+        const filterCount = document.getElementById('filterCount');
+        
+        let visibleCount = 0;
+        
+        // Show all sections first
+        categorySections.forEach(section => {
+          section.style.display = 'block';
+        });
+        
+        if (filterType === 'category') {
+          // Filter by category
+          categorySections.forEach(section => {
+            const sectionCategory = section.getAttribute('data-category');
+            if (sectionCategory !== filterValue) {
+              section.style.display = 'none';
+            } else {
+              const posts = section.querySelectorAll('.post-card');
+              visibleCount += posts.length;
+            }
+          });
+          
+          // Hide featured section
+          if (featuredSection) {
+            featuredSection.style.display = 'none';
+          }
+          
+          // Update filter info
+          const categoryName = document.querySelector(`[data-category="${filterValue}"] .category-name`)?.textContent || filterValue;
+          filterBadge.textContent = categoryName.toUpperCase();
+          filterCount.textContent = `${visibleCount} articles found`;
+          
+        } else if (filterType === 'tag') {
+          // Filter by tag
+          allPosts.forEach(post => {
+            const postTags = post.textContent.toLowerCase();
+            
+            if (postTags.includes(filterValue.toLowerCase())) {
+              post.classList.remove('hidden');
+              visibleCount++;
+            } else {
+              post.classList.add('hidden');
+            }
+          });
+          
+          // Hide empty sections
+          categorySections.forEach(section => {
+            const visiblePosts = section.querySelectorAll('.post-card:not(.hidden)');
+            if (visiblePosts.length === 0) {
+              section.style.display = 'none';
+            }
+          });
+          
+          // Hide featured section
+          if (featuredSection) {
+            featuredSection.style.display = 'none';
+          }
+          
+          // Update filter info
+          filterBadge.textContent = `#${filterValue}`;
+          filterCount.textContent = `${visibleCount} articles found`;
+        }
+        
+        // Show filter bar
+        filterInfoBar.classList.add('active');
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
+      function clearFilter() {
+        currentFilter.type = null;
+        currentFilter.value = null;
+        
+        const allPosts = document.querySelectorAll('.post-card');
+        const categorySections = document.querySelectorAll('.category-section');
+        const featuredSection = document.querySelector('.featured-section');
+        const filterInfoBar = document.getElementById('filterInfoBar');
+        
+        // Show all posts
+        allPosts.forEach(post => {
+          post.classList.remove('hidden');
+        });
+        
+        // Show all sections
+        categorySections.forEach(section => {
+          section.style.display = 'block';
+        });
+        
+        // Show featured section
+        if (featuredSection) {
+          featuredSection.style.display = 'block';
+        }
+        
+        // Hide filter bar
+        filterInfoBar.classList.remove('active');
+        
+        // Clear active states
+        document.querySelectorAll('.category-item').forEach(item => {
+          item.classList.remove('active');
+        });
+      }
+      
+      // Clear filter button
+      const clearFilterBtn = document.getElementById('clearFilterBtn');
+      if (clearFilterBtn) {
+        clearFilterBtn.addEventListener('click', clearFilter);
+      }
+      
       // Sidebar toggle for mobile
       const sidebar = document.getElementById('post-sidebar');
       const sidebarToggle = document.getElementById('sidebar-toggle');
@@ -302,25 +436,41 @@
           sidebarOverlay.classList.remove('active');
         });
         
-        // Smooth scroll for category links
+        // Category filter links
         document.querySelectorAll('.category-item').forEach(link => {
           link.addEventListener('click', function(e) {
-            const hash = this.getAttribute('href');
-            const target = document.querySelector(hash);
-            if (target) {
-              e.preventDefault();
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              
-              // Close mobile sidebar
-              sidebar.classList.remove('active');
-              sidebarOverlay.classList.remove('active');
-              
-              // Update active state
-              document.querySelectorAll('.category-item').forEach(item => {
-                item.classList.remove('active');
-              });
-              this.classList.add('active');
-            }
+            e.preventDefault();
+            
+            const category = this.getAttribute('data-category');
+            
+            // Close mobile sidebar
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            
+            // Update active state
+            document.querySelectorAll('.category-item').forEach(item => {
+              item.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // Filter posts
+            filterPosts('category', category);
+          });
+        });
+        
+        // Tag filter links
+        document.querySelectorAll('.tag-item').forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const tagText = this.textContent.trim().split(/\s+/)[0];
+            
+            // Close mobile sidebar
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            
+            // Filter posts
+            filterPosts('tag', tagText);
           });
         });
       }

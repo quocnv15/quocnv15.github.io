@@ -3,10 +3,83 @@ layout: page
 title: Home
 ---
 
-<div class="posts-homepage">
+<div class="post-list-container">
+  <!-- Sidebar with categories -->
+  <aside class="sidebar" id="post-sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <h3>📚 A Realistic Dreamer</h3>
+        <p class="sidebar-subtitle">Browse by category</p>
+      </div>
+      <nav class="category-nav">
+        {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
+        {% assign all_categories = "" | split: "" %}
+        {% for post in sorted_posts %}
+          {% for category in post.categories %}
+            {% unless all_categories contains category %}
+              {% assign all_categories = all_categories | push: category %}
+            {% endunless %}
+          {% endfor %}
+        {% endfor %}
+        {% assign sorted_categories = all_categories | sort %}
+        
+        {% for category in sorted_categories %}
+          {% assign posts_in_category = sorted_posts | where_exp: "post", "post.categories contains category" %}
+          <a href="#{{ category | slugify }}" class="category-item" data-category="{{ category | slugify }}">
+            <span class="category-name">{{ category }}</span>
+            <span class="category-count">{{ posts_in_category.size }} Bookmarks</span>
+          </a>
+        {% endfor %}
+      </nav>
+
+      <!-- Tags section -->
+      <div class="tags-section">
+        <h3 class="tags-title">🏷️ Tags</h3>
+        <div class="tags-cloud">
+          {% assign tags = site.tags | sort %}
+          {% for tag in tags limit:15 %}
+          <a href="#tag-{{ tag[0] | slugify }}" class="tag-item">
+            {{ tag[0] }} <span class="tag-count">{{ tag[1].size }}</span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main content area -->
+  <div class="post-list-main">
+    <div class="posts-homepage">
   <div class="page-header">
-    <h1 class="page-title">Technical Articles & Insights</h1>
-    <p class="page-description">Explore my collection of mobile development and AI integration articles, architecture patterns, and programming best practices</p>
+    <div class="page-header-content">
+      <h1 class="page-title">Technical Articles & Insights</h1>
+      <p class="page-description">Explore my collection of mobile development and AI integration articles, architecture patterns, and programming best practices</p>
+    </div>
+    
+    <!-- View Toggle -->
+    <div class="view-toggle-group">
+      <button class="view-toggle-btn active" data-view="grid" title="Grid View">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        Grid
+      </button>
+      <button class="view-toggle-btn" data-view="list" title="Alphabetical View">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <line x1="3" y1="6" x2="3.01" y2="6"></line>
+          <line x1="3" y1="12" x2="3.01" y2="12"></line>
+          <line x1="3" y1="18" x2="3.01" y2="18"></line>
+        </svg>
+        Alphabetically
+      </button>
+    </div>
+  </div>
     
     <!-- Search Bar -->
     <div class="search-section">
@@ -696,5 +769,89 @@ document.addEventListener('DOMContentLoaded', function() {
       clearSearch();
     }
   });
+  
+  // View toggle functionality
+  const viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
+  const categoriesContainer = document.querySelector('.categories-container');
+  
+  viewToggleBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const view = this.getAttribute('data-view');
+      
+      // Update active state
+      viewToggleBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      // Apply view
+      if (view === 'list') {
+        // Sort categories alphabetically
+        const categorySections = Array.from(document.querySelectorAll('.category-section'));
+        categorySections.sort((a, b) => {
+          const titleA = a.querySelector('.category-title').textContent.trim();
+          const titleB = b.querySelector('.category-title').textContent.trim();
+          return titleA.localeCompare(titleB);
+        });
+        
+        categorySections.forEach(section => {
+          categoriesContainer.appendChild(section);
+        });
+      } else {
+        // Default grid view (already sorted)
+        location.reload();
+      }
+    });
+  });
+  
+  // Sidebar toggle for mobile
+  const sidebar = document.getElementById('post-sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  
+  if (sidebarToggle && sidebar && sidebarOverlay) {
+    sidebarToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+    
+    sidebarOverlay.addEventListener('click', function() {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+    
+    // Smooth scroll for category links
+    document.querySelectorAll('.category-item').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const hash = this.getAttribute('href');
+        const target = document.querySelector(hash);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          
+          // Close mobile sidebar
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+          
+          // Update active state
+          document.querySelectorAll('.category-item').forEach(item => {
+            item.classList.remove('active');
+          });
+          this.classList.add('active');
+        }
+      });
+    });
+  }
 });
 </script>
+
+<!-- Close main content and container divs -->
+    </div>
+  </div>
+</div>
+
+<!-- Mobile sidebar toggle button -->
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle categories sidebar">
+  ☰
+</button>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>

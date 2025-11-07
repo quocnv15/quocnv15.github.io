@@ -3,13 +3,30 @@ layout: page
 title: Home
 ---
 
-<div class="posts-homepage">
-  <div class="page-header">
-    <h1 class="page-title">Technical Articles & Insights</h1>
-    <p class="page-description">Explore my collection of mobile development and AI integration articles, architecture patterns, and programming best practices</p>
-    
-    <!-- Search Bar -->
-    <div class="search-section">
+<div class="post-list-container">
+  <!-- Sidebar with categories -->
+  <aside class="sidebar" id="post-sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <p class="sidebar-subtitle">Browse by category</p>
+      </div>
+
+      <!-- Filter Status -->
+      <div class="filter-status" id="filterStatus" style="display: none;">
+        <div class="filter-status-content">
+          <span class="filter-status-icon">🔍</span>
+          <span class="filter-status-text" id="filterStatusText"></span>
+          <button class="clear-filter-btn" id="clearFilterBtn" title="Clear filter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Bar in Sidebar -->
+      <div class="search-section sidebar-search">
       <div class="search-container">
         <div class="search-input-wrapper">
           <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -20,7 +37,7 @@ title: Home
             type="text" 
             id="searchInput" 
             class="search-input" 
-            placeholder="Search articles by title, content, tags, or author..."
+              placeholder="Search articles..."
             aria-label="Search articles"
           >
           <button class="search-clear" id="searchClear" aria-label="Clear search" style="display: none;">
@@ -34,29 +51,75 @@ title: Home
       </div>
     </div>
 
-    <!-- Filter Controls -->
-    <div class="filter-controls">
-      <div class="filter-dropdown-container">
-        <select class="filter-dropdown" id="filterDropdown" aria-label="Filter articles by category">
-          <option value="all">All Articles</option>
-          <option value="ios">📱 iOS Development</option>
-          <option value="data">🔧 Data Structures</option>
-          <option value="architecture">🏗️ Architecture</option>
-          <option value="swift">💻 Swift Programming</option>
-          <option value="ai">🤖 AI & Strategy</option>
-          <option value="interview">💼 Interview Prep</option>
-          <option value="concurrency">⚡ Concurrency</option>
-          <option value="notes">📝 Knowledge Curation</option>
-        </select>
-      </div>
-      
-      <div class="content-type-filter">
-        <button class="filter-chip active" data-type="all">All</button>
-        <button class="filter-chip" data-type="original">Original</button>
-        <button class="filter-chip" data-type="repost">Reposts</button>
+      <nav class="category-nav">
+        {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
+        {% assign all_categories = "" | split: "" %}
+        {% for post in sorted_posts %}
+          {% for category in post.categories %}
+            {% unless all_categories contains category %}
+              {% assign all_categories = all_categories | push: category %}
+            {% endunless %}
+          {% endfor %}
+        {% endfor %}
+        {% assign sorted_categories = all_categories | sort %}
+
+        {% comment %} Define valid categories - only show categories that have corresponding sections {% endcomment %}
+        {% comment %} Mapping: category name -> section data-category attribute {% endcomment %}
+        {% comment %} Sections available: ios, data, architecture, swift, ai, interview, concurrency {% endcomment %}
+        {% assign category_mapping = "iOS:ios,Swift:swift,AI:ai,Strategy:ai,Architecture:architecture,Data Structures:data,Interview:interview,Concurrency:concurrency" | split: "," %}
+        {% assign min_posts = 1 %}
+
+        {% for category in sorted_categories %}
+          {% assign category_slug = category | slugify %}
+          {% assign posts_in_category = sorted_posts | where_exp: "post", "post.categories contains category" %}
+          
+          {% comment %} Only show if has minimum posts {% endcomment %}
+          {% if posts_in_category.size >= min_posts %}
+            {% assign has_section = false %}
+            {% assign mapped_slug = "" %}
+            
+            {% comment %} Check if category has a corresponding section {% endcomment %}
+            {% for mapping in category_mapping %}
+              {% assign parts = mapping | split: ":" %}
+              {% assign mapped_category = parts[0] %}
+              {% assign mapped_data_category = parts[1] %}
+              
+              {% if category == mapped_category %}
+                {% assign has_section = true %}
+                {% assign mapped_slug = mapped_data_category %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+            
+            {% comment %} Show category only if it has a corresponding section {% endcomment %}
+            {% if has_section %}
+              <a href="#{{ mapped_slug }}" class="category-item" data-category="{{ mapped_slug }}">
+                <span class="category-name">{{ category }}</span>
+                <span class="category-count">{{ posts_in_category.size }} Bookmarks</span>
+              </a>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </nav>
+
+      <!-- Tags section -->
+      <div class="tags-section">
+        <h3 class="tags-title">Tags</h3>
+        <div class="tags-cloud">
+          {% assign tags = site.tags | sort %}
+          {% for tag in tags limit:15 %}
+          <a href="#tag-{{ tag[0] | slugify }}" class="tag-item">
+            {{ tag[0] }} <span class="tag-count">{{ tag[1].size }}</span>
+          </a>
+          {% endfor %}
       </div>
     </div>
   </div>
+  </aside>
+
+  <!-- Main content area -->
+  <div class="post-list-main">
+    <div class="posts-homepage" style="padding-top: 2rem;">
 
   <!-- Search Results -->
   <div class="search-results" id="searchResults" style="display: none;">
@@ -95,7 +158,7 @@ title: Home
         <button class="nav-btn next">›</button>
       </div>
     </div>
-    
+
     <div class="featured-slider">
       {% assign featured_posts = site.posts | sort: 'date' | reverse %}
       {% for post in featured_posts limit: 4 %}
@@ -129,9 +192,9 @@ title: Home
   <!-- Dynamic Category Sections -->
   <div class="categories-container">
     {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
-    
+
     <!-- iOS Development Section -->
-    <div class="category-section" data-category="ios">
+    <div id="ios" class="category-section" data-category="ios">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">📱</span>
@@ -161,7 +224,7 @@ title: Home
     </div>
 
     <!-- Data Structures & Algorithms Section -->
-    <div class="category-section" data-category="data">
+    <div id="data" class="category-section" data-category="data">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">🔧</span>
@@ -191,7 +254,7 @@ title: Home
     </div>
 
     <!-- Architecture & Design Section -->
-    <div class="category-section" data-category="architecture">
+    <div id="architecture" class="category-section" data-category="architecture">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">🏗️</span>
@@ -221,7 +284,7 @@ title: Home
     </div>
 
     <!-- Swift Programming Section -->
-    <div class="category-section" data-category="swift">
+    <div id="swift" class="category-section" data-category="swift">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">💻</span>
@@ -251,7 +314,7 @@ title: Home
     </div>
 
     <!-- AI & Coding Strategy Section -->
-    <div class="category-section" data-category="ai">
+    <div id="ai" class="category-section" data-category="ai">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">🤖</span>
@@ -281,7 +344,7 @@ title: Home
     </div>
 
     <!-- Interview Preparation Section -->
-    <div class="category-section" data-category="interview">
+    <div id="interview" class="category-section" data-category="interview">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">💼</span>
@@ -311,7 +374,7 @@ title: Home
     </div>
 
     <!-- Concurrency Section -->
-    <div class="category-section" data-category="concurrency">
+    <div id="concurrency" class="category-section" data-category="concurrency">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">⚡</span>
@@ -341,7 +404,7 @@ title: Home
     </div>
 
     <!-- Knowledge Curation Section -->
-    <div class="category-section" data-category="notes">
+    <div id="notes" class="category-section" data-category="notes">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">📝</span>
@@ -362,6 +425,7 @@ title: Home
         {% include post-metadata.html post=note %}
         <article class="post-card" 
                  data-categories="notes" 
+                 data-tags="{% if note.tags %}{{ note.tags | join: ' ' | downcase }}{% endif %} notes"
                  data-date="{{ formatted_date_sort }}" 
                  data-read-time="{{ calculated_read_time }}">
           <div class="post-content">
@@ -392,7 +456,7 @@ title: Home
     <div class="view-all-section">
       <a href="/archive.html" class="view-all-btn">View All Articles →</a>
     </div>
-    
+
     <div class="quick-links">
       <a href="#" class="quick-link" data-scroll="top">↑ Back to Top</a>
       <a href="/archive.html" class="quick-link">📚 Archive</a>
@@ -414,28 +478,26 @@ document.addEventListener('DOMContentLoaded', function() {
   const clearSearchBtn = document.getElementById('clearSearchBtn');
   const browseAllBtn = document.getElementById('browseAllBtn');
   
-  // Filter functionality
-  const filterDropdown = document.getElementById('filterDropdown');
+  // Search state
   const categorySections = document.querySelectorAll('.category-section');
   const featuredSection = document.querySelector('.featured-section');
-  const filterChips = document.querySelectorAll('.filter-chip');
-  
-  // Search state
   let searchTimeout;
   let currentSearch = '';
-  let currentContentType = 'all';
+  
+  console.log('Category sections found:', categorySections.length); // Debug
+  console.log('Featured section found:', featuredSection ? 'Yes' : 'No'); // Debug
   
   // Get all posts data
   function getAllPosts() {
     const posts = [];
     const postElements = document.querySelectorAll('.post-card, .featured-card');
-    
+
     postElements.forEach(element => {
       const titleElement = element.querySelector('.post-title a, .featured-title a');
       const contentElement = element.querySelector('.post-excerpt, .featured-excerpt');
       const tagsElement = element.querySelector('.post-tags, .post-tag, .featured-badge');
       const metaElement = element.querySelector('.post-meta, .featured-meta');
-      
+
       // Get author from multiple possible sources
       let author = '';
       const authorElement = element.querySelector('[data-author]');
@@ -448,7 +510,7 @@ document.addEventListener('DOMContentLoaded', function() {
           author = authorText.textContent.trim();
         }
       }
-      
+
       if (titleElement) {
         posts.push({
           element: element,
@@ -464,27 +526,21 @@ document.addEventListener('DOMContentLoaded', function() {
         });
       }
     });
-    
+
     return posts;
   }
   
   // Search function
   function performSearch(query) {
     currentSearch = query.toLowerCase().trim();
-    
+
     if (currentSearch === '') {
       clearSearch();
       return;
     }
-    
+
     const allPosts = getAllPosts();
     const results = allPosts.filter(post => {
-      // Filter by content type
-      if (currentContentType !== 'all') {
-        if (currentContentType === 'original' && post.isRepost) return false;
-        if (currentContentType === 'repost' && !post.isRepost) return false;
-      }
-      
       // Search in title, content, tags, author
       const searchableText = [
         post.title,
@@ -492,10 +548,10 @@ document.addEventListener('DOMContentLoaded', function() {
         post.tags,
         post.author
       ].join(' ').toLowerCase();
-      
+
       return searchableText.includes(currentSearch);
     });
-    
+
     displaySearchResults(results, query);
   }
   
@@ -504,28 +560,28 @@ document.addEventListener('DOMContentLoaded', function() {
     // Hide regular content
     featuredSection.style.display = 'none';
     categorySections.forEach(section => section.style.display = 'none');
-    
+
     // Show search results
     searchResults.style.display = 'block';
     resultsCount.textContent = `(${results.length})`;
-    
+
     if (results.length === 0) {
       searchResultsGrid.style.display = 'none';
       noResults.style.display = 'block';
     } else {
       searchResultsGrid.style.display = 'grid';
       noResults.style.display = 'none';
-      
+
       // Clear previous results
       searchResultsGrid.innerHTML = '';
-      
+
       // Add results
       results.forEach(post => {
         const resultCard = createSearchResultCard(post, query);
         searchResultsGrid.appendChild(resultCard);
       });
     }
-    
+
     // Update status
     searchStatus.textContent = `Found ${results.length} result${results.length !== 1 ? 's' : ''}`;
     searchClear.style.display = 'block';
@@ -534,19 +590,19 @@ document.addEventListener('DOMContentLoaded', function() {
   // Create search result card
   function createSearchResultCard(post, query) {
     const card = post.element.cloneNode(true);
-    
+
     // Highlight search terms
     const titleElement = card.querySelector('.post-title a, .featured-title a');
     const contentElement = card.querySelector('.post-excerpt, .featured-excerpt');
-    
+
     if (titleElement) {
       titleElement.innerHTML = highlightText(titleElement.textContent, query);
     }
-    
+
     if (contentElement) {
       contentElement.innerHTML = highlightText(contentElement.textContent, query);
     }
-    
+
     // Add repost indicator if needed
     if (post.isRepost) {
       const repostBadge = document.createElement('span');
@@ -554,7 +610,7 @@ document.addEventListener('DOMContentLoaded', function() {
       repostBadge.textContent = 'Repost';
       card.querySelector('.post-content, .featured-content').prepend(repostBadge);
     }
-    
+
     return card;
   }
   
@@ -570,11 +626,11 @@ document.addEventListener('DOMContentLoaded', function() {
     searchClear.style.display = 'none';
     searchResults.style.display = 'none';
     searchStatus.textContent = '';
-    
+
     // Show regular content
     featuredSection.style.display = 'block';
     categorySections.forEach(section => section.style.display = 'block');
-    
+
     // Reset filter
     currentSearch = '';
     window.history.replaceState(null, null, window.location.pathname);
@@ -585,12 +641,12 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('input', function() {
       clearTimeout(searchTimeout);
       const query = this.value;
-      
+
       if (query.trim() === '') {
         clearSearch();
         return;
       }
-      
+
       // Debounced search
       searchTimeout = setTimeout(() => {
         performSearch(query);
@@ -598,7 +654,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.history.replaceState(null, null, `#search=${encodeURIComponent(query)}`);
       }, 300);
     });
-    
+
     searchInput.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') {
         clearSearch();
@@ -619,57 +675,6 @@ document.addEventListener('DOMContentLoaded', function() {
     browseAllBtn.addEventListener('click', clearSearch);
   }
   
-  // Content type filter chips
-  filterChips.forEach(chip => {
-    chip.addEventListener('click', function() {
-      filterChips.forEach(c => c.classList.remove('active'));
-      this.classList.add('active');
-      currentContentType = this.getAttribute('data-type');
-      
-      if (currentSearch) {
-        performSearch(currentSearch);
-      }
-    });
-  });
-  
-  // Existing dropdown functionality
-  if (filterDropdown) {
-    filterDropdown.addEventListener('change', function() {
-      const category = this.value;
-      if (currentSearch) {
-        // If searching, don't apply category filter
-        return;
-      }
-      filterByCategory(category);
-    });
-  }
-  
-  function filterByCategory(category) {
-    // Show/hide sections based on filter
-    categorySections.forEach(section => {
-      const sectionCategory = section.getAttribute('data-category');
-      
-      if (category === 'all' || sectionCategory === category) {
-        section.style.display = 'block';
-        section.classList.remove('hidden');
-      } else {
-        section.style.display = 'none';
-        section.classList.add('hidden');
-      }
-    });
-    
-    // Handle featured section
-    if (featuredSection) {
-      if (category === 'all') {
-        featuredSection.style.display = 'block';
-        featuredSection.classList.remove('hidden');
-      } else {
-        featuredSection.style.display = 'none';
-        featuredSection.classList.add('hidden');
-      }
-    }
-  }
-  
   // Check URL hash for search
   const urlHash = window.location.hash.substring(1);
   if (urlHash.startsWith('search=')) {
@@ -678,9 +683,6 @@ document.addEventListener('DOMContentLoaded', function() {
       searchInput.value = query;
       performSearch(query);
     }
-  } else if (urlHash && filterDropdown) {
-    filterDropdown.value = urlHash;
-    filterByCategory(urlHash);
   }
   
   // Add keyboard shortcuts
@@ -690,11 +692,365 @@ document.addEventListener('DOMContentLoaded', function() {
       e.preventDefault();
       searchInput.focus();
     }
-    
+
     // Escape to clear search
     if (e.key === 'Escape' && currentSearch) {
       clearSearch();
     }
   });
+  
+  // Sidebar toggle for mobile
+  const sidebar = document.getElementById('post-sidebar');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  
+  if (sidebarToggle && sidebar && sidebarOverlay) {
+    sidebarToggle.addEventListener('click', function() {
+      sidebar.classList.toggle('active');
+      sidebarOverlay.classList.toggle('active');
+    });
+
+    sidebarOverlay.addEventListener('click', function() {
+      sidebar.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+
+    // Filter state - support multiple categories
+    let activeCategories = new Set();
+    let activeTag = null;
+    const filterStatus = document.getElementById('filterStatus');
+    const filterStatusText = document.getElementById('filterStatusText');
+    const clearFilterBtn = document.getElementById('clearFilterBtn');
+
+    // Show filter status
+    function showFilterStatus(text) {
+      if (filterStatus && filterStatusText) {
+        filterStatusText.textContent = text;
+        filterStatus.style.display = 'block';
+      }
+    }
+
+    // Hide filter status
+    function hideFilterStatus() {
+      if (filterStatus) {
+        filterStatus.style.display = 'none';
+      }
+    }
+
+    // Clear filter button
+    if (clearFilterBtn) {
+      clearFilterBtn.addEventListener('click', function() {
+        activeCategories.clear();
+        activeTag = null;
+        document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+        hideFilterStatus();
+        showAllPosts();
+      });
+    }
+
+    // Filter by multiple categories
+    function filterByCategories() {
+      console.log('Filtering by categories:', Array.from(activeCategories)); // Debug
+
+      // Clear search
+      if (searchInput.value) {
+        searchInput.value = '';
+        clearSearch();
+      }
+
+      // If no categories selected, show all
+      if (activeCategories.size === 0) {
+        showAllPosts();
+        return;
+      }
+
+      // Hide all sections first
+      categorySections.forEach(section => {
+        section.style.display = 'none';
+      });
+
+      // Show only selected categories
+      let visibleSections = [];
+      activeCategories.forEach(categorySlug => {
+        // Try to find section by ID first, then by data-category attribute
+        let targetSection = document.getElementById(categorySlug);
+        if (!targetSection) {
+          targetSection = document.querySelector(`.category-section[data-category="${categorySlug}"]`);
+        }
+
+        if (targetSection) {
+          targetSection.style.display = 'block';
+          visibleSections.push(targetSection);
+        } else {
+          console.warn('Category section not found:', categorySlug);
+        }
+      });
+
+      // Update filter status
+      if (activeCategories.size > 0) {
+        const categoryNames = Array.from(activeCategories).map(slug => {
+          const categoryItem = document.querySelector(`.category-item[data-category="${slug}"]`);
+          return categoryItem?.querySelector('.category-name')?.textContent || slug;
+        });
+
+        if (categoryNames.length === 1) {
+          showFilterStatus(`Filtering by: ${categoryNames[0]}`);
+        } else {
+          showFilterStatus(`Filtering by: ${categoryNames.length} categories (${categoryNames.join(', ')})`);
+        }
+
+        // Smooth scroll to first visible section
+        if (visibleSections.length > 0) {
+          setTimeout(() => {
+            const yOffset = -100;
+            const y = visibleSections[0].getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }, 100);
+        }
+      }
+
+      // Hide featured section when filtering
+      if (featuredSection && activeCategories.size > 0) {
+        featuredSection.style.display = 'none';
+      }
+    }
+
+    // Filter by tag
+    function filterByTag(tagText) {
+      // Clear search
+      if (searchInput.value) {
+        searchInput.value = '';
+        clearSearch();
+      }
+
+      let visibleCount = 0;
+      const searchTag = tagText.toLowerCase().trim();
+
+      console.log('Filtering by tag:', searchTag); // Debug
+
+      // Check each category section
+    categorySections.forEach(section => {
+        const postsInSection = section.querySelectorAll('.post-card');
+        let hasVisiblePosts = false;
+
+        postsInSection.forEach(post => {
+          // Get tags from post element's data attribute first
+          let postTags = post.getAttribute('data-tags') || '';
+
+          // Also get from visible elements
+          const metaElement = post.querySelector('.post-meta');
+          const tagsElement = post.querySelector('.post-tags');
+          const badgeElements = post.querySelectorAll('.post-tag, .tag-badge, .category-badge');
+
+          if (metaElement) postTags += ' ' + metaElement.textContent;
+          if (tagsElement) postTags += ' ' + tagsElement.textContent;
+          badgeElements.forEach(badge => {
+            postTags += ' ' + badge.textContent;
+          });
+
+          postTags = postTags.toLowerCase();
+
+          console.log('Post tags:', postTags.substring(0, 100)); // Debug
+
+          // Check if tag exists - try multiple matching methods
+          const tagPattern = new RegExp('\\b' + searchTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+          const hasTag = tagPattern.test(postTags) ||
+                        postTags.includes(searchTag) ||
+                        postTags.includes('#' + searchTag) ||
+                        postTags.includes(searchTag.replace(/[-\s]/g, ''));
+
+          if (hasTag) {
+            post.style.display = 'block';
+            hasVisiblePosts = true;
+            visibleCount++;
+            console.log('✓ Post matched'); // Debug
+      } else {
+            post.style.display = 'none';
+          }
+        });
+
+        // Show/hide section based on visible posts
+        section.style.display = hasVisiblePosts ? 'block' : 'none';
+      });
+
+      // Filter featured section
+    if (featuredSection) {
+        const featuredPosts = featuredSection.querySelectorAll('.featured-card');
+        let hasVisibleFeatured = false;
+
+        featuredPosts.forEach(post => {
+          let postTags = post.getAttribute('data-tags') || '';
+
+          const metaElement = post.querySelector('.featured-meta');
+          const badgeElements = post.querySelectorAll('.featured-badge, .post-tag');
+
+          if (metaElement) postTags += ' ' + metaElement.textContent;
+          badgeElements.forEach(badge => {
+            postTags += ' ' + badge.textContent;
+          });
+
+          postTags = postTags.toLowerCase();
+
+          const tagPattern = new RegExp('\\b' + searchTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+          const hasTag = tagPattern.test(postTags) ||
+                        postTags.includes(searchTag) ||
+                        postTags.includes('#' + searchTag);
+
+          if (hasTag) {
+            post.style.display = 'block';
+            hasVisibleFeatured = true;
+            visibleCount++;
+      } else {
+            post.style.display = 'none';
+          }
+        });
+
+        featuredSection.style.display = hasVisibleFeatured ? 'block' : 'none';
+      }
+
+      console.log('Total visible posts:', visibleCount); // Debug
+
+      // Show filter status
+      showFilterStatus(`Filtering by tag: #${tagText} (${visibleCount} post${visibleCount !== 1 ? 's' : ''})`);
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Show all posts
+    function showAllPosts() {
+      // Clear search
+      if (searchInput.value) {
+        searchInput.value = '';
+        clearSearch();
+      }
+
+      // Hide filter status
+      hideFilterStatus();
+
+      // Show all sections
+      categorySections.forEach(section => {
+        section.style.display = 'block';
+
+        // Show all posts in section
+        section.querySelectorAll('.post-card').forEach(post => {
+          post.style.display = 'block';
+        });
+      });
+
+      // Show featured section
+      if (featuredSection) {
+        featuredSection.style.display = 'block';
+
+        // Show all featured posts
+        featuredSection.querySelectorAll('.featured-card').forEach(post => {
+          post.style.display = 'block';
+        });
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Category filtering - support multiple selection
+    const categoryItems = document.querySelectorAll('.category-item');
+    console.log('Found category items:', categoryItems.length); // Debug
+
+    categoryItems.forEach(link => {
+      link.addEventListener('click', function(e) {
+      e.preventDefault();
+
+        const categorySlug = this.getAttribute('data-category');
+        console.log('Category clicked:', categorySlug); // Debug
+
+        // Toggle category (multi-select)
+        if (activeCategories.has(categorySlug)) {
+          // Deselect this category
+          activeCategories.delete(categorySlug);
+          this.classList.remove('active');
+        } else {
+          // Select this category (add to set)
+          activeCategories.add(categorySlug);
+          this.classList.add('active');
+        }
+
+        // Clear tag filter when selecting categories
+        if (activeCategories.size > 0) {
+          activeTag = null;
+          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+        }
+
+        // Filter posts by selected categories
+        if (activeCategories.size === 0) {
+          showAllPosts();
+        } else {
+          filterByCategories();
+        }
+
+        // Close mobile sidebar
+        if (sidebar) sidebar.classList.remove('active');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+      });
+    });
+
+    // Tag filtering
+    document.querySelectorAll('.tag-item').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // Get tag name - extract just the tag text before the count
+        const fullText = this.textContent.trim();
+        // Remove numbers and extra spaces, handle both "TagName 5" and "TagName5" formats
+        const tagText = fullText.replace(/\s*\d+\s*$/, '').trim();
+
+        console.log('Tag clicked:', tagText); // Debug
+
+        // Toggle tag
+        if (activeTag === tagText) {
+          // Deselect - show all or categories if active
+          activeTag = null;
+          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+
+          if (activeCategories.size > 0) {
+            filterByCategories();
+          } else {
+            showAllPosts();
+          }
+        } else {
+          // Select new tag
+          activeTag = tagText;
+
+          // Clear category filters when selecting tag
+          activeCategories.clear();
+          document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+
+          // Update active states
+          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+          this.classList.add('active');
+
+          // Filter posts
+          filterByTag(tagText);
+        }
+
+        // Close mobile sidebar
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+      });
+    });
+  }
 });
 </script>
+
+<!-- Close main content and container divs -->
+    </div>
+  </div>
+</div>
+
+<!-- Mobile sidebar toggle button -->
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle categories sidebar">
+  ☰
+</button>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>

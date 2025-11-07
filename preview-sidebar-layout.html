@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview: Sidebar Layout</title>
+  <link rel="stylesheet" href="css/override.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f8f9fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="post-list-container">
+    <!-- Sidebar with categories -->
+    <aside class="sidebar" id="post-sidebar">
+      <div class="sidebar-content">
+        <div class="sidebar-header">
+          <h3>📚 A Realistic Dreamer</h3>
+          <p class="sidebar-subtitle">Browse by category</p>
+        </div>
+        <nav class="category-nav">
+          <a href="#ai" class="category-item active" data-category="ai">
+            <span class="category-name">AI Automation</span>
+            <span class="category-count">9 Bookmarks</span>
+          </a>
+          <a href="#prompts" class="category-item" data-category="prompts">
+            <span class="category-name">AI Prompts & Tactics</span>
+            <span class="category-count">10 Bookmarks</span>
+          </a>
+          <a href="#personal" class="category-item" data-category="personal">
+            <span class="category-name">Cá nhân</span>
+            <span class="category-count">12 Bookmarks</span>
+          </a>
+          <a href="#cdp" class="category-item" data-category="cdp">
+            <span class="category-name">CDP</span>
+            <span class="category-count">2 Bookmarks</span>
+          </a>
+          <a href="#tech" class="category-item" data-category="tech">
+            <span class="category-name">Công nghệ</span>
+            <span class="category-count">1 Bookmarks</span>
+          </a>
+        </nav>
+
+        <!-- Tags section -->
+        <div class="tags-section">
+          <h3 class="tags-title">🏷️ Tags</h3>
+          <div class="tags-cloud">
+            <a href="#tag-ai" class="tag-item">AI <span class="tag-count">15</span></a>
+            <a href="#tag-productivity" class="tag-item">Productivity <span class="tag-count">8</span></a>
+            <a href="#tag-automation" class="tag-item">Automation <span class="tag-count">12</span></a>
+            <a href="#tag-learning" class="tag-item">Learning <span class="tag-count">6</span></a>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content area -->
+    <div class="post-list-main">
+      <div class="posts-homepage">
+        <div class="page-header">
+          <div class="page-header-content">
+            <h1 class="page-title">Technical Articles & Insights</h1>
+            <p class="page-description">Explore my collection of mobile development and AI integration articles, architecture patterns, and programming best practices</p>
+          </div>
+          
+          <!-- View Toggle -->
+          <div class="view-toggle-group">
+            <button class="view-toggle-btn active" data-view="grid" title="Grid View">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              Grid
+            </button>
+            <button class="view-toggle-btn" data-view="list" title="Alphabetical View">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"></line>
+                <line x1="8" y1="12" x2="21" y2="12"></line>
+                <line x1="8" y1="18" x2="21" y2="18"></line>
+                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+              </svg>
+              Alphabetically
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Info Bar -->
+        <div class="filter-info-bar" id="filterInfoBar">
+          <div class="filter-active-info">
+            <span>🔍 Filtering:</span>
+            <span class="filter-badge" id="filterBadge"></span>
+            <span id="filterCount"></span>
+          </div>
+          <button class="clear-filter-btn" id="clearFilterBtn">Clear Filter</button>
+        </div>
+
+        <!-- Featured Section -->
+        <div class="featured-section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <span class="section-icon">⭐</span>
+              Featured Articles
+            </h2>
+          </div>
+          
+          <div class="featured-slider">
+            <article class="featured-card">
+              <div class="featured-content">
+                <div class="featured-badge">
+                  <span class="post-tag">🤖 AI</span>
+                </div>
+                <h3 class="featured-title">
+                  <a href="#">Webinar 500K AI - Xài sao? Phiên bản 4</a>
+                </h3>
+                <div class="featured-meta">
+                  <time class="featured-date">Nov 7, 2025</time>
+                  <span class="featured-read-time">5 min read</span>
+                </div>
+                <p class="featured-excerpt">
+                  Với hệ thống master prompt mạnh mẽ - hỗ trợ tư duy và công việc hiệu quả hơn...
+                </p>
+              </div>
+            </article>
+
+            <article class="featured-card">
+              <div class="featured-content">
+                <div class="featured-badge">
+                  <span class="post-tag">📱 iOS</span>
+                </div>
+                <h3 class="featured-title">
+                  <a href="#">Building Modern iOS Apps</a>
+                </h3>
+                <div class="featured-meta">
+                  <time class="featured-date">Nov 5, 2025</time>
+                  <span class="featured-read-time">8 min read</span>
+                </div>
+                <p class="featured-excerpt">
+                  Learn about the latest iOS development patterns and best practices...
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Categories Container -->
+        <div class="categories-container">
+          <!-- AI Category -->
+          <div class="category-section" data-category="ai" id="ai">
+            <div class="category-header">
+              <h2 class="category-title">
+                <span class="category-icon">🤖</span>
+                AI Automation
+              </h2>
+              <div class="category-controls">
+                <span class="post-count">9 articles</span>
+                <button class="expand-btn">+</button>
+              </div>
+            </div>
+            
+            <div class="posts-grid">
+              <article class="post-card">
+                <div class="post-content">
+                  <div class="post-tags">
+                    <span class="post-tag">AI</span>
+                  </div>
+                  <h3 class="post-title">
+                    <a href="#">Đa Nhiêm Với AI: Tác Động Và Chiến Lược</a>
+                  </h3>
+                  <div class="post-meta">
+                    <time class="post-date">Oct 1, 2025</time>
+                    <span class="post-read-time">5 min read</span>
+                  </div>
+                  <p class="post-excerpt">
+                    Tác Động Của AI Đến Đa Nhiêm Và Hiểu Suất Làm Việc...
+                  </p>
+                </div>
+              </article>
+
+              <article class="post-card">
+                <div class="post-content">
+                  <div class="post-tags">
+                    <span class="post-tag">AI</span>
+                  </div>
+                  <h3 class="post-title">
+                    <a href="#">Dùng AI để dịch thuật tài liệu eCommerce</a>
+                  </h3>
+                  <div class="post-meta">
+                    <time class="post-date">Sep 28, 2025</time>
+                    <span class="post-read-time">6 min read</span>
+                  </div>
+                  <p class="post-excerpt">
+                    Nhận dịp một bạn có cầu hỏi liên quan trong ngành eCommerce...
+                  </p>
+                </div>
+              </article>
+
+              <article class="post-card">
+                <div class="post-content">
+                  <div class="post-tags">
+                    <span class="post-tag">Prompts</span>
+                  </div>
+                  <h3 class="post-title">
+                    <a href="#">Master prompt cho các kỹ thuật brainstorm</a>
+                  </h3>
+                  <div class="post-meta">
+                    <time class="post-date">Sep 25, 2025</time>
+                    <span class="post-read-time">4 min read</span>
+                  </div>
+                  <p class="post-excerpt">
+                    Cách tiếp cận Tái nguyên Đoàn chat với chatGPT...
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- iOS Category -->
+          <div class="category-section" data-category="ios">
+            <div class="category-header">
+              <h2 class="category-title">
+                <span class="category-icon">📱</span>
+                iOS Development
+              </h2>
+              <div class="category-controls">
+                <span class="post-count">5 articles</span>
+                <button class="expand-btn">+</button>
+              </div>
+            </div>
+            
+            <div class="posts-grid">
+              <article class="post-card">
+                <div class="post-content">
+                  <div class="post-tags">
+                    <span class="post-tag">iOS</span>
+                  </div>
+                  <h3 class="post-title">
+                    <a href="#">Clean Architecture in iOS</a>
+                  </h3>
+                  <div class="post-meta">
+                    <time class="post-date">Sep 20, 2025</time>
+                    <span class="post-read-time">10 min read</span>
+                  </div>
+                  <p class="post-excerpt">
+                    Understanding Clean Architecture principles and how to apply them in iOS development...
+                  </p>
+                </div>
+              </article>
+
+              <article class="post-card">
+                <div class="post-content">
+                  <div class="post-tags">
+                    <span class="post-tag">Swift</span>
+                  </div>
+                  <h3 class="post-title">
+                    <a href="#">Modern Concurrency in Swift</a>
+                  </h3>
+                  <div class="post-meta">
+                    <time class="post-date">Sep 15, 2025</time>
+                    <span class="post-read-time">12 min read</span>
+                  </div>
+                  <p class="post-excerpt">
+                    Exploring async/await and structured concurrency in Swift 5.5 and beyond...
+                  </p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-navigation">
+          <div class="view-all-section">
+            <a href="/archive.html" class="view-all-btn">View All Articles →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile sidebar toggle button -->
+  <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle categories sidebar">
+    ☰
+  </button>
+
+  <!-- Sidebar overlay for mobile -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Filter state
+      let currentFilter = {
+        type: null,
+        value: null
+      };
+      
+      // Filter functionality
+      function filterPosts(filterType, filterValue) {
+        currentFilter.type = filterType;
+        currentFilter.value = filterValue;
+        
+        const allPosts = document.querySelectorAll('.post-card');
+        const categorySections = document.querySelectorAll('.category-section');
+        const featuredSection = document.querySelector('.featured-section');
+        const filterInfoBar = document.getElementById('filterInfoBar');
+        const filterBadge = document.getElementById('filterBadge');
+        const filterCount = document.getElementById('filterCount');
+        
+        let visibleCount = 0;
+        
+        // Show all sections first
+        categorySections.forEach(section => {
+          section.style.display = 'block';
+        });
+        
+        if (filterType === 'category') {
+          // Filter by category
+          categorySections.forEach(section => {
+            const sectionCategory = section.getAttribute('data-category');
+            if (sectionCategory !== filterValue) {
+              section.style.display = 'none';
+            } else {
+              const posts = section.querySelectorAll('.post-card');
+              visibleCount += posts.length;
+            }
+          });
+          
+          // Hide featured section
+          if (featuredSection) {
+            featuredSection.style.display = 'none';
+          }
+          
+          // Update filter info
+          const categoryName = document.querySelector(`[data-category="${filterValue}"] .category-name`)?.textContent || filterValue;
+          filterBadge.textContent = categoryName.toUpperCase();
+          filterCount.textContent = `${visibleCount} articles found`;
+          
+        } else if (filterType === 'tag') {
+          // Filter by tag
+          allPosts.forEach(post => {
+            const postTags = post.textContent.toLowerCase();
+            
+            if (postTags.includes(filterValue.toLowerCase())) {
+              post.classList.remove('hidden');
+              visibleCount++;
+            } else {
+              post.classList.add('hidden');
+            }
+          });
+          
+          // Hide empty sections
+          categorySections.forEach(section => {
+            const visiblePosts = section.querySelectorAll('.post-card:not(.hidden)');
+            if (visiblePosts.length === 0) {
+              section.style.display = 'none';
+            }
+          });
+          
+          // Hide featured section
+          if (featuredSection) {
+            featuredSection.style.display = 'none';
+          }
+          
+          // Update filter info
+          filterBadge.textContent = `#${filterValue}`;
+          filterCount.textContent = `${visibleCount} articles found`;
+        }
+        
+        // Show filter bar
+        filterInfoBar.classList.add('active');
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
+      function clearFilter() {
+        currentFilter.type = null;
+        currentFilter.value = null;
+        
+        const allPosts = document.querySelectorAll('.post-card');
+        const categorySections = document.querySelectorAll('.category-section');
+        const featuredSection = document.querySelector('.featured-section');
+        const filterInfoBar = document.getElementById('filterInfoBar');
+        
+        // Show all posts
+        allPosts.forEach(post => {
+          post.classList.remove('hidden');
+        });
+        
+        // Show all sections
+        categorySections.forEach(section => {
+          section.style.display = 'block';
+        });
+        
+        // Show featured section
+        if (featuredSection) {
+          featuredSection.style.display = 'block';
+        }
+        
+        // Hide filter bar
+        filterInfoBar.classList.remove('active');
+        
+        // Clear active states
+        document.querySelectorAll('.category-item').forEach(item => {
+          item.classList.remove('active');
+        });
+      }
+      
+      // Clear filter button
+      const clearFilterBtn = document.getElementById('clearFilterBtn');
+      if (clearFilterBtn) {
+        clearFilterBtn.addEventListener('click', clearFilter);
+      }
+      
+      // Sidebar toggle for mobile
+      const sidebar = document.getElementById('post-sidebar');
+      const sidebarToggle = document.getElementById('sidebar-toggle');
+      const sidebarOverlay = document.getElementById('sidebar-overlay');
+      
+      if (sidebarToggle && sidebar && sidebarOverlay) {
+        sidebarToggle.addEventListener('click', function() {
+          sidebar.classList.toggle('active');
+          sidebarOverlay.classList.toggle('active');
+        });
+        
+        sidebarOverlay.addEventListener('click', function() {
+          sidebar.classList.remove('active');
+          sidebarOverlay.classList.remove('active');
+        });
+        
+        // Category filter links
+        document.querySelectorAll('.category-item').forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const category = this.getAttribute('data-category');
+            
+            // Close mobile sidebar
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            
+            // Update active state
+            document.querySelectorAll('.category-item').forEach(item => {
+              item.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            // Filter posts
+            filterPosts('category', category);
+          });
+        });
+        
+        // Tag filter links
+        document.querySelectorAll('.tag-item').forEach(link => {
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const tagText = this.textContent.trim().split(/\s+/)[0];
+            
+            // Close mobile sidebar
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            
+            // Filter posts
+            filterPosts('tag', tagText);
+          });
+        });
+      }
+
+      // View toggle
+      const viewToggleBtns = document.querySelectorAll('.view-toggle-btn');
+      viewToggleBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          viewToggleBtns.forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+          
+          const view = this.getAttribute('data-view');
+          console.log('Switched to view:', view);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+

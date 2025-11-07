@@ -1,0 +1,101 @@
+---
+layout: default
+---
+
+<div class="post-list-container">
+  <!-- Sidebar with categories and tags - Fixed on the left -->
+  <aside class="sidebar" id="post-sidebar">
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <h3>📚 Categories</h3>
+        <p class="sidebar-subtitle">Navigate by category</p>
+      </div>
+      <nav class="category-nav">
+        {% assign categories = site.posts | map: 'categories' | join: ',' | split: ',' | uniq | sort %}
+        {% for category in categories %}
+        {% if category != "" %}
+        {% assign posts_in_category = site.posts | where_exp: "post", "post.categories contains category" %}
+        <a href="#{{ category | slugify }}" class="category-item" data-category="{{ category | slugify }}">
+          <span class="category-name">{{ category }}</span>
+          <span class="category-count">{{ posts_in_category.size }}</span>
+        </a>
+        {% endif %}
+        {% endfor %}
+      </nav>
+
+      <!-- Tags section -->
+      <div class="tags-section">
+        <h3 class="tags-title">🏷️ Tags</h3>
+        <div class="tags-cloud">
+          {% assign tags = site.tags | sort %}
+          {% for tag in tags %}
+          <a href="#tag-{{ tag[0] | slugify }}" class="tag-item" data-count="{{ tag[1].size }}">
+            {{ tag[0] }} <span class="tag-count">{{ tag[1].size }}</span>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main content area - Simplified, different from home -->
+  <div class="post-list-main">
+    <div class="post-list-header">
+      {% if page.title %}
+      <h1>{{ page.title | escape }}</h1>
+      {% endif %}
+      {% if content %}
+      <div class="post-list-description">
+        {{ content }}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="posts-by-category">
+      {% for category in categories %}
+      {% if category != "" %}
+      <section id="{{ category | slugify }}" class="category-section" data-category="{{ category | slugify }}">
+        <h2 class="category-title">{{ category }}</h2>
+        <div class="posts-grid">
+          {% assign category_posts = site.posts | where_exp: "post", "post.categories contains category" | sort: 'date'
+          | reverse %}
+          {% for post in category_posts %}
+          <article class="post-card">
+            <a href="{{ post.url | relative_url }}">
+              {% if post.image %}
+              <img src="{{ post.image }}" alt="{{ post.title }}" class="post-thumbnail" loading="lazy">
+              {% endif %}
+              <div class="post-card-content">
+                <h3 class="post-title">{{ post.title }}</h3>
+                <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
+                <div class="post-meta">
+                  <time datetime="{{ post.date | date_to_xmlschema }}">
+                    {{ post.date | date: "%b %d, %Y" }}
+                  </time>
+                  {% if post.tags %}
+                  <span class="post-tags">
+                    {% for tag in post.tags limit:2 %}
+                    <span class="tag">{{ tag }}</span>
+                    {% endfor %}
+                  </span>
+                  {% endif %}
+                </div>
+              </div>
+            </a>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Mobile sidebar toggle button -->
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle categories sidebar">
+  ☰
+</button>
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>

@@ -1,7 +1,6 @@
 ---
 layout: page
 title: Life Time Calculator
-permalink: /tools/life-time-calculator/
 ---
 
 <div class="lifetime-calculator-page">
@@ -23,10 +22,10 @@ permalink: /tools/life-time-calculator/
               id="currentAge"
               min="1"
               max="100"
-              value="25"
+              value="30"
               class="range-input"
             />
-            <span class="input-value" id="currentAgeValue">25 tuổi</span>
+            <span class="input-value" id="currentAgeValue">30 tuổi</span>
           </div>
         </div>
 
@@ -38,17 +37,17 @@ permalink: /tools/life-time-calculator/
               id="lifeExpectancy"
               min="50"
               max="110"
-              value="85"
+              value="75"
               class="range-input"
             />
-            <span class="input-value" id="lifeExpectancyValue">85 tuổi</span>
+            <span class="input-value" id="lifeExpectancyValue">75 tuổi</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Results -->
-    <div id="results" style="display: none;">
+    <div id="results">
       <!-- Key Metrics -->
       <div class="metrics-grid">
         <div class="metric-card metric-blue">
@@ -131,8 +130,9 @@ permalink: /tools/life-time-calculator/
 <style>
 .lifetime-calculator-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   padding: 2rem 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .calculator-container {
@@ -143,28 +143,38 @@ permalink: /tools/life-time-calculator/
 .calculator-header {
   text-align: center;
   margin-bottom: 3rem;
+  padding: 2rem 0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .calculator-title {
-  font-size: 3rem;
-  font-weight: bold;
-  color: white;
-  margin: 0 0 0.5rem 0;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin: 0 0 0.8rem 0;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .calculator-subtitle {
-  font-size: 1.25rem;
-  color: #cbd5e1;
+  font-size: 1.2rem;
+  color: #5a6c7d;
   margin: 0;
+  opacity: 0.9;
+  font-weight: 400;
 }
 
 .input-section {
-  background: #1e293b;
+  background: white;
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-  border: 1px solid #334155;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .input-grid {
@@ -180,7 +190,7 @@ permalink: /tools/life-time-calculator/
 
 .input-label {
   display: block;
-  color: #cbd5e1;
+  color: #2c3e50;
   margin-bottom: 0.75rem;
   font-weight: 600;
   font-size: 1rem;
@@ -195,7 +205,7 @@ permalink: /tools/life-time-calculator/
 .range-input {
   flex: 1;
   height: 8px;
-  background: #334155;
+  background: #e8e8e8;
   border-radius: 8px;
   outline: none;
   -webkit-appearance: none;
@@ -207,37 +217,41 @@ permalink: /tools/life-time-calculator/
   appearance: none;
   width: 20px;
   height: 20px;
-  background: #3b82f6;
+  background: #3498db;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
 }
 
 .range-input::-webkit-slider-thumb:hover {
-  background: #2563eb;
+  background: #2980b9;
   transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
 }
 
 .range-input::-moz-range-thumb {
   width: 20px;
   height: 20px;
-  background: #3b82f6;
+  background: #3498db;
   border-radius: 50%;
   cursor: pointer;
   border: none;
   transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
 }
 
 .range-input::-moz-range-thumb:hover {
-  background: #2563eb;
+  background: #2980b9;
   transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
 }
 
 .input-value {
   font-size: 1.875rem;
   font-weight: bold;
   min-width: fit-content;
-  color: #60a5fa;
+  color: #3498db;
 }
 
 .metrics-grid {
@@ -248,37 +262,58 @@ permalink: /tools/life-time-calculator/
 }
 
 .metric-card {
-  background: #1e293b;
+  background: white;
   border-radius: 12px;
   padding: 1.5rem;
   text-align: center;
-  border: 1px solid #334155;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border-left: 4px solid;
+}
+
+.metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 .metric-blue {
-  border-color: #1e40af;
-  background: #1e3a8a;
+  border-left-color: #3498db;
+}
+
+.metric-blue .metric-value {
+  color: #3498db;
 }
 
 .metric-purple {
-  border-color: #7c3aed;
-  background: #6b21a8;
+  border-left-color: #9b59b6;
+}
+
+.metric-purple .metric-value {
+  color: #9b59b6;
 }
 
 .metric-pink {
-  border-color: #be185d;
-  background: #9f1239;
+  border-left-color: #e91e63;
+}
+
+.metric-pink .metric-value {
+  color: #e91e63;
 }
 
 .metric-orange {
-  border-color: #c2410c;
-  background: #9a3412;
+  border-left-color: #f39c12;
+}
+
+.metric-orange .metric-value {
+  color: #f39c12;
 }
 
 .metric-label {
-  color: #cbd5e1;
+  color: #5a6c7d;
   margin: 0 0 0.5rem 0;
   font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .metric-value {
@@ -287,24 +322,8 @@ permalink: /tools/life-time-calculator/
   margin: 0;
 }
 
-.metric-blue .metric-value {
-  color: #93c5fd;
-}
-
-.metric-purple .metric-value {
-  color: #c4b5fd;
-}
-
-.metric-pink .metric-value {
-  color: #f9a8d4;
-}
-
-.metric-orange .metric-value {
-  color: #fdba74;
-}
-
 .metric-unit {
-  color: #94a3b8;
+  color: #7f8c8d;
   font-size: 0.875rem;
   margin: 0.25rem 0 0 0;
 }
@@ -317,25 +336,29 @@ permalink: /tools/life-time-calculator/
 }
 
 .chart-card {
-  background: #1e293b;
+  background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  border: 1px solid #334155;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .chart-title {
-  color: white;
+  color: #2c3e50;
   font-size: 1.125rem;
-  font-weight: bold;
+  font-weight: 600;
   margin: 0 0 1rem 0;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 0.5rem;
 }
 
 .table-card {
-  background: #1e293b;
+  background: white;
   border-radius: 12px;
   overflow: hidden;
-  border: 1px solid #334155;
+  border: 1px solid #e8e8e8;
   margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .activities-table {
@@ -344,14 +367,15 @@ permalink: /tools/life-time-calculator/
 }
 
 .activities-table thead {
-  background: #334155;
+  background: #f8f9fa;
 }
 
 .activities-table th {
   padding: 0.75rem 1.5rem;
   text-align: left;
-  color: #cbd5e1;
+  color: #2c3e50;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
 .activities-table th.text-right {
@@ -359,17 +383,17 @@ permalink: /tools/life-time-calculator/
 }
 
 .activities-table tbody tr {
-  border-top: 1px solid #334155;
+  border-top: 1px solid #e8e8e8;
   transition: background 0.2s;
 }
 
 .activities-table tbody tr:hover {
-  background: #334155;
+  background: #f8f9fa;
 }
 
 .activities-table td {
   padding: 0.75rem 1.5rem;
-  color: #cbd5e1;
+  color: #2c3e50;
 }
 
 .activities-table td.text-right {
@@ -378,15 +402,15 @@ permalink: /tools/life-time-calculator/
 
 .activities-table td:last-child {
   font-weight: 600;
-  color: #60a5fa;
+  color: #3498db;
 }
 
 .cta-section {
-  background: linear-gradient(135deg, #dc2626 0%, #ec4899 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 12px;
   padding: 2rem;
   text-align: center;
-  border: 1px solid #ef4444;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .cta-title {
@@ -400,6 +424,7 @@ permalink: /tools/life-time-calculator/
   font-size: 1.125rem;
   color: white;
   margin: 0 0 1.5rem 0;
+  opacity: 0.95;
 }
 
 .cta-highlight {
@@ -416,12 +441,25 @@ permalink: /tools/life-time-calculator/
 }
 
 @media (max-width: 768px) {
+  .lifetime-calculator-page {
+    padding: 1rem 0.5rem;
+  }
+  
+  .calculator-header {
+    padding: 1.5rem 1rem;
+    margin-bottom: 2rem;
+  }
+  
   .calculator-title {
-    font-size: 2rem;
+    font-size: 2.2rem;
   }
   
   .calculator-subtitle {
-    font-size: 1rem;
+    font-size: 1.1rem;
+  }
+  
+  .input-section {
+    padding: 1.5rem;
   }
   
   .input-grid {
@@ -436,6 +474,14 @@ permalink: /tools/life-time-calculator/
     grid-template-columns: repeat(2, 1fr);
   }
   
+  .cta-section {
+    padding: 1.5rem;
+  }
+  
+  .cta-title {
+    font-size: 1.5rem;
+  }
+  
   .cta-list {
     grid-template-columns: 1fr;
   }
@@ -444,12 +490,12 @@ permalink: /tools/life-time-calculator/
 
 <script>
 (function() {
-  let currentAge = 25;
-  let lifeExpectancy = 85;
+  let currentAge = 30;
+  let lifeExpectancy = 75;
   let barChart = null;
   let pieChart = null;
 
-  const COLORS = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#FF6B9D'];
+  const COLORS = ['#3498db', '#9b59b6', '#e91e63', '#f39c12', '#27ae60', '#e74c3c', '#1abc9c'];
 
   // Initialize
   document.addEventListener('DOMContentLoaded', function() {
@@ -559,8 +605,8 @@ permalink: /tools/life-time-calculator/
         datasets: [{
           label: 'Năm',
           data: activities.map(a => a.years),
-          backgroundColor: '#3b82f6',
-          borderColor: '#2563eb',
+          backgroundColor: '#3498db',
+          borderColor: '#2980b9',
           borderWidth: 1
         }]
       },
@@ -572,11 +618,12 @@ permalink: /tools/life-time-calculator/
             display: false
           },
           tooltip: {
-            backgroundColor: '#1e293b',
-            titleColor: '#e2e8f0',
-            bodyColor: '#e2e8f0',
-            borderColor: '#475569',
+            backgroundColor: '#2c3e50',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
+            borderColor: '#3498db',
             borderWidth: 1,
+            padding: 12,
             callbacks: {
               label: function(context) {
                 return context.parsed.y.toFixed(1) + ' năm';
@@ -587,7 +634,7 @@ permalink: /tools/life-time-calculator/
         scales: {
           x: {
             ticks: {
-              color: '#94a3b8',
+              color: '#5a6c7d',
               font: {
                 size: 10
               },
@@ -595,15 +642,15 @@ permalink: /tools/life-time-calculator/
               minRotation: 45
             },
             grid: {
-              color: '#475569'
+              color: '#e8e8e8'
             }
           },
           y: {
             ticks: {
-              color: '#94a3b8'
+              color: '#5a6c7d'
             },
             grid: {
-              color: '#475569'
+              color: '#e8e8e8'
             }
           }
         }
@@ -626,7 +673,7 @@ permalink: /tools/life-time-calculator/
         datasets: [{
           data: activities.map(a => a.percent),
           backgroundColor: COLORS.slice(0, activities.length),
-          borderColor: '#1e293b',
+          borderColor: '#ffffff',
           borderWidth: 2
         }]
       },
@@ -637,7 +684,7 @@ permalink: /tools/life-time-calculator/
           legend: {
             position: 'bottom',
             labels: {
-              color: '#cbd5e1',
+              color: '#2c3e50',
               padding: 15,
               font: {
                 size: 11
@@ -645,11 +692,12 @@ permalink: /tools/life-time-calculator/
             }
           },
           tooltip: {
-            backgroundColor: '#1e293b',
-            titleColor: '#e2e8f0',
-            bodyColor: '#e2e8f0',
-            borderColor: '#475569',
+            backgroundColor: '#2c3e50',
+            titleColor: '#ffffff',
+            bodyColor: '#ffffff',
+            borderColor: '#3498db',
             borderWidth: 1,
+            padding: 12,
             callbacks: {
               label: function(context) {
                 const label = context.label || '';

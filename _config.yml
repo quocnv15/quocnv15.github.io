@@ -36,6 +36,9 @@ collections:
   notes:
     output: true
     permalink: /notes/:path/
+  tools:
+    output: true
+    permalink: /tools/:path/
 
 plugins:
   - jekyll-feed

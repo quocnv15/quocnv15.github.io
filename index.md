@@ -27,29 +27,29 @@ title: Home
 
       <!-- Search Bar in Sidebar -->
       <div class="search-section sidebar-search">
-        <div class="search-container">
-          <div class="search-input-wrapper">
-            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input 
-              type="text" 
-              id="searchInput" 
-              class="search-input" 
+      <div class="search-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            type="text" 
+            id="searchInput" 
+            class="search-input" 
               placeholder="Search articles..."
-              aria-label="Search articles"
-            >
-            <button class="search-clear" id="searchClear" aria-label="Clear search" style="display: none;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-          <div class="search-status" id="searchStatus"></div>
+            aria-label="Search articles"
+          >
+          <button class="search-clear" id="searchClear" aria-label="Clear search" style="display: none;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
         </div>
+        <div class="search-status" id="searchStatus"></div>
       </div>
+    </div>
 
       <nav class="category-nav">
         {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
@@ -63,12 +63,42 @@ title: Home
         {% endfor %}
         {% assign sorted_categories = all_categories | sort %}
 
+        {% comment %} Define valid categories - only show categories that have corresponding sections {% endcomment %}
+        {% comment %} Mapping: category name -> section data-category attribute {% endcomment %}
+        {% comment %} Sections available: ios, data, architecture, swift, ai, interview, concurrency {% endcomment %}
+        {% assign category_mapping = "iOS:ios,Swift:swift,AI:ai,Strategy:ai,Architecture:architecture,Data Structures:data,Interview:interview,Concurrency:concurrency" | split: "," %}
+        {% assign min_posts = 1 %}
+
         {% for category in sorted_categories %}
+          {% assign category_slug = category | slugify %}
           {% assign posts_in_category = sorted_posts | where_exp: "post", "post.categories contains category" %}
-          <a href="#{{ category | slugify }}" class="category-item" data-category="{{ category | slugify }}">
-            <span class="category-name">{{ category }}</span>
-            <span class="category-count">{{ posts_in_category.size }} Bookmarks</span>
-          </a>
+          
+          {% comment %} Only show if has minimum posts {% endcomment %}
+          {% if posts_in_category.size >= min_posts %}
+            {% assign has_section = false %}
+            {% assign mapped_slug = "" %}
+            
+            {% comment %} Check if category has a corresponding section {% endcomment %}
+            {% for mapping in category_mapping %}
+              {% assign parts = mapping | split: ":" %}
+              {% assign mapped_category = parts[0] %}
+              {% assign mapped_data_category = parts[1] %}
+              
+              {% if category == mapped_category %}
+                {% assign has_section = true %}
+                {% assign mapped_slug = mapped_data_category %}
+                {% break %}
+              {% endif %}
+            {% endfor %}
+            
+            {% comment %} Show category only if it has a corresponding section {% endcomment %}
+            {% if has_section %}
+              <a href="#{{ mapped_slug }}" class="category-item" data-category="{{ mapped_slug }}">
+                <span class="category-name">{{ category }}</span>
+                <span class="category-count">{{ posts_in_category.size }} Bookmarks</span>
+              </a>
+            {% endif %}
+          {% endif %}
         {% endfor %}
       </nav>
 
@@ -82,9 +112,9 @@ title: Home
             {{ tag[0] }} <span class="tag-count">{{ tag[1].size }}</span>
           </a>
           {% endfor %}
-        </div>
       </div>
     </div>
+  </div>
   </aside>
 
   <!-- Main content area -->
@@ -685,8 +715,8 @@ document.addEventListener('DOMContentLoaded', function() {
       sidebarOverlay.classList.remove('active');
     });
 
-    // Filter state
-    let activeCategory = null;
+    // Filter state - support multiple categories
+    let activeCategories = new Set();
     let activeTag = null;
     const filterStatus = document.getElementById('filterStatus');
     const filterStatusText = document.getElementById('filterStatusText');
@@ -710,7 +740,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Clear filter button
     if (clearFilterBtn) {
       clearFilterBtn.addEventListener('click', function() {
-        activeCategory = null;
+        activeCategories.clear();
         activeTag = null;
         document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
         document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
@@ -719,9 +749,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
-    // Filter by category
-    function filterByCategory(categorySlug) {
-      console.log('Filtering by category:', categorySlug); // Debug
+    // Filter by multiple categories
+    function filterByCategories() {
+      console.log('Filtering by categories:', Array.from(activeCategories)); // Debug
 
       // Clear search
       if (searchInput.value) {
@@ -729,43 +759,59 @@ document.addEventListener('DOMContentLoaded', function() {
         clearSearch();
       }
 
+      // If no categories selected, show all
+      if (activeCategories.size === 0) {
+        showAllPosts();
+        return;
+      }
+
       // Hide all sections first
       categorySections.forEach(section => {
         section.style.display = 'none';
       });
 
-      // Try to find section by ID first, then by data-category attribute
-      let targetSection = document.getElementById(categorySlug);
-      if (!targetSection) {
-        targetSection = document.querySelector(`.category-section[data-category="${categorySlug}"]`);
-      }
+      // Show only selected categories
+      let visibleSections = [];
+      activeCategories.forEach(categorySlug => {
+        // Try to find section by ID first, then by data-category attribute
+        let targetSection = document.getElementById(categorySlug);
+        if (!targetSection) {
+          targetSection = document.querySelector(`.category-section[data-category="${categorySlug}"]`);
+        }
 
-      console.log('Target section found:', targetSection ? 'Yes' : 'No'); // Debug
+        if (targetSection) {
+          targetSection.style.display = 'block';
+          visibleSections.push(targetSection);
+        } else {
+          console.warn('Category section not found:', categorySlug);
+        }
+      });
 
-      if (targetSection) {
-        targetSection.style.display = 'block';
+      // Update filter status
+      if (activeCategories.size > 0) {
+        const categoryNames = Array.from(activeCategories).map(slug => {
+          const categoryItem = document.querySelector(`.category-item[data-category="${slug}"]`);
+          return categoryItem?.querySelector('.category-name')?.textContent || slug;
+        });
 
-        // Get category name from sidebar
-        const categoryItem = document.querySelector(`.category-item[data-category="${categorySlug}"]`);
-        const categoryName = categoryItem?.querySelector('.category-name')?.textContent || categorySlug;
-        showFilterStatus(`Filtering by: ${categoryName}`);
+        if (categoryNames.length === 1) {
+          showFilterStatus(`Filtering by: ${categoryNames[0]}`);
+        } else {
+          showFilterStatus(`Filtering by: ${categoryNames.length} categories (${categoryNames.join(', ')})`);
+        }
 
-        // Smooth scroll to section with offset for fixed header
-        setTimeout(() => {
-          const yOffset = -100; // Offset for fixed header
-          const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }, 100);
-      } else {
-        console.error('Category section not found:', categorySlug); // Debug
-        console.log('Available sections:', Array.from(categorySections).map(s => ({
-          id: s.id,
-          dataCategory: s.getAttribute('data-category')
-        })));
+        // Smooth scroll to first visible section
+        if (visibleSections.length > 0) {
+          setTimeout(() => {
+            const yOffset = -100;
+            const y = visibleSections[0].getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }, 100);
+        }
       }
 
       // Hide featured section when filtering
-      if (featuredSection) {
+      if (featuredSection && activeCategories.size > 0) {
         featuredSection.style.display = 'none';
       }
     }
@@ -784,7 +830,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.log('Filtering by tag:', searchTag); // Debug
 
       // Check each category section
-      categorySections.forEach(section => {
+    categorySections.forEach(section => {
         const postsInSection = section.querySelectorAll('.post-card');
         let hasVisiblePosts = false;
 
@@ -819,7 +865,7 @@ document.addEventListener('DOMContentLoaded', function() {
             hasVisiblePosts = true;
             visibleCount++;
             console.log('✓ Post matched'); // Debug
-          } else {
+      } else {
             post.style.display = 'none';
           }
         });
@@ -829,7 +875,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 
       // Filter featured section
-      if (featuredSection) {
+    if (featuredSection) {
         const featuredPosts = featuredSection.querySelectorAll('.featured-card');
         let hasVisibleFeatured = false;
 
@@ -855,7 +901,7 @@ document.addEventListener('DOMContentLoaded', function() {
             post.style.display = 'block';
             hasVisibleFeatured = true;
             visibleCount++;
-          } else {
+      } else {
             post.style.display = 'none';
           }
         });
@@ -907,37 +953,39 @@ document.addEventListener('DOMContentLoaded', function() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Category filtering
+    // Category filtering - support multiple selection
     const categoryItems = document.querySelectorAll('.category-item');
     console.log('Found category items:', categoryItems.length); // Debug
 
     categoryItems.forEach(link => {
       link.addEventListener('click', function(e) {
-        e.preventDefault();
+      e.preventDefault();
 
         const categorySlug = this.getAttribute('data-category');
         console.log('Category clicked:', categorySlug); // Debug
 
-        // Toggle category
-        if (activeCategory === categorySlug) {
-          // Deselect - show all
-          activeCategory = null;
+        // Toggle category (multi-select)
+        if (activeCategories.has(categorySlug)) {
+          // Deselect this category
+          activeCategories.delete(categorySlug);
+          this.classList.remove('active');
+        } else {
+          // Select this category (add to set)
+          activeCategories.add(categorySlug);
+          this.classList.add('active');
+        }
+
+        // Clear tag filter when selecting categories
+        if (activeCategories.size > 0) {
           activeTag = null;
-          document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
           document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+        }
+
+        // Filter posts by selected categories
+        if (activeCategories.size === 0) {
           showAllPosts();
         } else {
-          // Select new category
-          activeCategory = categorySlug;
-          activeTag = null; // Clear tag filter
-
-          // Update active states
-          document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
-          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
-          this.classList.add('active');
-
-          // Filter posts
-          filterByCategory(categorySlug);
+          filterByCategories();
         }
 
         // Close mobile sidebar
@@ -960,18 +1008,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Toggle tag
         if (activeTag === tagText) {
-          // Deselect - show all or category if active
+          // Deselect - show all or categories if active
           activeTag = null;
           document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
 
-          if (activeCategory) {
-            filterByCategory(activeCategory);
+          if (activeCategories.size > 0) {
+            filterByCategories();
           } else {
             showAllPosts();
           }
         } else {
           // Select new tag
           activeTag = tagText;
+
+          // Clear category filters when selecting tag
+          activeCategories.clear();
+          document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
 
           // Update active states
           document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));

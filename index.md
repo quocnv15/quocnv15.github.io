@@ -11,6 +11,20 @@ title: Home
         <p class="sidebar-subtitle">Browse by category</p>
       </div>
 
+      <!-- Filter Status -->
+      <div class="filter-status" id="filterStatus" style="display: none;">
+        <div class="filter-status-content">
+          <span class="filter-status-icon">🔍</span>
+          <span class="filter-status-text" id="filterStatusText"></span>
+          <button class="clear-filter-btn" id="clearFilterBtn" title="Clear filter">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <!-- Search Bar in Sidebar -->
       <div class="search-section sidebar-search">
         <div class="search-container">
@@ -60,7 +74,7 @@ title: Home
 
       <!-- Tags section -->
       <div class="tags-section">
-        <h3 class="tags-title">🏷️ Tags</h3>
+        <h3 class="tags-title">Tags</h3>
         <div class="tags-cloud">
           {% assign tags = site.tags | sort %}
           {% for tag in tags limit:15 %}
@@ -75,7 +89,7 @@ title: Home
 
   <!-- Main content area -->
   <div class="post-list-main">
-    <div class="posts-homepage">
+    <div class="posts-homepage" style="padding-top: 2rem;">
 
   <!-- Search Results -->
   <div class="search-results" id="searchResults" style="display: none;">
@@ -150,7 +164,7 @@ title: Home
     {% assign sorted_posts = site.posts | sort: 'date' | reverse %}
 
     <!-- iOS Development Section -->
-    <div class="category-section" data-category="ios">
+    <div id="ios" class="category-section" data-category="ios">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">📱</span>
@@ -180,7 +194,7 @@ title: Home
     </div>
 
     <!-- Data Structures & Algorithms Section -->
-    <div class="category-section" data-category="data">
+    <div id="data" class="category-section" data-category="data">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">🔧</span>
@@ -210,7 +224,7 @@ title: Home
     </div>
 
     <!-- Architecture & Design Section -->
-    <div class="category-section" data-category="architecture">
+    <div id="architecture" class="category-section" data-category="architecture">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">🏗️</span>
@@ -240,7 +254,7 @@ title: Home
     </div>
 
     <!-- Swift Programming Section -->
-    <div class="category-section" data-category="swift">
+    <div id="swift" class="category-section" data-category="swift">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">💻</span>
@@ -270,7 +284,7 @@ title: Home
     </div>
 
     <!-- AI & Coding Strategy Section -->
-    <div class="category-section" data-category="ai">
+    <div id="ai" class="category-section" data-category="ai">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">🤖</span>
@@ -300,7 +314,7 @@ title: Home
     </div>
 
     <!-- Interview Preparation Section -->
-    <div class="category-section" data-category="interview">
+    <div id="interview" class="category-section" data-category="interview">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">💼</span>
@@ -330,7 +344,7 @@ title: Home
     </div>
 
     <!-- Concurrency Section -->
-    <div class="category-section" data-category="concurrency">
+    <div id="concurrency" class="category-section" data-category="concurrency">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">⚡</span>
@@ -360,7 +374,7 @@ title: Home
     </div>
 
     <!-- Knowledge Curation Section -->
-    <div class="category-section" data-category="notes">
+    <div id="notes" class="category-section" data-category="notes">
       <div class="category-header">
         <h2 class="category-title">
           <span class="category-icon">📝</span>
@@ -381,6 +395,7 @@ title: Home
         {% include post-metadata.html post=note %}
         <article class="post-card" 
                  data-categories="notes" 
+                 data-tags="{% if note.tags %}{{ note.tags | join: ' ' | downcase }}{% endif %} notes"
                  data-date="{{ formatted_date_sort }}" 
                  data-read-time="{{ calculated_read_time }}">
           <div class="post-content">
@@ -438,6 +453,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const featuredSection = document.querySelector('.featured-section');
   let searchTimeout;
   let currentSearch = '';
+  
+  console.log('Category sections found:', categorySections.length); // Debug
+  console.log('Featured section found:', featuredSection ? 'Yes' : 'No'); // Debug
   
   // Get all posts data
   function getAllPosts() {
@@ -667,41 +685,305 @@ document.addEventListener('DOMContentLoaded', function() {
       sidebarOverlay.classList.remove('active');
     });
 
-    // Smooth scroll for category links
-    document.querySelectorAll('.category-item').forEach(link => {
-      link.addEventListener('click', function(e) {
-        const hash = this.getAttribute('href');
-        const target = document.querySelector(hash);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Filter state
+    let activeCategory = null;
+    let activeTag = null;
+    const filterStatus = document.getElementById('filterStatus');
+    const filterStatusText = document.getElementById('filterStatusText');
+    const clearFilterBtn = document.getElementById('clearFilterBtn');
 
-          // Close mobile sidebar
-          sidebar.classList.remove('active');
-          sidebarOverlay.classList.remove('active');
+    // Show filter status
+    function showFilterStatus(text) {
+      if (filterStatus && filterStatusText) {
+        filterStatusText.textContent = text;
+        filterStatus.style.display = 'block';
+      }
+    }
 
-          // Update active state
-          document.querySelectorAll('.category-item').forEach(item => {
-            item.classList.remove('active');
+    // Hide filter status
+    function hideFilterStatus() {
+      if (filterStatus) {
+        filterStatus.style.display = 'none';
+      }
+    }
+
+    // Clear filter button
+    if (clearFilterBtn) {
+      clearFilterBtn.addEventListener('click', function() {
+        activeCategory = null;
+        activeTag = null;
+        document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+        document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+        hideFilterStatus();
+        showAllPosts();
+      });
+    }
+
+    // Filter by category
+    function filterByCategory(categorySlug) {
+      console.log('Filtering by category:', categorySlug); // Debug
+
+      // Clear search
+      if (searchInput.value) {
+        searchInput.value = '';
+        clearSearch();
+      }
+
+      // Hide all sections first
+      categorySections.forEach(section => {
+        section.style.display = 'none';
+      });
+
+      // Try to find section by ID first, then by data-category attribute
+      let targetSection = document.getElementById(categorySlug);
+      if (!targetSection) {
+        targetSection = document.querySelector(`.category-section[data-category="${categorySlug}"]`);
+      }
+
+      console.log('Target section found:', targetSection ? 'Yes' : 'No'); // Debug
+
+      if (targetSection) {
+        targetSection.style.display = 'block';
+
+        // Get category name from sidebar
+        const categoryItem = document.querySelector(`.category-item[data-category="${categorySlug}"]`);
+        const categoryName = categoryItem?.querySelector('.category-name')?.textContent || categorySlug;
+        showFilterStatus(`Filtering by: ${categoryName}`);
+
+        // Smooth scroll to section with offset for fixed header
+        setTimeout(() => {
+          const yOffset = -100; // Offset for fixed header
+          const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }, 100);
+      } else {
+        console.error('Category section not found:', categorySlug); // Debug
+        console.log('Available sections:', Array.from(categorySections).map(s => ({
+          id: s.id,
+          dataCategory: s.getAttribute('data-category')
+        })));
+      }
+
+      // Hide featured section when filtering
+      if (featuredSection) {
+        featuredSection.style.display = 'none';
+      }
+    }
+
+    // Filter by tag
+    function filterByTag(tagText) {
+      // Clear search
+      if (searchInput.value) {
+        searchInput.value = '';
+        clearSearch();
+      }
+
+      let visibleCount = 0;
+      const searchTag = tagText.toLowerCase().trim();
+
+      console.log('Filtering by tag:', searchTag); // Debug
+
+      // Check each category section
+      categorySections.forEach(section => {
+        const postsInSection = section.querySelectorAll('.post-card');
+        let hasVisiblePosts = false;
+
+        postsInSection.forEach(post => {
+          // Get tags from post element's data attribute first
+          let postTags = post.getAttribute('data-tags') || '';
+
+          // Also get from visible elements
+          const metaElement = post.querySelector('.post-meta');
+          const tagsElement = post.querySelector('.post-tags');
+          const badgeElements = post.querySelectorAll('.post-tag, .tag-badge, .category-badge');
+
+          if (metaElement) postTags += ' ' + metaElement.textContent;
+          if (tagsElement) postTags += ' ' + tagsElement.textContent;
+          badgeElements.forEach(badge => {
+            postTags += ' ' + badge.textContent;
           });
+
+          postTags = postTags.toLowerCase();
+
+          console.log('Post tags:', postTags.substring(0, 100)); // Debug
+
+          // Check if tag exists - try multiple matching methods
+          const tagPattern = new RegExp('\\b' + searchTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+          const hasTag = tagPattern.test(postTags) ||
+                        postTags.includes(searchTag) ||
+                        postTags.includes('#' + searchTag) ||
+                        postTags.includes(searchTag.replace(/[-\s]/g, ''));
+
+          if (hasTag) {
+            post.style.display = 'block';
+            hasVisiblePosts = true;
+            visibleCount++;
+            console.log('✓ Post matched'); // Debug
+          } else {
+            post.style.display = 'none';
+          }
+        });
+
+        // Show/hide section based on visible posts
+        section.style.display = hasVisiblePosts ? 'block' : 'none';
+      });
+
+      // Filter featured section
+      if (featuredSection) {
+        const featuredPosts = featuredSection.querySelectorAll('.featured-card');
+        let hasVisibleFeatured = false;
+
+        featuredPosts.forEach(post => {
+          let postTags = post.getAttribute('data-tags') || '';
+
+          const metaElement = post.querySelector('.featured-meta');
+          const badgeElements = post.querySelectorAll('.featured-badge, .post-tag');
+
+          if (metaElement) postTags += ' ' + metaElement.textContent;
+          badgeElements.forEach(badge => {
+            postTags += ' ' + badge.textContent;
+          });
+
+          postTags = postTags.toLowerCase();
+
+          const tagPattern = new RegExp('\\b' + searchTag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i');
+          const hasTag = tagPattern.test(postTags) ||
+                        postTags.includes(searchTag) ||
+                        postTags.includes('#' + searchTag);
+
+          if (hasTag) {
+            post.style.display = 'block';
+            hasVisibleFeatured = true;
+            visibleCount++;
+          } else {
+            post.style.display = 'none';
+          }
+        });
+
+        featuredSection.style.display = hasVisibleFeatured ? 'block' : 'none';
+      }
+
+      console.log('Total visible posts:', visibleCount); // Debug
+
+      // Show filter status
+      showFilterStatus(`Filtering by tag: #${tagText} (${visibleCount} post${visibleCount !== 1 ? 's' : ''})`);
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Show all posts
+    function showAllPosts() {
+      // Clear search
+      if (searchInput.value) {
+        searchInput.value = '';
+        clearSearch();
+      }
+
+      // Hide filter status
+      hideFilterStatus();
+
+      // Show all sections
+      categorySections.forEach(section => {
+        section.style.display = 'block';
+
+        // Show all posts in section
+        section.querySelectorAll('.post-card').forEach(post => {
+          post.style.display = 'block';
+        });
+      });
+
+      // Show featured section
+      if (featuredSection) {
+        featuredSection.style.display = 'block';
+
+        // Show all featured posts
+        featuredSection.querySelectorAll('.featured-card').forEach(post => {
+          post.style.display = 'block';
+        });
+      }
+
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Category filtering
+    const categoryItems = document.querySelectorAll('.category-item');
+    console.log('Found category items:', categoryItems.length); // Debug
+
+    categoryItems.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const categorySlug = this.getAttribute('data-category');
+        console.log('Category clicked:', categorySlug); // Debug
+
+        // Toggle category
+        if (activeCategory === categorySlug) {
+          // Deselect - show all
+          activeCategory = null;
+          activeTag = null;
+          document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+          showAllPosts();
+        } else {
+          // Select new category
+          activeCategory = categorySlug;
+          activeTag = null; // Clear tag filter
+
+          // Update active states
+          document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
           this.classList.add('active');
+
+          // Filter posts
+          filterByCategory(categorySlug);
         }
+
+        // Close mobile sidebar
+        if (sidebar) sidebar.classList.remove('active');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('active');
       });
     });
 
-    // Smooth scroll for tag links
+    // Tag filtering
     document.querySelectorAll('.tag-item').forEach(link => {
       link.addEventListener('click', function(e) {
-        const hash = this.getAttribute('href');
-        const target = document.querySelector(hash);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        e.preventDefault();
 
-          // Close mobile sidebar
-          sidebar.classList.remove('active');
-          sidebarOverlay.classList.remove('active');
+        // Get tag name - extract just the tag text before the count
+        const fullText = this.textContent.trim();
+        // Remove numbers and extra spaces, handle both "TagName 5" and "TagName5" formats
+        const tagText = fullText.replace(/\s*\d+\s*$/, '').trim();
+
+        console.log('Tag clicked:', tagText); // Debug
+
+        // Toggle tag
+        if (activeTag === tagText) {
+          // Deselect - show all or category if active
+          activeTag = null;
+          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+
+          if (activeCategory) {
+            filterByCategory(activeCategory);
+          } else {
+            showAllPosts();
+          }
+        } else {
+          // Select new tag
+          activeTag = tagText;
+
+          // Update active states
+          document.querySelectorAll('.tag-item').forEach(item => item.classList.remove('active'));
+          this.classList.add('active');
+
+          // Filter posts
+          filterByTag(tagText);
         }
+
+        // Close mobile sidebar
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
       });
     });
   }

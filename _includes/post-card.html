@@ -17,6 +17,7 @@
 
 <article class="post-card" 
          data-categories="{{ categories_data }}" 
+         data-tags="{% if post_item.tags %}{{ post_item.tags | join: ' ' | downcase }}{% endif %}"
          data-date="{{ formatted_date_sort }}" 
          data-read-time="{{ calculated_read_time }}">
   <div class="post-content">

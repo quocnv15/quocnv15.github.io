@@ -71,6 +71,17 @@ Thư mục này chứa tài liệu dành cho AI agents và developers để hi�
   - Recommendation
 - **Audience:** Tech leads, architects
 
+### 3. Coding Standards
+- **File:** [System/coding-standards.md](./System/coding-standards.md)
+- **Purpose:** Coding style và quality guidelines
+- **Content:**
+  - TypeScript standards
+  - HTML/CSS/Liquid best practices
+  - Code quality requirements
+  - Testing standards
+  - Documentation guidelines
+- **Audience:** All developers
+
 ## 📚 SOP - Standard Operating Procedures
 
 ### Testing Checklist
@@ -83,7 +94,8 @@ Thư mục này chứa tài liệu dành cho AI agents và developers để hi�
 ### For New Team Members
 1. Start with **System/content-management.md** - Understand how content works
 2. Read **System/architecture-review.md** - Get architecture overview
-3. Check **Tasks/** folder - See recent implementation work
+3. Review **System/coding-standards.md** - Learn coding guidelines
+4. Check **Tasks/** folder - See recent implementation work
 
 ### For Adding Content
 1. Read **System/content-management.md**
@@ -104,6 +116,7 @@ Thư mục này chứa tài liệu dành cho AI agents và developers để hi�
 
 ## 🔄 Recent Updates
 
+- **2025-01-XX:** Added coding standards and quality guidelines
 - **2025-10-15:** Post sync implementation completed
 - **2025-10-15:** Added content management documentation
 - **2025-10-15:** Organized docs into Tasks/System/SOP structure
@@ -112,7 +125,7 @@ Thư mục này chứa tài liệu dành cho AI agents và developers để hi�
 
 **Adding a post?** → [System/content-management.md](./System/content-management.md#adding-a-new-post)  
 **Adding a category?** → [System/content-management.md](./System/content-management.md#adding-a-new-category)  
-**Modifying read time?** → [System/content-management.md](./System/content-management.md#modifying-display-logic)  
+**Coding standards?** → [System/coding-standards.md](./System/coding-standards.md)  
 **Testing checklist?** → [SOP/TESTING_CHECKLIST.md](./SOP/TESTING_CHECKLIST.md)  
 
 ---

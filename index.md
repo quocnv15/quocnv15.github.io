@@ -66,7 +66,7 @@ title: Home
         {% comment %} Define valid categories - only show categories that have corresponding sections {% endcomment %}
         {% comment %} Mapping: category name -> section data-category attribute {% endcomment %}
         {% comment %} Sections available: ios, data, architecture, swift, ai, interview, concurrency {% endcomment %}
-        {% assign category_mapping = "iOS:ios,Swift:swift,AI:ai,Strategy:ai,Architecture:architecture,Data Structures:data,Interview:interview,Concurrency:concurrency" | split: "," %}
+        {% assign category_mapping = "iOS:ios,Swift:swift,AI Tools & Workflow:ai-workflow,AI Agents & Automation:ai-agents,AI Strategy & Business:ai-strategy,Architecture:architecture,Data Structures:data,Interview:interview,Concurrency:concurrency" | split: "," %}
         {% assign min_posts = 1 %}
 
         {% for category in sorted_categories %}
@@ -313,22 +313,22 @@ title: Home
       </div>
     </div>
 
-    <!-- AI & Coding Strategy Section -->
-    <div id="ai" class="category-section" data-category="ai">
+    <!-- AI Tools & Workflow Section -->
+    <div id="ai-workflow" class="category-section" data-category="ai-workflow">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">🤖</span>
-          AI & Coding Strategy
+          <span class="category-icon">🛠️</span>
+          AI Tools & Workflow
         </h2>
         <div class="category-controls">
           <span class="post-count">
-            {% assign ai_count = 0 %}
+            {% assign ai_workflow_count = 0 %}
             {% for post in sorted_posts %}
-              {% if post.categories contains 'AI' or post.categories contains 'Strategy' %}
-                {% assign ai_count = ai_count | plus: 1 %}
+              {% if post.categories contains 'AI Tools & Workflow' %}
+                {% assign ai_workflow_count = ai_workflow_count | plus: 1 %}
               {% endif %}
             {% endfor %}
-            {{ ai_count }} articles
+            {{ ai_workflow_count }} articles
           </span>
           <button class="expand-btn">+</button>
         </div>
@@ -336,7 +336,67 @@ title: Home
       
       <div class="posts-grid">
         {% for post in sorted_posts %}
-          {% if post.categories contains 'AI' or post.categories contains 'Strategy' %}
+          {% if post.categories contains 'AI Tools & Workflow' %}
+            {% include post-card.html post=post %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- AI Agents & Automation Section -->
+    <div id="ai-agents" class="category-section" data-category="ai-agents">
+      <div class="category-header">
+        <h2 class="category-title">
+          <span class="category-icon">🤖</span>
+          AI Agents & Automation
+        </h2>
+        <div class="category-controls">
+          <span class="post-count">
+            {% assign ai_agents_count = 0 %}
+            {% for post in sorted_posts %}
+              {% if post.categories contains 'AI Agents & Automation' %}
+                {% assign ai_agents_count = ai_agents_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+            {{ ai_agents_count }} articles
+          </span>
+          <button class="expand-btn">+</button>
+        </div>
+      </div>
+      
+      <div class="posts-grid">
+        {% for post in sorted_posts %}
+          {% if post.categories contains 'AI Agents & Automation' %}
+            {% include post-card.html post=post %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    
+    <!-- AI Strategy & Business Section -->
+    <div id="ai-strategy" class="category-section" data-category="ai-strategy">
+      <div class="category-header">
+        <h2 class="category-title">
+          <span class="category-icon">📊</span>
+          AI Strategy & Business
+        </h2>
+        <div class="category-controls">
+          <span class="post-count">
+            {% assign ai_strategy_count = 0 %}
+            {% for post in sorted_posts %}
+              {% if post.categories contains 'AI Strategy & Business' %}
+                {% assign ai_strategy_count = ai_strategy_count | plus: 1 %}
+              {% endif %}
+            {% endfor %}
+            {{ ai_strategy_count }} articles
+          </span>
+          <button class="expand-btn">+</button>
+        </div>
+      </div>
+      
+      <div class="posts-grid">
+        {% for post in sorted_posts %}
+          {% if post.categories contains 'AI Strategy & Business' %}
             {% include post-card.html post=post %}
           {% endif %}
         {% endfor %}

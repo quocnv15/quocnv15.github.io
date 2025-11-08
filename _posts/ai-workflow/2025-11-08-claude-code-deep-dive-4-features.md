@@ -3,7 +3,7 @@ layout: post
 title: "Claude Code Deep Dive: 4 Features You Need to Master"
 date: 2025-11-08 10:00:00 +0700
 tags: [ai, claude-code, agent-skills, mcp-servers, productivity, tools]
-categories: [AI]
+categories: [AI Tools & Workflow]
 author: NGUYEN VAN QUOC
 ---
 

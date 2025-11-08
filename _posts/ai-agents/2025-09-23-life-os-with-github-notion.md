@@ -1,9 +1,10 @@
 ---
 layout: post
-title: "LifeOs - CC + Notion + Github"
+title: "LifeOS Integration: Claude Code + Notion + GitHub"
 date: 2025-09-23 12:00:00 +0700
-categories: [AI, Strategy]
-tags: [AI, Coding, GLM, Productivity, Strategy]
+categories: [AI Agents & Automation]
+tags: [ai-agents, automation, integration, notion, github, claude-code]
+author: NGUYEN VAN QUOC
 ---
 Công cụ là claude code và quản lý task vụ thường ngày là notion và code quản lý bởi github
 

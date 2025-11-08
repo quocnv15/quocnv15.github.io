@@ -1,9 +1,10 @@
 ---
 layout: post
-title: "4 Ways to Upskill with AI Safely"
+title: "4 Strategies for Working Safely with AI"
 date: 2025-09-24 10:00:00 +0700
-categories: [AI, Strategy]
-tags: [AI, Learning, Productivity, Strategy, Education]
+categories: [AI Strategy & Business]
+tags: [ai-strategy, business, productivity, learning, education]
+author: NGUYEN VAN QUOC
 ---
 
 # 4 Ways to Upskill with AI Safely

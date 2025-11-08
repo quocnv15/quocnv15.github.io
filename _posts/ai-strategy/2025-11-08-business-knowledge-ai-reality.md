@@ -2,8 +2,9 @@
 layout: post
 title: "Business Knowledge in AI Era: From Books to Reality"
 date: 2025-11-08 11:00:00 +0700
-tags: [business, ai, strategy, knowledge-management, productivity, learning]
-categories: [AI]
+tags: [ai-strategy, business, knowledge-management, productivity, learning]
+categories: [AI Strategy & Business]
+author: NGUYEN VAN QUOC
 ---
 
 # Sự Thật Về Kiến Thức Kinh Doanh: Từ Sách Đến Thực Hiện Trong Kỷ Nguyên AI

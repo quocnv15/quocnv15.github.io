@@ -6,54 +6,55 @@
     <title>iOS Memory Hub — Dashboard</title>
     <style>
         :root {
-            /* Color System — Pro Max Palette */
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #13131f;
-            --bg-tertiary: #1a1a2e;
-            --bg-card: #1f1f35;
+            /* Color System — Enhanced Palette */
+            --bg-primary: #0d0d12;
+            --bg-secondary: #151520;
+            --bg-tertiary: #1e1e30;
+            --bg-card: #232338;
+            --bg-card-hover: #2a2a42;
 
             /* Accent Colors */
-            --accent-primary: #8b5cf6;
-            --accent-secondary: #6366f1;
-            --accent-gradient: linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%);
+            --accent-primary: #9333ea;
+            --accent-secondary: #7c3aed;
+            --accent-gradient: linear-gradient(135deg, #9333ea 0%, #7c3aed 50%, #6366f1 100%);
 
             /* Semantic Colors */
-            --success: #10b981;
-            --success-bg: rgba(16, 185, 129, 0.1);
+            --success: #22c55e;
+            --success-bg: rgba(34, 197, 94, 0.15);
             --warning: #f59e0b;
-            --warning-bg: rgba(245, 158, 11, 0.1);
+            --warning-bg: rgba(245, 158, 11, 0.15);
             --danger: #ef4444;
-            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-bg: rgba(239, 68, 68, 0.15);
             --info: #3b82f6;
-            --info-bg: rgba(59, 130, 246, 0.1);
+            --info-bg: rgba(59, 130, 246, 0.15);
 
-            /* Text Colors */
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            /* Text Colors — Enhanced Contrast */
+            --text-primary: #ffffff;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
 
             /* Borders */
-            --border-primary: rgba(139, 92, 246, 0.2);
-            --border-secondary: rgba(255, 255, 255, 0.05);
+            --border-primary: rgba(147, 51, 234, 0.3);
+            --border-secondary: rgba(255, 255, 255, 0.08);
 
             /* Shadows */
-            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
-            --shadow-glow: 0 0 20px rgba(139, 92, 246, 0.3);
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 6px 12px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.6);
+            --shadow-glow: 0 0 30px rgba(147, 51, 234, 0.4);
 
             /* Spacing */
             --space-xs: 0.5rem;
-            --space-sm: 1rem;
-            --space-md: 1.5rem;
+            --space-sm: 0.75rem;
+            --space-md: 1.25rem;
             --space-lg: 2rem;
             --space-xl: 3rem;
 
             /* Border Radius */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-xl: 28px;
         }
 
         * {
@@ -66,21 +67,21 @@
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.7;
             overflow-x: hidden;
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1440px;
             margin: 0 auto;
             padding: var(--space-lg);
         }
 
-        /* Header */
+        /* Header — Enhanced */
         .header {
             text-align: center;
             margin-bottom: var(--space-xl);
-            padding: var(--space-lg) 0;
+            padding: var(--space-lg) 0 var(--space-md);
             position: relative;
         }
 
@@ -90,94 +91,93 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 200px;
-            height: 2px;
+            width: 120px;
+            height: 3px;
             background: var(--accent-gradient);
-            border-radius: 1px;
+            border-radius: 2px;
         }
 
         .header-badge {
             display: inline-flex;
             align-items: center;
-            gap: var(--space-xs);
-            padding: 0.5rem 1rem;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
             background: var(--success-bg);
-            border: 1px solid var(--success);
-            border-radius: 20px;
-            font-size: 0.85rem;
+            border: 1.5px solid var(--success);
+            border-radius: var(--radius-xl);
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--success);
-            margin-bottom: var(--space-sm);
+            margin-bottom: var(--space-md);
         }
 
         .header h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
-            font-weight: 800;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 900;
             background: var(--accent-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: var(--space-sm);
-            letter-spacing: -0.02em;
+            margin-bottom: var(--space-md);
+            letter-spacing: -0.03em;
         }
 
         .header .subtitle {
             color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 600px;
+            font-size: 1.15rem;
+            max-width: 650px;
             margin: 0 auto;
+            font-weight: 400;
         }
 
-        /* Stats Grid */
-        .stats-section {
-            margin-bottom: var(--space-xl);
-        }
-
+        /* Section Headers — Better Hierarchy */
         .section-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: var(--space-md);
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             gap: var(--space-sm);
         }
 
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
         .section-icon {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
         }
 
         .last-updated {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
         }
 
-        .last-updated::before {
-            content: '🕐';
-            font-size: 1rem;
+        /* Stats Grid — Enhanced Readability */
+        .stats-section {
+            margin-bottom: var(--space-xl);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: var(--space-md);
         }
 
         .stat-card {
             background: var(--bg-card);
-            padding: var(--space-md);
+            padding: var(--space-lg);
             border-radius: var(--radius-lg);
-            border: 1px solid var(--border-primary);
+            border: 1.5px solid var(--border-secondary);
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .stat-card::before {
@@ -186,16 +186,17 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 4px;
             background: var(--accent-gradient);
             opacity: 0;
             transition: opacity 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-6px);
+            background: var(--bg-card-hover);
             box-shadow: var(--shadow-glow);
-            border-color: var(--accent-primary);
+            border-color: var(--border-primary);
         }
 
         .stat-card:hover::before {
@@ -205,20 +206,20 @@
         .stat-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
-            margin-bottom: var(--space-sm);
+            align-items: flex-start;
+            margin-bottom: var(--space-md);
         }
 
         .stat-icon {
-            font-size: 2rem;
-            filter: grayscale(0.3);
+            font-size: 2.4rem;
+            filter: grayscale(0.2);
         }
 
         .stat-trend {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            padding: 0.4rem 0.9rem;
+            border-radius: var(--radius-xl);
+            font-size: 0.85rem;
+            font-weight: 700;
         }
 
         .trend-up {
@@ -237,61 +238,70 @@
         }
 
         .stat-value {
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 3rem;
+            font-weight: 900;
             line-height: 1;
-            margin-bottom: var(--space-xs);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
         }
 
         .stat-label {
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 500;
+            letter-spacing: 0.08em;
         }
 
-        /* Apps Section */
+        /* Apps Grid — Improved Cards */
         .apps-section {
             margin-bottom: var(--space-xl);
         }
 
         .apps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
             gap: var(--space-md);
         }
 
         .app-card {
             background: var(--bg-card);
             border-radius: var(--radius-lg);
-            padding: var(--space-md);
-            border: 1px solid var(--border-secondary);
-            transition: all 0.3s ease;
+            padding: var(--space-lg);
+            border: 1.5px solid var(--border-secondary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         .app-card:hover {
             border-color: var(--border-primary);
             box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
         }
 
         .app-card.star-performer {
-            border-color: var(--success);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+            border: 2px solid var(--success);
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.2);
         }
 
         .app-card.star-performer::after {
-            content: '⭐';
+            content: '⭐ WINNER';
             position: absolute;
             top: var(--space-sm);
             right: var(--space-sm);
-            font-size: 1.5rem;
+            background: var(--success-bg);
+            color: var(--success);
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
         }
 
         .app-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
+            align-items: flex-start;
             margin-bottom: var(--space-md);
         }
 
@@ -300,9 +310,10 @@
         }
 
         .app-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            color: var(--text-primary);
         }
 
         .app-category {
@@ -310,45 +321,46 @@
             align-items: center;
             gap: 0.5rem;
             color: var(--text-secondary);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            font-weight: 500;
         }
 
         .app-category::before {
             content: '📁';
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
 
         .app-badge {
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-xl);
+            font-size: 0.8rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
         }
 
         .badge-scale {
             background: var(--success-bg);
             color: var(--success);
-            border: 1px solid var(--success);
+            border: 1.5px solid var(--success);
         }
 
         .badge-optimize {
             background: var(--warning-bg);
             color: var(--warning);
-            border: 1px solid var(--warning);
+            border: 1.5px solid var(--warning);
         }
 
         .badge-watch {
             background: var(--info-bg);
             color: var(--info);
-            border: 1px solid var(--info);
+            border: 1.5px solid var(--info);
         }
 
         .badge-new {
             background: var(--bg-tertiary);
             color: var(--text-secondary);
-            border: 1px solid var(--border-secondary);
+            border: 1.5px solid var(--border-secondary);
         }
 
         .app-metrics {
@@ -360,36 +372,40 @@
 
         .app-metric {
             text-align: center;
-            padding: var(--space-sm);
+            padding: var(--space-md) var(--space-sm);
             background: var(--bg-tertiary);
             border-radius: var(--radius-md);
         }
 
         .app-metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.7rem;
+            font-weight: 800;
             line-height: 1;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.4rem;
         }
 
         .app-metric-label {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
+            font-weight: 600;
         }
 
         .app-action {
             width: 100%;
-            padding: 0.875rem 1rem;
+            padding: 1rem;
             background: var(--accent-gradient);
             border: none;
             border-radius: var(--radius-md);
             color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-weight: 700;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s ease;
+            text-decoration: none;
+            display: block;
+            text-align: center;
         }
 
         .app-action:hover {
@@ -397,22 +413,27 @@
             box-shadow: var(--shadow-glow);
         }
 
-        /* Navigation Section */
+        .app-action:focus-visible {
+            outline: 3px solid var(--accent-primary);
+            outline-offset: 2px;
+        }
+
+        /* Navigation — Enhanced */
         .nav-section {
             margin-bottom: var(--space-xl);
         }
 
         .nav-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: var(--space-sm);
         }
 
         .nav-card {
             background: var(--bg-card);
-            padding: var(--space-md);
+            padding: var(--space-lg);
             border-radius: var(--radius-md);
-            border: 1px solid var(--border-secondary);
+            border: 1.5px solid var(--border-secondary);
             text-decoration: none;
             color: inherit;
             transition: all 0.3s ease;
@@ -421,86 +442,84 @@
 
         .nav-card:hover {
             border-color: var(--border-primary);
-            transform: translateX(8px);
+            transform: translateX(10px);
             box-shadow: var(--shadow-md);
+            background: var(--bg-card-hover);
+        }
+
+        .nav-card:focus-visible {
+            outline: 3px solid var(--accent-primary);
+            outline-offset: 2px;
         }
 
         .nav-icon {
-            font-size: 2rem;
+            font-size: 2.2rem;
             margin-bottom: var(--space-sm);
         }
 
         .nav-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
+            font-weight: 800;
+            font-size: 1.15rem;
+            margin-bottom: 0.4rem;
         }
 
         .nav-desc {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
+            line-height: 1.5;
         }
 
-        /* Quality Gaps */
+        /* Quality Gaps — Visual Hierarchy */
         .gaps-section {
             margin-bottom: var(--space-xl);
         }
 
         .gaps-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
             gap: var(--space-sm);
         }
 
         .gap-card {
             background: var(--bg-card);
-            padding: var(--space-md);
+            padding: var(--space-lg) var(--space-md);
             border-radius: var(--radius-md);
-            border-left: 4px solid;
-            position: relative;
-        }
-
-        .gap-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: inherit;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            border-left: 5px solid;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
         .gap-card:hover {
-            transform: scale(1.05);
+            transform: scale(1.08);
+            box-shadow: var(--shadow-md);
         }
 
         .gap-ux { border-color: #f59e0b; }
         .gap-discoverability { border-color: #6366f1; }
-        .gap-aso { border-color: #10b981; }
+        .gap-aso { border-color: #22c55e; }
         .gap-performance { border-color: #ef4444; }
-        .gap-monetization { border-color: #8b5cf6; }
+        .gap-monetization { border-color: #9333ea; }
         .gap-technical { border-color: #06b6d4; }
 
         .gap-count {
-            font-size: 2.5rem;
-            font-weight: 800;
+            font-size: 2.8rem;
+            font-weight: 900;
             line-height: 1;
+            margin-bottom: 0.3rem;
         }
 
         .gap-category {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            margin-top: 0.25rem;
+            font-weight: 600;
         }
 
-        /* Footer */
+        /* Footer — Cleaner */
         .footer {
             text-align: center;
             margin-top: var(--space-xl);
             padding: var(--space-lg) 0;
-            border-top: 1px solid var(--border-primary);
+            border-top: 1.5px solid var(--border-primary);
         }
 
         .footer-links {
@@ -514,24 +533,33 @@
         .footer-links a {
             color: var(--accent-primary);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.95rem;
             transition: color 0.2s ease;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
         }
 
         .footer-links a:hover {
             color: var(--accent-secondary);
+            background: var(--bg-tertiary);
+        }
+
+        .footer-links a:focus-visible {
+            outline: 2px solid var(--accent-primary);
         }
 
         .footer-text {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            line-height: 1.7;
         }
 
         /* Animations */
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -543,7 +571,7 @@
         .app-card,
         .nav-card,
         .gap-card {
-            animation: fadeIn 0.5s ease backwards;
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
         }
 
         .stat-card:nth-child(1) { animation-delay: 0.05s; }
@@ -552,20 +580,20 @@
         .stat-card:nth-child(4) { animation-delay: 0.2s; }
         .stat-card:nth-child(5) { animation-delay: 0.25s; }
 
-        /* Responsive */
+        /* Responsive — Enhanced */
         @media (max-width: 768px) {
             .container {
                 padding: var(--space-md);
             }
 
             .header h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .section-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: var(--space-xs);
+                gap: var(--space-sm);
             }
 
             .app-metrics {
@@ -577,11 +605,16 @@
             .nav-grid {
                 grid-template-columns: 1fr;
             }
+
+            .footer-links {
+                flex-direction: column;
+                gap: var(--space-sm);
+            }
         }
 
-        /* Scrollbar Styling */
+        /* Scrollbar */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 10px;
         }
 
         ::-webkit-scrollbar-track {
@@ -590,11 +623,24 @@
 
         ::-webkit-scrollbar-thumb {
             background: var(--accent-primary);
-            border-radius: 4px;
+            border-radius: 5px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-secondary);
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--accent-primary);
+            outline-offset: 2px;
         }
     </style>
 </head>
@@ -604,7 +650,7 @@
         <header class="header">
             <div class="header-badge">🟢 Active System</div>
             <h1>iOS Memory Hub</h1>
-            <p class="subtitle">Memory, Identity & Orchestration Hub for iOS Development</p>
+            <p class="subtitle">Portfolio Management Dashboard • 5 Apps • Target: 50</p>
         </header>
 
         <!-- Portfolio Stats -->
@@ -614,13 +660,13 @@
                     <span class="section-icon">📊</span>
                     Portfolio Overview
                 </h2>
-                <div class="last-updated">Updated: April 24, 2026</div>
+                <div class="last-updated">April 24, 2026</div>
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">🎯</span>
-                        <span class="stat-trend trend-up">📈 Target: 50</span>
+                        <span class="stat-trend trend-up">📈 10% to goal</span>
                     </div>
                     <div class="stat-value">5</div>
                     <div class="stat-label">Active Apps</div>
@@ -629,7 +675,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">💰</span>
-                        <span class="stat-trend trend-up">✅ Positive</span>
+                        <span class="stat-trend trend-up">✅ Profitable</span>
                     </div>
                     <div class="stat-value">1.24x</div>
                     <div class="stat-label">Portfolio ROI</div>
@@ -638,7 +684,7 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">⭐</span>
-                        <span class="stat-trend trend-up">🚀 Scale Ready</span>
+                        <span class="stat-trend trend-up">🚀 Scale This</span>
                     </div>
                     <div class="stat-value">7.7x</div>
                     <div class="stat-label">Star Performer (App 010)</div>
@@ -647,16 +693,16 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">💵</span>
-                        <span class="stat-trend trend-up">📈 Growing</span>
+                        <span class="stat-trend trend-up">📈 +$147</span>
                     </div>
-                    <div class="stat-value">~$760+</div>
+                    <div class="stat-value">~$760</div>
                     <div class="stat-label">Total Revenue</div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">🔧</span>
-                        <span class="stat-trend trend-stable">In Progress</span>
+                        <span class="stat-trend trend-stable">⏳ Active</span>
                     </div>
                     <div class="stat-value">11</div>
                     <div class="stat-label">Quality Gaps</div>
@@ -688,16 +734,16 @@
                         </div>
                         <div class="app-metric">
                             <div class="app-metric-value">$600</div>
-                            <div class="app-metric-label">Ad Spend</div>
+                            <div class="app-metric-label">Spend</div>
                         </div>
                         <div class="app-metric">
                             <div class="app-metric-value">+$60</div>
                             <div class="app-metric-label">Net</div>
                         </div>
                     </div>
-                    <button class="app-action" onclick="window.open('https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios006-silly-smile', '_blank')">
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios006-silly-smile" class="app-action" target="_blank">
                         View Details →
-                    </button>
+                    </a>
                 </div>
 
                 <div class="app-card">
@@ -722,9 +768,9 @@
                             <div class="app-metric-label">Early</div>
                         </div>
                     </div>
-                    <button class="app-action" onclick="window.open('https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios009-emoji-merge', '_blank')">
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios009-emoji-merge" class="app-action" target="_blank">
                         View Details →
-                    </button>
+                    </a>
                 </div>
 
                 <div class="app-card star-performer">
@@ -733,7 +779,7 @@
                             <div class="app-name">GPS Camera</div>
                             <div class="app-category">Utility Camera • App 010</div>
                         </div>
-                        <span class="app-badge badge-scale">⭐ Scale</span>
+                        <span class="app-badge badge-scale">⭐ SCALE</span>
                     </div>
                     <div class="app-metrics">
                         <div class="app-metric">
@@ -742,16 +788,16 @@
                         </div>
                         <div class="app-metric">
                             <div class="app-metric-value">$13</div>
-                            <div class="app-metric-label">Ad Spend</div>
+                            <div class="app-metric-label">Spend</div>
                         </div>
                         <div class="app-metric">
                             <div class="app-metric-value">+$87</div>
                             <div class="app-metric-label">Net</div>
                         </div>
                     </div>
-                    <button class="app-action" onclick="window.open('https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios010-gps-camera', '_blank')">
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios010-gps-camera" class="app-action" target="_blank">
                         View Details →
-                    </button>
+                    </a>
                 </div>
 
                 <div class="app-card">
@@ -776,9 +822,9 @@
                             <div class="app-metric-label">Monitor</div>
                         </div>
                     </div>
-                    <button class="app-action" onclick="window.open('https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios014-zipper-wallpaper', '_blank')">
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios014-zipper-wallpaper" class="app-action" target="_blank">
                         View Details →
-                    </button>
+                    </a>
                 </div>
 
                 <div class="app-card">
@@ -803,9 +849,9 @@
                             <div class="app-metric-label">Monitor</div>
                         </div>
                     </div>
-                    <button class="app-action" onclick="window.open('https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios017-dual-camera', '_blank')">
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios017-dual-camera" class="app-action" target="_blank">
                         View Details →
-                    </button>
+                    </a>
                 </div>
             </div>
         </section>
@@ -849,7 +895,7 @@
                     <div class="nav-desc">First winning category pattern (7.7x ROI)</div>
                 </a>
 
-                <a href="https://github.com/quocnv15/ios-kit/blob/main/ios-memory/quality-gaps" class="nav-card" target="_blank">
+                <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/quality-gaps" class="nav-card" target="_blank">
                     <div class="nav-icon">🔧</div>
                     <div class="nav-title">Quality Gaps</div>
                     <div class="nav-desc">11 gaps tracked across 6 categories</div>

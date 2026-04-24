@@ -4,11 +4,12 @@
   {%- include head.html -%}
 
   <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
     {% include header-nav.html %}
 
-    <main class="page-content" aria-label="Content">
-      <div class="wrapper">
+    <main id="main-content" class="page-content" aria-label="Content" role="main">
+      <div class="wrapper container">
         {{ content }}
       </div>
     </main>
@@ -20,16 +21,33 @@
       src="{{ '/assets/js/main.js' | relative_url }}?v={{ site.time | date: '%s' }}">
     </script>
 
+    <!-- Navigation Module - Critical, load immediately -->
+    <script type="module" src="{{ '/assets/js/navigation.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+
+    <!-- Search and Filter Modules - Lazy load on search focus -->
+    {% if page.layout == 'page' and page.title == 'Home' %}
+    <script type="module">
+      // Lazy load search and filter modules when search input is focused
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.addEventListener('focus', () => {
+          import('{{ '/assets/js/search.js' | relative_url }}?v={{ site.time | date: '%s' }}');
+          import('{{ '/assets/js/filter.js' | relative_url }}?v={{ site.time | date: '%s' }}');
+        }, { once: true });
+      }
+    </script>
+    {% endif %}
+
     <!-- Site Configuration for TypeScript -->
     <script type="application/json" id="site-config">
       {
         "theme": "system",
-        "searchEnabled": false,
+        "searchEnabled": {% if page.layout == 'page' and page.title == 'Home' %}true{% else %}false{% endif %},
         "tocEnabled": false,
         "copyCodeEnabled": true,
         "shareButtonsEnabled": false,
         "isPost": false,
-        "isHomePage": true,
+        "isHomePage": {% if page.layout == 'page' and page.title == 'Home' %}true{% else %}false{% endif %},
         "environment": "{{ jekyll.environment }}"
       }
     </script>

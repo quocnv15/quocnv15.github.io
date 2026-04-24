@@ -1,6 +1,6 @@
-<header class="site-header custom-header">
-  <nav class="site-nav">
-    <div class="site-nav-inner">
+<header class="site-header custom-header" role="banner">
+  <nav class="site-nav" role="navigation" aria-label="Main navigation">
+    <div class="site-nav-inner container">
       <a class="site-title" rel="author" href="{{ '/' | relative_url }}">QuocNV</a>
       <div class="nav-links">
         <a class="nav-link" href="{{ '/about/' | relative_url }}">About</a>
@@ -10,78 +10,23 @@
         <a class="nav-link" href="{{ '/projects/' | relative_url }}">Projects</a>
         <a class="nav-link" href="{{ '/tools/' | relative_url }}">Tools</a>
         <a class="nav-link" href="{{ '/archive.html' | relative_url }}">Archive</a>
-        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMobile">
           <span class="nav-toggle-icon"></span>
           <span class="nav-toggle-icon"></span>
           <span class="nav-toggle-icon"></span>
         </button>
       </div>
     </div>
-    <div class="nav-mobile" id="navMobile">
-      <a class="nav-link" href="{{ '/about/' | relative_url }}">About</a>
-      <a class="nav-link" href="{{ '/' | relative_url }}">Home</a>
-      <a class="nav-link" href="{{ '/dashboard/' | relative_url }}">Dashboard</a>
-      <a class="nav-link" href="{{ '/portfolio/' | relative_url }}">Portfolio</a>
-      <a class="nav-link" href="{{ '/projects/' | relative_url }}">Projects</a>
-      <a class="nav-link" href="{{ '/tools/' | relative_url }}">Tools</a>
-      <a class="nav-link" href="{{ '/archive.html' | relative_url }}">Archive</a>
+    <div class="nav-mobile" id="navMobile" aria-hidden="true" role="menu" aria-label="Mobile navigation menu">
+      <a class="nav-link" href="{{ '/about/' | relative_url }}" role="menuitem">About</a>
+      <a class="nav-link" href="{{ '/' | relative_url }}" role="menuitem">Home</a>
+      <a class="nav-link" href="{{ '/dashboard/' | relative_url }}" role="menuitem">Dashboard</a>
+      <a class="nav-link" href="{{ '/portfolio/' | relative_url }}" role="menuitem">Portfolio</a>
+      <a class="nav-link" href="{{ '/projects/' | relative_url }}" role="menuitem">Projects</a>
+      <a class="nav-link" href="{{ '/tools/' | relative_url }}" role="menuitem">Tools</a>
+      <a class="nav-link" href="{{ '/archive.html' | relative_url }}" role="menuitem">Archive</a>
     </div>
   </nav>
 </header>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const navToggle = document.getElementById('navToggle');
-    const navMobile = document.getElementById('navMobile');
-    const body = document.body;
-
-    // Toggle mobile menu
-    navToggle.addEventListener('click', function(e) {
-      e.stopPropagation();
-      navMobile.classList.toggle('active');
-      navToggle.classList.toggle('active');
-      body.classList.toggle('nav-open');
-    });
-
-    // Close mobile menu when clicking on a link
-    const mobileLinks = navMobile.querySelectorAll('.nav-link');
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', function() {
-        navMobile.classList.remove('active');
-        navToggle.classList.remove('active');
-        body.classList.remove('nav-open');
-      });
-    });
-
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(e) {
-      if (!navMobile.contains(e.target) && !navToggle.contains(e.target)) {
-        navMobile.classList.remove('active');
-        navToggle.classList.remove('active');
-        body.classList.remove('nav-open');
-      }
-    });
-
-    // Close mobile menu on escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        navMobile.classList.remove('active');
-        navToggle.classList.remove('active');
-        body.classList.remove('nav-open');
-      }
-    });
-
-    // Handle window resize
-    let resizeTimer;
-    window.addEventListener('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        if (window.innerWidth > 768) {
-          navMobile.classList.remove('active');
-          navToggle.classList.remove('active');
-          body.classList.remove('nav-open');
-        }
-      }, 250);
-    });
-  });
-</script>
+<script type="module" src="{{ '/assets/js/navigation.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

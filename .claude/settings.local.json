@@ -44,5 +44,8 @@
     ],
     "deny": [],
     "ask": []
+  },
+  "enabledPlugins": {
+    "codex@openai-codex": true
   }
 }

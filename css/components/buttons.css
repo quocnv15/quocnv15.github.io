@@ -1,0 +1,78 @@
+/**
+ * Button Components
+ * Uses CSS variables for colors and spacing
+ */
+
+.button,
+.btn,
+button,
+[type="button"],
+[type="submit"],
+[type="reset"] {
+  display: inline-block;
+  padding: var(--space-sm) var(--space-lg);
+  font-size: var(--font-base);
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--color-primary);
+  color: var(--color-bg);
+}
+
+.button:hover,
+.btn:hover,
+button:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.button:active,
+.btn:active,
+button:active {
+  transform: translateY(0);
+}
+
+/* Button variants */
+.button-secondary {
+  background: var(--color-secondary);
+}
+
+.button-secondary:hover {
+  background: var(--color-secondary-dark);
+}
+
+.button-outline {
+  background: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.button-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-bg);
+}
+
+/* Button sizes */
+.button-small {
+  padding: var(--space-xs) var(--space-md);
+  font-size: var(--font-sm);
+}
+
+.button-large {
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--font-lg);
+}
+
+/* Disabled state */
+.button:disabled,
+.btn:disabled,
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

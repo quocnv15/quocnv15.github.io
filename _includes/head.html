@@ -2,8 +2,54 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Resource Hints -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   {%- seo -%}
-  <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
+
+  <!-- Critical CSS Inline - Above-fold styles -->
+  <style>
+    /* Critical above-fold styles */
+    body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:16px;line-height:1.6;color:#333}
+    *{box-sizing:border-box}
+    .wrapper{max-width:1200px;margin:0 auto;padding:0 20px}
+    .container{width:100%}
+    main{display:block;min-height:100vh}
+  </style>
+
+  <!-- CSS Variables (must load first) -->
+  <link rel="stylesheet" href="{{ "/css/variables.css" | relative_url }}">
+
+  <!-- Base CSS -->
+  <link rel="stylesheet" href="{{ "/css/base/reset.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/base/typography.css" | relative_url }}">
+
+  <!-- Component CSS - Defer non-critical -->
+  <link rel="preload" href="{{ "/css/components/buttons.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ "/css/components/buttons.css" | relative_url }}"></noscript>
+
+  <link rel="preload" href="{{ "/css/components/cards.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ "/css/components/cards.css" | relative_url }}"></noscript>
+
+  <link rel="stylesheet" href="{{ "/css/components/navigation.css" | relative_url }}">
+
+  <link rel="preload" href="{{ "/css/components/forms.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ "/css/components/forms.css" | relative_url }}"></noscript>
+
+  <link rel="preload" href="{{ "/css/components/layout.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ "/css/components/layout.css" | relative_url }}"></noscript>
+
+  <!-- Utility CSS -->
+  <link rel="stylesheet" href="{{ "/css/utilities/spacing.css" | relative_url }}">
+
+  <!-- Legacy CSS (kept for backwards compatibility during transition) -->
+  <link rel="preload" href="{{ "/assets/main.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}"></noscript>
+
+  <link rel="stylesheet" href="{{ "/css/override.css" | relative_url }}">
+
   {%- feed_meta -%}
   {%- if jekyll.environment == 'production' and site.google_analytics -%}
     {%- include google-analytics.html -%}

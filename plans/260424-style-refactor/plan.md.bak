@@ -1,0 +1,158 @@
+---
+title: "Style Architecture Refactoring"
+description: "Refactor Jekyll site CSS/JS architecture from monolithic 3,474-line CSS file to modular design system with extracted JavaScript modules"
+status: pending
+priority: P1
+effort: 16h
+branch: main
+tags: [css, javascript, refactoring, design-system]
+created: 2026-04-24
+---
+
+## Overview
+
+Refactor Jekyll site from monolithic style architecture to modular, maintainable design system. **Parallel-optimized execution**: Phases 1-3 run concurrently; Phase 4 integrates; Phases 5-6 run sequentially.
+
+### Dependency Graph
+
+```mermaid
+graph TD
+    P1[Phase 01: CSS Variables] --> P2[Phase 02: CSS Components]
+    P2 --> P4[Phase 04: Layout Refactor]
+    P3[Phase 03: JS Modules] --> P4
+    P4 --> P5[Phase 05: Accessibility]
+    P4 --> P6[Phase 06: Performance]
+
+    style P1 fill:#e3f2fd
+    style P2 fill:#fff3e0
+    style P3 fill:#e3f2fd
+    style P4 fill:#ffe0b2
+    style P5 fill:#f3e5f5
+    style P6 fill:#f3e5f5
+```
+<!-- Updated: Validation Session 1 - Changed to sequential execution (01→02) per user decision -->
+
+### Parallelization Strategy
+
+| Wave | Phases | Description |
+|------|--------|-------------|
+| **Wave 1** (Parallel) | 01, 02, 03 | Independent foundation work |
+| **Wave 2** (Sequential) | 04 | Integration point - depends on 01-03 |
+| **Wave 3** (Sequential) | 05, 06 | Quality & optimization gates |
+
+### File Ownership Matrix
+
+| File | Owned By | Dependencies |
+|------|----------|--------------|
+| `css/variables.css` | Phase 01 | None |
+| `css/base/` | Phase 02 | Phase 01 |
+| `css/components/` | Phase 02 | Phase 01 |
+| `assets/js/search.js` | Phase 03 | None |
+| `assets/js/filter.js` | Phase 03 | None |
+| `assets/js/navigation.js` | Phase 03 | None |
+| `_layouts/*.html` | Phase 04 | Phase 01, 02, 03 |
+| `_includes/*.html` | Phase 04 | Phase 01, 02, 03 |
+| `index.md` | Phase 04 | Phase 01, 02, 03 |
+
+## Phase Status
+
+| Phase | Title | Status | Owner | Hours |
+|-------|-------|--------|-------|-------|
+| [01](phase-01-css-variables.md) | CSS Variables & Design System | pending | css-specialist | 2h |
+| [02](phase-02-css-components.md) | CSS Component Architecture | pending | css-specialist | 4h |
+| [03](phase-03-js-modules.md) | JavaScript Module Extraction | pending | js-specialist | 3h |
+| [04](phase-04-layout-refactor.md) | Layout Refactoring & Integration | pending | frontend-specialist | 4h |
+| [05](phase-05-accessibility.md) | Accessibility Improvements | pending | a11y-specialist | 2h |
+| [06](phase-06-performance.md) | Performance Optimization | pending | perf-specialist | 1h |
+
+## Research Context
+
+- **CSS Analysis**: [`research/researcher-css-report.md`](research/researcher-css-report.md) - 3,474-line file, 47+ color inconsistencies
+- **JS & Layout Analysis**: [`research/researcher-js-layout-report.md`](research/researcher-js-layout-report.md) - 600+ lines inline JS, module extraction opportunities
+
+## Success Criteria
+
+- CSS file reduced by 40-50% (target: <2,000 lines total)
+- Color palette consolidated to 8-10 core colors
+- Zero inline styles in layout files
+- All JavaScript extracted to ES6 modules
+- Maintain WCAG 2.1 AA compliance
+- Lighthouse score >90 for all categories
+
+## Risk Mitigation
+
+- **Conflict Prevention**: Each file owned by exactly one phase
+- **Rollback Strategy**: Git branch per phase for isolation
+- **Testing**: Visual regression tests before/after each phase
+
+## Validation Log
+
+### Session 1 — 2026-04-24
+**Trigger:** Initial plan creation validation
+**Questions asked:** 7
+
+#### Questions & Answers
+
+1. **[CSS Methodology]** Phase 02 plans to use BEM (Block Element Modifier) methodology for CSS naming. However, your current codebase doesn't follow BEM. Which CSS naming methodology should we use?
+   - Options: BEM (Block__Element--Modifier) | Utility-first (Tailwind-like) | Semantic naming (current style) | BEM-light (hybrid)
+   - **Answer:** Semantic naming (current style)
+   - **Rationale:** Maintains consistency with existing codebase (.post-card, .nav-link style). Lower learning curve. Still uses CSS variables but keeps current naming patterns.
+
+2. **[Parallel Strategy]** The plan has Phases 01-02-03 running in parallel, but Phase 02 says it 'depends on' Phase 01 for CSS variables. Should Phase 02 wait for Phase 01 to complete first?
+   - Options: Yes, Phase 02 must wait | No, run in parallel | Hybrid: Start Phase 02 early
+   - **Answer:** Yes, Phase 02 must wait
+   - **Rationale:** CSS variables need to exist before components can reference them. Prevents undefined variable issues. Changes execution from Wave 1 (parallel) to sequential: Phase 01 → Phase 02 → Phase 03.
+
+3. **[JavaScript Support]** Phase 03 extracts JavaScript to ES6 modules with import/export. This requires modern browsers (ES6 modules supported in 94%+ browsers). Should we add fallback support for older browsers?
+   - Options: No, ES6 modules only (Recommended) | Yes, add nomodule fallback | Polyfill approach
+   - **Answer:** No, ES6 modules only (Recommended)
+   - **Rationale:** Target audience is developers/technical users with modern browsers. Simpler build process, faster page loads. 94%+ browser support is sufficient.
+
+4. **[Accessibility Scope]** The plan targets WCAG 2.1 AA compliance (strict accessibility standards). This level of effort may be overkill for a personal blog. What accessibility level should we target?
+   - Options: WCAG 2.1 AA (as planned) | WCAG 2.1 A (relaxed) | Best-effort accessibility
+   - **Answer:** WCAG 2.1 AA (as planned)
+   - **Rationale:** Full compliance worth the effort. Demonstrates professional quality. Good for portfolio/resume site. Only 2h additional work.
+
+5. **[File Deletion]** Phase 02 plans to delete css/override.css (3,474 lines) and assets/css/main.css. These are risky deletions. Should we proceed or use a safer approach?
+   - Options: Yes, delete it (Recommended) | Rename to .old backup | Keep until testing complete
+   - **Answer:** Keep until testing complete
+   - **Rationale:** Safer approach. Keep old files as reference during testing. Delete after Phase 04 integration confirms everything works. Reduces risk of breaking changes.
+
+6. **[Performance Scope]** Phase 06 includes critical CSS inline (extracting above-fold styles). This is complex and may be over-engineered for a personal blog. What performance optimization level do you want?
+   - Options: Full optimization (as planned) | CSS optimization only | JS lazy loading only | Defer to later
+   - **Answer:** Full optimization (as planned)
+   - **Rationale:** Worth the complexity. Critical CSS inline provides 15+ Lighthouse score improvement. Good learning opportunity. Lazy loading JS improves initial page load significantly.
+
+7. **[Design Tokens]** Phase 01 consolidates your 47+ unique colors down to 8-10 core colors. This may change your site's visual appearance. How aggressive should the color consolidation be?
+   - Options: Consolidate palette (Recommended) | Preserve all colors | Middle ground (12-15 colors)
+   - **Answer:** Consolidate palette (Recommended)
+   - **Rationale:** 47+ colors is excessive. Consolidation creates more cohesive, professional appearance. 8-10 core colors sufficient for personal blog.
+
+#### Confirmed Decisions
+- **CSS naming**: Use semantic naming (current style), NOT BEM
+- **Execution order**: Phase 01 → Phase 02 → Phase 03 (sequential, NOT parallel)
+- **JavaScript**: ES6 modules only, no fallbacks
+- **Accessibility**: Full WCAG 2.1 AA compliance
+- **File deletion**: Keep old files until testing complete, then delete
+- **Performance**: Full optimization including critical CSS inline
+- **Color palette**: Consolidate 47 colors to 8-10 core variables
+
+#### Action Items
+- [ ] Update Phase 01: Clarify color consolidation approach
+- [ ] Update Phase 02: Change BEM to semantic naming methodology
+- [ ] Update Phase 02: Change parallelization to sequential (wait for Phase 01)
+- [ ] Update Phase 02: Change deletion strategy to "keep until testing complete"
+- [ ] Update plan.md dependency graph to show sequential execution
+- [ ] Recalculate total effort (sequential may increase timeline)
+
+#### Impact on Phases
+- **Phase 01**: Add clarification that color consolidation is approved (8-10 colors)
+- **Phase 02**: 
+  - Change methodology from BEM to semantic naming
+  - Change parallelization from "Can run with Phase 01" to "Must wait for Phase 01"
+  - Change deletion strategy to "Keep until testing complete"
+  - Update success criteria to reflect semantic naming
+- **Phase 03**: No changes (ES6 modules confirmed)
+- **Phase 04**: No changes (integration unchanged)
+- **Phase 05**: No changes (WCAG 2.1 AA confirmed)
+- **Phase 06**: No changes (full optimization confirmed)

@@ -1,0 +1,56 @@
+/**
+ * Design System Variables
+ * Core design tokens for colors, spacing, and typography
+ * Consolidated from 47+ colors to 8-10 core variables
+ */
+
+:root {
+  /* Colors - Core Palette (8 colors) */
+  --color-primary: #2563eb;
+  --color-secondary: #667eea;
+  --color-accent: #764ba2;
+  --color-text: #2c3e50;
+  --color-text-muted: #666;
+  --color-border: #e8e8e8;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f8f9fa;
+
+  /* Spacing Scale - 7 steps (0.25rem to 3rem) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 2.5rem;
+  --space-3xl: 3rem;
+
+  /* Typography Scale - 7 steps (0.75rem to 2rem) */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-base: 1rem;
+  --font-lg: 1.125rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
+  --font-3xl: 2rem;
+
+  /* Extended Palette (derived colors for compatibility) */
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #3b82f6;
+  --color-secondary-dark: #5568d3;
+  --color-accent-dark: #6c3483;
+  --color-success: #27ae60;
+  --color-warning: #f39c12;
+  --color-error: #e74c3c;
+
+  /* Component-specific variables */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  /* Layout */
+  --max-width: 1200px;
+  --header-height: 60px;
+}

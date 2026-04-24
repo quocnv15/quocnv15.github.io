@@ -28,9 +28,11 @@
 
 ### App 006: Silly Smile ⚖️
 
-**Category:** Wallpaper (Emoji-themed)  
-**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, Kingfisher, AdMob  
-**Monetization:** IAP (monthly/weekly) + AdMob (banner, interstitial, rewarded, native, AOA)  
+**App Store Connect:** https://appstoreconnect.apple.com/apps/6756903565
+
+**Category:** Wallpaper (Emoji-themed)
+**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, Kingfisher, AdMob
+**Monetization:** IAP (monthly/weekly) + AdMob (banner, interstitial, rewarded, native, AOA)
 **Languages:** 18 + RTL support
 
 **Metrics:**
@@ -59,9 +61,11 @@
 
 ### App 009: Emoji Merge 🔥
 
-**Category:** Puzzle Game (Merge mechanics)  
-**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, Kingfisher, AdMob, Hero, XLPagerTabStrip  
-**Monetization:** IAP premium + AdMob (all formats)  
+**App Store Connect:** https://appstoreconnect.apple.com/apps/6758211252
+
+**Category:** Puzzle Game (Merge mechanics)
+**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, Kingfisher, AdMob, Hero, XLPagerTabStrip
+**Monetization:** IAP premium + AdMob (all formats)
 **Languages:** 18 + RTL support
 
 **Metrics:**
@@ -88,9 +92,11 @@
 
 ### App 010: GPS Camera 🚀
 
-**Category:** Utility Camera (GPS stamp + map)  
-**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, AVFoundation, MapKit, CoreLocation  
-**Monetization:** IAP + Ads (later removed for fork)  
+**App Store Connect:** https://appstoreconnect.apple.com/apps/6759522440
+
+**Category:** Utility Camera (GPS stamp + map)
+**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, AVFoundation, MapKit, CoreLocation
+**Monetization:** IAP + Ads (later removed for fork)
 **Languages:** Multiple
 
 **Metrics:**
@@ -118,9 +124,11 @@
 
 ### App 014: Zipper Wallpaper
 
-**Category:** Wallpaper (Zipper lock style)  
-**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, Kingfisher, Alamofire, AdMob  
-**Monetization:** Premium paywall + native top ad + AdMob  
+**App Store Connect:** https://appstoreconnect.apple.com/apps/6759516562
+
+**Category:** Wallpaper (Zipper lock style)
+**Tech Stack:** UIKit + RxSwift + MVVM + Coordinator, Realm, Kingfisher, Alamofire, AdMob
+**Monetization:** Premium paywall + native top ad + AdMob
 **Languages:** 18 + RTL support
 
 **Metrics:**
@@ -144,9 +152,11 @@
 
 ### App 017: Dual Camera
 
-**Category:** Camera (Dual capture)  
-**Tech Stack:** Fork from GPS Camera, UIKit + RxSwift + MVVM + Coordinator  
-**Monetization:** IAP (premium)  
+**App Store Connect:** https://appstoreconnect.apple.com/apps/6761648608
+
+**Category:** Camera (Dual capture)
+**Tech Stack:** Fork from GPS Camera, UIKit + RxSwift + MVVM + Coordinator
+**Monetization:** IAP (premium)
 **Languages:** 19
 
 **Metrics:**

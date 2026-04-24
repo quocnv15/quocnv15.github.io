@@ -12,13 +12,13 @@ permalink: /portfolio/
 
 ### Current Portfolio
 
-| App | Category | Status | ROI | Notes |
-|-----|----------|--------|-----|-------|
-| 006 Silly Smile | Entertainment | Live | 0.43x | $600 spent, $260 ads + $400 IAP |
-| 009 Emoji Merge | Entertainment | Testing | - | 9 IAP purchases in testing |
-| 010 GPS Camera | Utility | **Winner** | **7.7x** | $100 IAP, $13 spend |
-| 011 Dual Camera | Utility | Integrating | - | In development |
-| 012 Zipper Wallpaper | Utility | Integrating | - | In development |
+| App | Category | Status | ROI | App Store |
+|-----|----------|--------|-----|-----------|
+| 006 Silly Smile | Wallpaper | Live | 1.1x | [View](https://appstoreconnect.apple.com/apps/6756903565) |
+| 009 Emoji Merge | Entertainment | Testing | TBD | [View](https://appstoreconnect.apple.com/apps/6758211252) |
+| 010 GPS Camera | Utility | **Winner** | **7.7x** | [View](https://appstoreconnect.apple.com/apps/6759522440) |
+| 014 Zipper Wallpaper | Wallpaper | Live | TBD | [View](https://appstoreconnect.apple.com/apps/6759516562) |
+| 017 Dual Camera | Utility | Live | TBD | [View](https://appstoreconnect.apple.com/apps/6761648608) |
 
 ### Winning Category: Utility Camera
 

@@ -32,4 +32,6 @@ permalink: /memory/site-map/
 1. `/memory/`
 2. `/memory/portfolio-overview/`
 3. `/memory/quality-gaps/`
-4. quay lại `/dashboard/` để chốt action tuần.
+4. `/memory/showcase/`
+5. `/memory/mentors/`
+6. quay lại `/dashboard/` để chốt action tuần.

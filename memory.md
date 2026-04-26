@@ -55,4 +55,6 @@ permalink: /memory/
 - [Memory Site Map](/memory/site-map/)
 - [Memory Portfolio Overview](/memory/portfolio-overview/)
 - [Memory Quality Gaps](/memory/quality-gaps/)
+- [Memory Showcase Library](/memory/showcase/)
+- [Memory Mentors Notes](/memory/mentors/)
 - [Portfolio Page](/portfolio/)

@@ -60,6 +60,8 @@ permalink: /dashboard/
       <a href="/memory/site-map/">2) Site Map (bản đồ tài liệu)</a>
       <a href="/memory/portfolio-overview/">3) Portfolio Overview (toàn cảnh app)</a>
       <a href="/memory/quality-gaps/">4) Quality Gaps (danh sách issue)</a>
+      <a href="/memory/showcase/">5) Showcase Library (case studies + playbooks)</a>
+      <a href="/memory/mentors/">6) Mentors Notes (insights đã publish)</a>
       <a href="/portfolio/">Mở Portfolio Page (catalog chi tiết app)</a>
     </div>
   </section>

@@ -5,7 +5,7 @@ layout: default
 
 <main class="page-content" role="main">
   <div class="wrapper container">
-    <article class="page card">
+    <article class="page card {% if page.title == 'Home' %}page-home{% else %}page-readable{% endif %}">
       <header class="page-header card-header">
         <h1 class="page-title">{{ page.title | escape }}</h1>
       </header>

@@ -94,7 +94,7 @@ permalink: /about/
         </div>
       </div>
 
-      <h3>Professional Experience</h3>
+      <h3 id="professional-experience">Professional Experience</h3>
       <div class="experience-item">
         <h4>Senior Developer</h4>
         <p class="experience-company">Dr.JOY VN, Hanoi | Feb 2020 - Now</p>
@@ -204,7 +204,7 @@ permalink: /about/
       <div class="contact-buttons">
         <a href="mailto:quocnv155@gmail.com" class="btn-contact">Send Email</a>
         <a href="https://linkedin.com/in/nguyen-quoc-3a16a6226" target="_blank" class="btn-contact secondary">Connect on LinkedIn</a>
-        <a href="#" class="btn-contact secondary" id="downloadCV">Download CV</a>
+        <a href="#professional-experience" class="btn-contact secondary">View Experience</a>
       </div>
     </div>
   </div>
@@ -222,14 +222,5 @@ permalink: /about/
         link.classList.add('active');
       }
     });
-
-    // CV download functionality (placeholder - replace with actual CV file)
-    const downloadCV = document.getElementById('downloadCV');
-    if (downloadCV) {
-      downloadCV.addEventListener('click', function(e) {
-        e.preventDefault();
-        alert('CV download functionality will be available soon. Please contact me via email for my resume.');
-      });
-    }
   });
 </script>

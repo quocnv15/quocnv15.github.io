@@ -4,7 +4,8 @@ title: iOS App Portfolio
 permalink: /portfolio/
 ---
 
-# iOS App Portfolio
+> Trang này là **catalog chiến lược và hồ sơ app** (bức tranh tổng thể).
+> Các tín hiệu vận hành theo tuần và action ngắn hạn nằm ở [Dashboard](/dashboard/).
 
 ## Portfolio Snapshot
 
@@ -33,6 +34,11 @@ permalink: /portfolio/
 1. **Scale Winners:** Double down on utility camera category
 2. **Pattern Detection:** Document successful patterns across categories
 3. **Optimize Underperformers:** A/B test monetization in entertainment apps
+
+### Role Separation
+
+- **Portfolio:** danh mục app, pattern dài hạn, định hướng đầu tư.
+- **Dashboard:** theo dõi KPI tuần, ưu tiên hành động ngay, đọc nhanh memory tài liệu.
 
 ### Quality Gaps
 

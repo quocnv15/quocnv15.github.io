@@ -1,5 +1,10 @@
 # NGUYEN VAN QUOC - Senior iOS Developer
 
+[![Powered by Exocortex AI](https://img.shields.io/badge/Powered_by-Exocortex_Agentic_OS-7b2cbf?style=for-the-badge&logo=openai&logoColor=white)](#)
+
+> **🧠 Exocortex Agentic OS Ecosystem Node:** 
+> This repository serves as the public-facing portfolio and knowledge curation node within the massive **13-repository BKPlus Exocortex Agentic OS**. It is actively maintained, refactored, and optimized using autonomous AI orchestration (up to 1M+ token context windows) to ensure enterprise-grade code quality and continuous integration.
+
 A modern Jekyll-based static blog and personal portfolio featuring a **TypeScript-powered frontend** with exceptional performance and developer experience.
 
 ## 🚀 Live Site

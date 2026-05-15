@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Agentlytics Data-Driven DNA"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/012-agentlytics-data-driven-dna/
+---
+
 # Case Study 012: Agentlytics — Quản trị hiệu suất bằng Data
 
 > **"Không thể tối ưu hóa thứ bạn không đo lường được."**

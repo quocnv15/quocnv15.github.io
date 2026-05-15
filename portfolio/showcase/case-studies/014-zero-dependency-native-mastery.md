@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Zero-Dependency Native Mastery"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/014-zero-dependency-native-mastery/
+---
+
 # Case Study 014: Zero-Dependency — Triết lý tối giản để bảo trì app trọn đời
 
 > **"Sức mạnh đến từ sự thuần khiết."**

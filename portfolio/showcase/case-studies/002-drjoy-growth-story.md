@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Câu Chuyện Dr.Joy"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/002-drjoy-growth-story/
+---
+
 # Câu Chuyện Phát Triển Bản Thân: Hành Trình Tại Dr.Joy & Giá Trị Của Điểm Chạm 20%
 
 > **[DRAFT]** — Chờ bổ sung data từ môi trường Dr.Joy. Triết lý: "20% Giá Trị" — Giao phó 80% phần việc đại trà cho hệ thống tự động, tập trung 20% tư duy phán đoán.

@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Case Study: Hệ Thống Đằng Sau 14 Apps"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/001-system-behind-14-apps/
+---
+
 # Case Study: Hệ Thống Đằng Sau 14 Apps
 
 > **Tác giả:** Quoc Nguyen Van  

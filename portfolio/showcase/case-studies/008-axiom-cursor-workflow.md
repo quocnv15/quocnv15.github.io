@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Axiom Cursor Workflow"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/008-axiom-cursor-workflow/
+---
+
 # Case Study 08: Axiom Agent System - Cá Nhân Hóa AI Lên Cấp Độ "Hệ Sinh Thái Workflow"
 
 ## 1. Ngữ Cảnh: Khủng Hoảng Của Các Template Sinh Code Vô Hồn

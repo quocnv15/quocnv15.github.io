@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Agentlytics Retrospective"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/007-agentlytics-retrospective/
+---
+
 # Case Study 07: Agentlytics & The Memory System - Biến Nợ Kỹ Thuật (Tech-Debt) Thành Dữ Liệu Hành Vi
 
 ## 1. Ngữ Cảnh: Ký Ức Của Dự Án Ngắn Hạn

@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Co-Founder AI Quality Gate"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/011-quality-gate-co-founder/
+---
+
 # Case Study 011: Co-Founder AI Quality Gate
 
 > **Hệ thống Cộng sự AI: Tự học, Đánh giá giá trị kinh doanh & Ép xung chất lượng Portfolio**

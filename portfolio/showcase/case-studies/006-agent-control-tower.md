@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Agent Control Tower"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/006-agent-control-tower/
+---
+
 # Case Study 06: iOS Agent Control Tower - Trạm Điểu Phối Đội Quân AI Từ Xa
 
 ## 1. Ngữ Cảnh: Kỉ Nguyên Phân Tán (Decoupled Workflow)

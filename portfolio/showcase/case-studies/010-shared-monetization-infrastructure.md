@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Shared Monetization Infrastructure"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/010-shared-monetization-infrastructure/
+---
+
 # Case Study 10: Shared Monetization Infrastructure - Quản Trị Hệ Sinh Thái Ads Tại Quy Mô 14 Apps
 
 ## 1. Ngữ Cảnh: Đồng Bộ Hóa Doanh Thu

@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "ASO 13 Locales Automation"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/004-aso-13-locales-automation/
+---
+
 # Case Study 04: The 13-Locale multiplier - Giải Bài Toán Tối Ưu Tự Động Hóa ASO
 
 ## 1. Ngữ Cảnh: Khát Vọng "Factory Model" (Mô hình nhà máy)

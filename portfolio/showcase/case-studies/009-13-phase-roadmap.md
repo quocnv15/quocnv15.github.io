@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "13-Phase Roadmap"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/009-13-phase-roadmap/
+---
+
 # Case Study 09: The 13-Phase Roadmap - Chuẩn Hóa Lộ Trình Công Nghiệp Để Phát Hành 14 Apps/Năm
 
 ## 1. Ngữ Cảnh: Nút Thắt Cổ Chai (Bottleneck) Ở Giai Đoạn Phát Hành

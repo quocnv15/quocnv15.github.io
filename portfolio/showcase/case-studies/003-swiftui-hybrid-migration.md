@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "SwiftUI Hybrid Migration"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/003-swiftui-hybrid-migration/
+---
+
 # Case Study 03: 6-Phase SwiftUI Migration - Kiến Trúc Cầu Nối (Hybrid Bridge)
 
 ## 1. Ngữ Cảnh: Áp Lực Công Nghệ Lên Sản Phẩm Cốt Lõi

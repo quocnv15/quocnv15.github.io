@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Beads Stack-Agnostic"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/015-beads-stack-agnostic/
+---
+
 # Case Study 015: Stack-Agnostic Architecture (Beads System)
 
 > **Xây dựng hệ thống tự động hóa đa nền tảng thông qua Project Profile Pattern**

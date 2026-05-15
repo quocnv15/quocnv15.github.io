@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Core System Refinement"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/016-core-system-refinement/
+---
+
 # Case Study 016: Core System Refinement & Token Optimization
 
 > **Tinh gọn hệ thống cốt lõi để đạt hiệu suất 100% Agent Coverage và tối ưu hóa chi phí vận hành**

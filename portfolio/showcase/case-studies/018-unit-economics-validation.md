@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Unit Economics Validation"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/018-unit-economics-validation/
+---
+
 # Case Study 018 — Unit Economics Validation
 
 > **Title:** Từ Blueprint đến Business: 3 Apps, 3 Bài Học về Unit Economics  

@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Research-First Dual Camera"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/005-research-first-dual-camera/
+---
+
 # Case Study 05: Socratic Gate - Sức Mạnh Của Việc "Hoãn Code" 3 Ngày Mở Đầu
 
 ## 1. Ngữ Cảnh: Kì Vọng Cho Sự Đột Phá

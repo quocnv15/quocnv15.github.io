@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Global Scale Automation"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/013-global-scale-automation/
+---
+
 # Case Study 013: Global Engine — Tự động hóa bản địa hóa trên 13 quốc gia
 
 > **"Phát triển cục bộ, vươn tầm toàn cầu."**

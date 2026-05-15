@@ -1,3 +1,11 @@
+---
+layout: portfolio-detail
+title: "Quality Gate Architecture"
+back_url: /portfolio/showcase/
+back_label: "← Showcase"
+permalink: /portfolio/showcase/case-studies/017-quality-gate-architecture/
+---
+
 # Case Study 017: Blueprint for the Co-Founder AI Quality Gate
 
 > **Thiết kế kiến trúc hệ thống tự học và tự động nâng cấp chất lượng Portfolio**

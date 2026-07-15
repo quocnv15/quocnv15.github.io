@@ -29,6 +29,10 @@ permalink: /portfolio/
 - **Higher LTV:** Utility apps have longer retention
 - **Faster Payback:** Average 2-3 month payback period
 
+### SwiftUI Sandbox & Reusable Library
+
+We maintain a collection of 160+ SwiftUI templates, animations, and custom UI controls from our design experiments and premium templates. Visit the [SwiftUI Templates Showcase](/swiftui/) to browse the categorized components.
+
 ### Growth Strategy
 
 1. **Scale Winners:** Double down on utility camera category

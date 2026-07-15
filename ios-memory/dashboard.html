@@ -642,6 +642,133 @@
             outline: 3px solid var(--accent-primary);
             outline-offset: 2px;
         }
+
+        /* Milestones (Income Installments) */
+        .milestones-section {
+            margin-bottom: var(--space-xl);
+        }
+
+        .milestones-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .milestone-item {
+            background: var(--bg-card);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-lg);
+            border: 1.5px solid var(--border-secondary);
+            border-left: 5px solid var(--accent-primary);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+        }
+
+        .milestone-item:hover {
+            border-color: var(--border-primary);
+            transform: translateX(6px);
+            background: var(--bg-card-hover);
+            box-shadow: var(--shadow-md);
+        }
+
+        .milestone-item.scale {
+            border-left-color: var(--warning);
+        }
+        
+        .milestone-item.efficiency {
+            border-left-color: var(--success);
+        }
+
+        .milestone-item.historical {
+            border-left-color: var(--info);
+        }
+
+        .milestone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+            flex-wrap: wrap;
+            gap: var(--space-xs);
+        }
+
+        .milestone-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .milestone-badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.3rem 0.6rem;
+            border-radius: var(--radius-sm);
+            text-transform: uppercase;
+        }
+
+        .milestone-badge.scale {
+            background: var(--warning-bg);
+            color: var(--warning);
+        }
+
+        .milestone-badge.efficiency {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .milestone-badge.historical {
+            background: var(--info-bg);
+            color: var(--info);
+        }
+
+        .milestone-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .milestone-date {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .milestone-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-sm);
+            margin: var(--space-sm) 0;
+        }
+
+        .milestone-metric {
+            background: var(--bg-tertiary);
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+
+        .milestone-val {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .milestone-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .milestone-note {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-top: var(--space-xs);
+        }
+
+        @media (max-width: 768px) {
+            .milestone-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
     </style>
 </head>
 <body>
@@ -650,7 +777,7 @@
         <header class="header">
             <div class="header-badge">🟢 Active System</div>
             <h1>iOS Memory Hub</h1>
-            <p class="subtitle">Portfolio Management Dashboard • 5 Apps • Target: 50</p>
+            <p class="subtitle">Portfolio Management Dashboard • 8 Apps • Target: 50</p>
         </header>
 
         <!-- Portfolio Stats -->
@@ -660,25 +787,25 @@
                     <span class="section-icon">📊</span>
                     Portfolio Overview
                 </h2>
-                <div class="last-updated">April 24, 2026</div>
+                <div class="last-updated">July 13, 2026</div>
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">🎯</span>
-                        <span class="stat-trend trend-up">📈 10% to goal</span>
+                        <span class="stat-trend trend-up">📈 16% to goal</span>
                     </div>
-                    <div class="stat-value">5</div>
+                    <div class="stat-value">8</div>
                     <div class="stat-label">Active Apps</div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">💰</span>
-                        <span class="stat-trend trend-up">✅ Profitable</span>
+                        <span class="stat-trend trend-stable">Scale: 1.01x</span>
                     </div>
-                    <div class="stat-value">1.24x</div>
-                    <div class="stat-label">Portfolio ROI</div>
+                    <div class="stat-value">1.35x</div>
+                    <div class="stat-label">Portfolio ROI (June/Scale)</div>
                 </div>
 
                 <div class="stat-card">
@@ -693,10 +820,10 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <span class="stat-icon">💵</span>
-                        <span class="stat-trend trend-up">📈 +$147</span>
+                        <span class="stat-trend trend-up">📈 +$1,112</span>
                     </div>
-                    <div class="stat-value">~$760</div>
-                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value">$1,872</div>
+                    <div class="stat-label">Total Revenue (30d SOT)</div>
                 </div>
 
                 <div class="stat-card">
@@ -706,6 +833,114 @@
                     </div>
                     <div class="stat-value">11</div>
                     <div class="stat-label">Quality Gaps</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Moboco Revenue Milestones (Thu nhập từng đợt) -->
+        <section class="milestones-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">💸</span>
+                    Thu Nhập Từng Đợt (Revenue Milestones)
+                </h2>
+                <div class="last-updated">Latest: July 13, 2026</div>
+            </div>
+            <div class="milestones-list">
+                <!-- Đợt 3 -->
+                <div class="milestone-item scale">
+                    <div class="milestone-header">
+                        <div class="milestone-title-wrapper">
+                            <span class="milestone-badge scale">Đợt 3: Scale SOT</span>
+                            <span class="milestone-title">Cửa Sổ Tăng Trưởng (30 Ngày)</span>
+                        </div>
+                        <span class="milestone-date">14/06/2026 — 13/07/2026</span>
+                    </div>
+                    <div class="milestone-metrics">
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--text-primary);">$1,872.36</div>
+                            <div class="milestone-lbl">Revenue</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--danger);">$1,808.34</div>
+                            <div class="milestone-lbl">Meta Ads Spend</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--success);">+$9.77</div>
+                            <div class="milestone-lbl">Net Profit</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--warning);">101%</div>
+                            <div class="milestone-lbl">ROAS</div>
+                        </div>
+                    </div>
+                    <div class="milestone-note">
+                        <strong>Đánh giá vận hành:</strong> Doanh thu tăng mạnh (+17%) nhờ mở rộng chiến dịch quảng cáo nhưng tỷ suất lợi nhuận mỏng do overspend Ads Meta. Cần kiểm soát chi phí chặt chẽ ở các đợt tiếp theo.
+                    </div>
+                </div>
+
+                <!-- Đợt 2 -->
+                <div class="milestone-item efficiency">
+                    <div class="milestone-header">
+                        <div class="milestone-title-wrapper">
+                            <span class="milestone-badge efficiency">Đợt 2: Efficiency</span>
+                            <span class="milestone-title">Vận Hành Tối Ưu Hiệu Suất</span>
+                        </div>
+                        <span class="milestone-date">01/06/2026 — 30/06/2026</span>
+                    </div>
+                    <div class="milestone-metrics">
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--text-primary);">$1,503.56</div>
+                            <div class="milestone-lbl">Revenue</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--info);">$1,078.93</div>
+                            <div class="milestone-lbl">Meta Ads Spend</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--success);">+$392.26</div>
+                            <div class="milestone-lbl">Net Profit</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--success);">135%</div>
+                            <div class="milestone-lbl">ROAS</div>
+                        </div>
+                    </div>
+                    <div class="milestone-note">
+                        <strong>Đánh giá vận hành:</strong> Giai đoạn hiệu quả nhất nhờ duy trì spend band tối ưu ($20–30/ngày). ROI cao ổn định và thu nhập ròng cao nhất từ trước đến nay.
+                    </div>
+                </div>
+
+                <!-- Đợt 1 -->
+                <div class="milestone-item historical">
+                    <div class="milestone-header">
+                        <div class="milestone-title-wrapper">
+                            <span class="milestone-badge historical">Đợt 1: Historical</span>
+                            <span class="milestone-title">Thiết Lập Baseline Ban Đầu</span>
+                        </div>
+                        <span class="milestone-date">Nửa đầu tháng 05/2026</span>
+                    </div>
+                    <div class="milestone-metrics">
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--text-primary);">~$306.00</div>
+                            <div class="milestone-lbl">Revenue</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--info);">$281.03</div>
+                            <div class="milestone-lbl">Meta Ads Spend</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--success);">+$25.00</div>
+                            <div class="milestone-lbl">Net Profit</div>
+                        </div>
+                        <div class="milestone-metric">
+                            <div class="milestone-val" style="color: var(--warning);">109%</div>
+                            <div class="milestone-lbl">ROAS</div>
+                        </div>
+                    </div>
+                    <div class="milestone-note">
+                        <strong>Đánh giá vận hành:</strong> Đợt kiểm thử ban đầu để xác định baseline vận hành, thiết lập liên kết tracking và đo lường doanh thu từ các nguồn quảng cáo / IAP.
+                    </div>
                 </div>
             </div>
         </section>
@@ -853,6 +1088,87 @@
                         View Details →
                     </a>
                 </div>
+
+                <div class="app-card">
+                    <div class="app-header">
+                        <div class="app-info">
+                            <div class="app-name">Clap Find Phone</div>
+                            <div class="app-category">Utility • App 015</div>
+                        </div>
+                        <span class="app-badge badge-new">New</span>
+                    </div>
+                    <div class="app-metrics">
+                        <div class="app-metric">
+                            <div class="app-metric-value">TBD</div>
+                            <div class="app-metric-label">ROI</div>
+                        </div>
+                        <div class="app-metric">
+                            <div class="app-metric-value">&lt;30d</div>
+                            <div class="app-metric-label">Age</div>
+                        </div>
+                        <div class="app-metric">
+                            <div class="app-metric-value">Organic</div>
+                            <div class="app-metric-label">Spend</div>
+                        </div>
+                    </div>
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios15-clap-find-phone" class="app-action" target="_blank">
+                        View Details →
+                    </a>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-header">
+                        <div class="app-info">
+                            <div class="app-name">QR Code Scanner</div>
+                            <div class="app-category">Utility • App 029</div>
+                        </div>
+                        <span class="app-badge badge-new">New</span>
+                    </div>
+                    <div class="app-metrics">
+                        <div class="app-metric">
+                            <div class="app-metric-value">TBD</div>
+                            <div class="app-metric-label">ROI</div>
+                        </div>
+                        <div class="app-metric">
+                            <div class="app-metric-value">&lt;30d</div>
+                            <div class="app-metric-label">Age</div>
+                        </div>
+                        <div class="app-metric">
+                            <div class="app-metric-value">Organic</div>
+                            <div class="app-metric-label">Spend</div>
+                        </div>
+                    </div>
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios029-qrcode-scanner" class="app-action" target="_blank">
+                        View Details →
+                    </a>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-header">
+                        <div class="app-info">
+                            <div class="app-name">Vintage Camera</div>
+                            <div class="app-category">Utility Camera • App 030</div>
+                        </div>
+                        <span class="app-badge badge-new">New</span>
+                    </div>
+                    <div class="app-metrics">
+                        <div class="app-metric">
+                            <div class="app-metric-value">TBD</div>
+                            <div class="app-metric-label">ROI</div>
+                        </div>
+                        <div class="app-metric">
+                            <div class="app-metric-value">&lt;30d</div>
+                            <div class="app-metric-label">Age</div>
+                        </div>
+                        <div class="app-metric">
+                            <div class="app-metric-value">Organic</div>
+                            <div class="app-metric-label">Spend</div>
+                        </div>
+                    </div>
+                    <a href="https://github.com/quocnv15/ios-kit/tree/main/ios-memory/apps/ios030-vintage-camera" class="app-action" target="_blank">
+                        View Details →
+                    </a>
+                </div>
             </div>
         </section>
 
@@ -877,7 +1193,7 @@
                     <div class="nav-desc">All 5 apps with unit economics</div>
                 </a>
 
-                <a href="https://github.com/quocnv15/ios-kit/blob/main/ios-memory/portfolio/me/SOUL.md" class="nav-card" target="_blank">
+                <a href="https://github.com/quocnv15/ios-kit/blob/main/ios-memory/portfolio/me/01-Identity/SOUL.md" class="nav-card" target="_blank">
                     <div class="nav-icon">💡</div>
                     <div class="nav-title">SOUL.md</div>
                     <div class="nav-desc">Core philosophy and non-negotiables</div>
@@ -951,7 +1267,7 @@
                 Maintained by Quoc Nguyen Van • Built with ❤️ for iOS Development
             </div>
             <div class="footer-text" style="margin-top: 0.5rem;">
-                Last updated: April 24, 2026 • Next review: May 24, 2026
+                Last updated: July 13, 2026 • Next review: August 13, 2026
             </div>
         </footer>
     </div>

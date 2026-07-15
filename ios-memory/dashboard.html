@@ -769,6 +769,49 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        /* Memory Timeline strip */
+        .timeline-section {
+            margin-bottom: var(--space-xl);
+        }
+        .timeline-lanes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        .lane-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            text-align: center;
+        }
+        .lane-pill.apps { border-color: rgba(34, 197, 94, 0.45); }
+        .lane-pill.platform { border-color: rgba(34, 211, 238, 0.45); }
+        .lane-pill.growth { border-color: rgba(192, 132, 252, 0.45); }
+        .lane-pill.story { border-color: rgba(251, 146, 60, 0.55); }
+        .lane-pill .lane-emoji { font-size: 1.4rem; margin-bottom: 0.35rem; }
+        .lane-pill .lane-name { font-weight: 700; font-size: 0.95rem; }
+        .lane-pill .lane-desc { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; }
+        .story-beats {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+        .beat-chip {
+            background: var(--bg-tertiary);
+            border-left: 3px solid #fb923c;
+            border-radius: var(--radius-sm);
+            padding: 0.65rem 0.85rem;
+            font-size: 0.85rem;
+        }
+        .beat-chip strong { color: #fb923c; }
+        .beat-chip span { color: var(--text-secondary); display: block; margin-top: 0.2rem; font-size: 0.78rem; }
+        @media (max-width: 900px) {
+            .timeline-lanes { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
@@ -787,7 +830,7 @@
                     <span class="section-icon">📊</span>
                     Portfolio Overview
                 </h2>
-                <div class="last-updated">July 13, 2026</div>
+                <div class="last-updated">July 15, 2026</div>
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
@@ -1172,6 +1215,55 @@
             </div>
         </section>
 
+        <!-- Memory Timeline (ops + personal story) -->
+        <section class="timeline-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="section-icon">⏳</span>
+                    Memory Timeline
+                </h2>
+                <div class="last-updated">v5 · July 15, 2026</div>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: var(--space-md); max-width: 720px;">
+                Living event store (~200 notes) + 4 timeline lanes. Ops ranks events automatically;
+                personal arc is hand-curated in <code>STORY.md</code> and aligned to the same months.
+            </p>
+            <div class="timeline-lanes">
+                <div class="lane-pill apps">
+                    <div class="lane-emoji">📱</div>
+                    <div class="lane-name">apps</div>
+                    <div class="lane-desc">Ship / product work</div>
+                </div>
+                <div class="lane-pill platform">
+                    <div class="lane-emoji">🛠</div>
+                    <div class="lane-name">platform</div>
+                    <div class="lane-desc">Kit · hub · pipeline · harness</div>
+                </div>
+                <div class="lane-pill growth">
+                    <div class="lane-emoji">🌱</div>
+                    <div class="lane-name">growth</div>
+                    <div class="lane-desc">P&amp;L · playbooks · case studies</div>
+                </div>
+                <div class="lane-pill story">
+                    <div class="lane-emoji">📖</div>
+                    <div class="lane-name">story</div>
+                    <div class="lane-desc">Personal trajectory spine</div>
+                </div>
+            </div>
+            <div class="story-beats">
+                <div class="beat-chip"><strong>🚀 1 · Founding</strong><span>Portfolio apps · real products on store</span></div>
+                <div class="beat-chip"><strong>🧰 2 · Tooling</strong><span>Agentic kit · ios-kit way of working</span></div>
+                <div class="beat-chip"><strong>🧠 3 · Memory</strong><span>Hub · external brain · daily + DECISIONS</span></div>
+                <div class="beat-chip"><strong>⚙️ 4 · Harness</strong><span>Intake · trace · discipline over vibes</span></div>
+                <div class="beat-chip"><strong>🛡️ 5 · Discipline</strong><span>Counsel gate · playbooks when repeating</span></div>
+                <div class="beat-chip"><strong>🔗 6 · Pipeline</strong><span>LGTM → PR as system · runners</span></div>
+                <div class="beat-chip"><strong>♻️ 7 · Compound</strong><span>Promote ledger · assets that reuse</span></div>
+                <div class="beat-chip"><strong>💰 8 · Economics</strong><span>P&amp;L đợt · unit economics over gut</span></div>
+                <div class="beat-chip"><strong>✅ 9 · Verify</strong><span>Verify-first autonomy ladder</span></div>
+                <div class="beat-chip"><strong>⏳ 10 · See path</strong><span>Living timeline · ops + STORY spine</span></div>
+            </div>
+        </section>
+
         <!-- Quick Navigation -->
         <section class="nav-section">
             <div class="section-header">
@@ -1181,6 +1273,30 @@
                 </h2>
             </div>
             <div class="nav-grid">
+                <a href="https://github.com/Manking-155/ios-memory/blob/main/portfolio/growth/timeline/views/timeline.html" class="nav-card" target="_blank">
+                    <div class="nav-icon">⏳</div>
+                    <div class="nav-title">Timeline HTML</div>
+                    <div class="nav-desc">Zoom / pan interactive · 4 lanes incl. story</div>
+                </a>
+
+                <a href="https://github.com/Manking-155/ios-memory/blob/main/portfolio/growth/timeline/views/timeline-tree.canvas" class="nav-card" target="_blank">
+                    <div class="nav-icon">🗺️</div>
+                    <div class="nav-title">Timeline Canvas</div>
+                    <div class="nav-desc">Obsidian poster · apps · platform · growth · story</div>
+                </a>
+
+                <a href="https://github.com/Manking-155/ios-memory/blob/main/portfolio/growth/timeline/STORY.md" class="nav-card" target="_blank">
+                    <div class="nav-icon">📖</div>
+                    <div class="nav-title">STORY.md</div>
+                    <div class="nav-desc">Personal trajectory spine · 10 beats · self-review</div>
+                </a>
+
+                <a href="https://github.com/Manking-155/ios-memory/blob/main/portfolio/growth/timeline/TIMELINE.md" class="nav-card" target="_blank">
+                    <div class="nav-icon">📚</div>
+                    <div class="nav-title">TIMELINE.md</div>
+                    <div class="nav-desc">Hub · Dataview · how to render</div>
+                </a>
+
                 <a href="https://github.com/Manking-155/ios-memory/blob/main/SITE-MAP.md" class="nav-card" target="_blank">
                     <div class="nav-icon">🗺️</div>
                     <div class="nav-title">SITE MAP</div>
@@ -1267,7 +1383,7 @@
                 Maintained by Quoc Nguyen Van • Built with ❤️ for iOS Development
             </div>
             <div class="footer-text" style="margin-top: 0.5rem;">
-                Last updated: July 13, 2026 • Next review: August 13, 2026
+                Last updated: July 15, 2026 • Timeline v5 + STORY spine
             </div>
         </footer>
     </div>

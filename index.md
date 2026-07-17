@@ -3,6 +3,21 @@ layout: page
 title: Home
 ---
 
+<section class="portfolio-hero" style="margin-bottom: 2rem;">
+  <p class="portfolio-hero__eyebrow">PERSONAL SITE</p>
+  <h1 class="portfolio-hero__title">iOS indie · systems · agent OS</h1>
+  <p class="portfolio-hero__subtitle">
+    I build multi-app iOS products and the harness around them.
+    Use this site to <strong>review the work</strong> or <strong>browse public cases</strong>.
+  </p>
+  <p class="portfolio-hero__stats" style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+    <a class="portfolio-card" style="padding:0.6rem 1rem;text-decoration:none;" href="{{ '/work/' | relative_url }}"><strong>Work</strong> — weekly review hub</a>
+    <a class="portfolio-card" style="padding:0.6rem 1rem;text-decoration:none;" href="{{ '/cases/' | relative_url }}"><strong>Cases</strong> — public stories</a>
+    <a class="portfolio-card" style="padding:0.6rem 1rem;text-decoration:none;" href="{{ '/archive.html' | relative_url }}"><strong>Writing</strong> — blog</a>
+  </p>
+</section>
+<link href="{{ '/css/portfolio-hub.css' | relative_url }}" rel="stylesheet">
+
 <div class="post-list-container">
   <!-- Sidebar with categories -->
   <aside class="sidebar" id="post-sidebar">

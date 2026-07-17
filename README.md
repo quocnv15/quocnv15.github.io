@@ -1,27 +1,45 @@
-# NGUYEN VAN QUOC - Senior iOS Developer
+# NGUYEN VAN QUOC — iOS Indie · Agent OS
 
 [![Powered by Exocortex AI](https://img.shields.io/badge/Powered_by-Exocortex_Agentic_OS-7b2cbf?style=for-the-badge&logo=openai&logoColor=white)](#)
 
-> **🧠 Exocortex Agentic OS Ecosystem Node:** 
-> This repository serves as the public-facing portfolio and knowledge curation node within the massive **13-repository BKPlus Exocortex Agentic OS**. It is actively maintained, refactored, and optimized using autonomous AI orchestration (up to 1M+ token context windows) to ensure enterprise-grade code quality and continuous integration.
+> **Public personal site** for reviewing work and showing public case studies.  
+> Private memory/mentors live in sibling repos (`ios-memory`, `mentor-agent`) — **not** fully mirrored here.
 
-A modern Jekyll-based static blog and personal portfolio featuring a **TypeScript-powered frontend** with exceptional performance and developer experience.
+Jekyll + TypeScript frontend · GitHub Pages.
 
 ## 🚀 Live Site
 
 [https://quocnv15.github.io](https://quocnv15.github.io)
 
+| Mode | URL | Purpose |
+|------|-----|---------|
+| **Work (review)** | [/work/](https://quocnv15.github.io/work/) | Weekly operator hub |
+| **Cases (show-off)** | [/cases/](https://quocnv15.github.io/cases/) | Featured public case studies |
+| **Dashboard** | [/ios-memory/dashboard.html](https://quocnv15.github.io/ios-memory/dashboard.html) | Portfolio board |
+| **Writing** | [/archive.html](https://quocnv15.github.io/archive.html) | Blog |
+
+## How I use this site weekly (2 min)
+
+1. Open **/work/** → priorities + links.  
+2. Open **Dashboard** → spend / ROI band.  
+3. Open **/cases/** → if a story improved, plan next sync.  
+4. Deep private work stays in `ios-memory` (never bulk-published).
+
+## Sync public content from ios-memory
+
+```bash
+./scripts/sync-content.sh
+# allowlist: dashboard HTML, case studies (+ Jekyll frontmatter), portfolio overview
+```
+
 ## 📱 About
 
-Welcome to my personal blog and portfolio! I'm **NGUYEN VAN QUOC**, a Senior iOS Developer with 8+ years of experience in mobile application development. This site showcases:
+- Multi-app **iOS indie** portfolio and systems
+- **Case studies** (public) and client **projects**
+- Blog on iOS, AI agents, architecture
+- CV / About for professional context
 
-- **Technical blog posts** about iOS development, TypeScript, and modern web development
-- **Project showcases** and portfolio pieces with interactive features
-- **Professional experience** and technical expertise
-- **Modern web development** with TypeScript and best practices
-- **Knowledge curation** and learning resources
-
-## 🎯 What's New (2025)
+## 🎯 What's New
 
 This site has been **completely refactored** with a modern TypeScript frontend architecture:
 

@@ -4,7 +4,8 @@ title: Memory Mentors Notes
 permalink: /memory/mentors/
 ---
 
-> Repo hiện chưa có thư mục mentors local độc lập; trang này tổng hợp các insight mentors xuất hiện trong case studies đã publish.
+> **Public page only.** Full mentor corpus lives privately in sibling repo `mentor-agent` (not mirrored here).  
+> Trang này tổng hợp **signals** xuất hiện trong case studies / frameworks đã publish — không dump raw notes.
 
 ## Mentor Signals Available
 

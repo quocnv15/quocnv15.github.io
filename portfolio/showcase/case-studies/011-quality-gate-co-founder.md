@@ -76,5 +76,5 @@ Thay vì một công cụ kiểm tra lỗi thụ động, hệ thống được 
 
 ## See Also
 - [Kế hoạch chi tiết Quality Gate](../../growth/plans/2026-04-23-quality-gate-profit-generator/plan.md)
-- [Framework 20% của Tony](../../mentors/tony/20-percent-article.md)
+- [Framework 20% của Tony](../../../../mentor-agent/data/tony/Others_Uncategorized/20-percent-article.md)
 - [Workflow System](../../me/WORKFLOW-SYSTEM.md)

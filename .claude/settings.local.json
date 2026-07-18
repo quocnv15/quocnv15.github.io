@@ -40,11 +40,17 @@
       "Bash(rm:*)",
       "Bash(git restore:*)",
       "Bash(fi:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(rtk git *)",
+      "Bash(rtk grep *)",
+      "Bash(bundle exec *)"
     ],
     "deny": [],
     "ask": []
   },
+  "enabledMcpjsonServers": [
+    "chrome-devtools"
+  ],
   "enabledPlugins": {
     "codex@openai-codex": true
   }

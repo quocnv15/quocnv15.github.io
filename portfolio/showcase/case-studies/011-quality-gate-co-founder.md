@@ -57,7 +57,7 @@ Thay vì một công cụ kiểm tra lỗi thụ động, hệ thống được 
     - **Speed to Market:** Có đang làm quá phức tạp không?
     - **Monetization Friction:** Trải nghiệm thanh toán có mượt không?
     - **Retention Hook:** Có yếu tố gây "nghiện" không?
-- **Kết quả:** Quoc tập trung vào những thứ thực sự tạo ra $2,000/tháng.
+- **Kết quả:** Quoc tập trung vào những thứ thực sự tạo ra doanh thu (target private).
 
 ---
 

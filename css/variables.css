@@ -1,35 +1,53 @@
 /**
- * Design System Variables — Minimalist Clean
- * Slate monochrome chrome + one action accent
- * Dark mode via prefers-color-scheme
+ * Design System — Minimalist Clean
+ * One coherent surface ladder for light + dark (no inverted “white islands”).
+ *
+ * Roles:
+ *   bg / bg-alt / surface  — page canvas → subtle band → card
+ *   text / text-muted / heading
+ *   accent                 — links & focus only
+ *   solid / on-solid       — filled controls (chips, CTAs, active nav)
+ *   hero-*                 — full-bleed hero band (same family as canvas)
  */
 
 :root {
-  /* ── Slate Monochrome Palette ── */
-  --color-primary: #0f172a;      /* Slate 900 — headings, emphasis, nav chrome */
-  --color-primary-dark: #020617; /* Slate 950 — primary hover / pressed */
-  --color-secondary: #334155;    /* Slate 700 — secondary UI chrome */
-  --color-secondary-dark: #1e293b; /* Slate 800 — secondary hover */
-  --color-accent: #2563eb;       /* Blue 600 — links, focus, primary action ONLY */
-  --color-accent-hover: #1d4ed8; /* Blue 700 — accent hover */
-  --color-text: #1e293b;         /* Slate 800 — body text */
-  --color-text-muted: #64748b;   /* Slate 500 — metadata, dates, secondary info */
-  --color-border: #e2e8f0;       /* Slate 200 — borders, dividers */
+  /* ── Canvas ── */
   --color-bg: #ffffff;
-  --color-bg-alt: #f8fafc;       /* Slate 50 — alternate sections */
-  --color-on-primary: #ffffff;   /* Text/icons on primary surfaces */
+  --color-bg-alt: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-border: #e2e8f0;
 
-  /* ── Semantic Status (distinct hues — never flatten) ── */
-  --color-success: #16a34a;      /* Green 600 */
-  --color-warning: #d97706;      /* Amber 600 */
-  --color-error: #dc2626;        /* Red 600 */
+  /* ── Text ── */
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+  --color-heading: #0f172a;
 
-  /* ── Shadows — micro, barely visible ── */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+  /* ── Accent (interactive only) ── */
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 12%, var(--color-bg));
 
-  /* ── Spacing Scale ── */
+  /* ── Solid fills (chips, primary buttons, active states) ── */
+  --color-solid: #0f172a;
+  --color-solid-hover: #020617;
+  --color-on-solid: #ffffff;
+
+  /* ── Hero band ── */
+  --color-hero-bg: #0f172a;
+  --color-hero-fg: #f8fafc;
+  --color-hero-muted: #94a3b8;
+
+  /* ── Semantic ── */
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  /* ── Shadows ── */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.08);
+
+  /* ── Spacing ── */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -38,7 +56,7 @@
   --space-2xl: 2.5rem;
   --space-3xl: 3rem;
 
-  /* ── Typography Scale ── */
+  /* ── Type ── */
   --font-xs: 0.75rem;
   --font-sm: 0.875rem;
   --font-base: 1rem;
@@ -46,38 +64,62 @@
   --font-xl: 1.25rem;
   --font-2xl: 1.5rem;
   --font-3xl: 2rem;
-
-  /* ── Font Families ── */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
 
-  /* ── Border Radius ── */
+  /* ── Radius / layout ── */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
-
-  /* ── Layout ── */
   --max-width: 1200px;
   --header-height: 60px;
+
+  /* ── Back-compat aliases (legacy components) ── */
+  --color-primary: var(--color-solid);
+  --color-primary-dark: var(--color-solid-hover);
+  --color-on-primary: var(--color-on-solid);
+  --color-secondary: #475569;
+  --color-secondary-dark: #334155;
 }
 
-/* ── Dark Mode ── */
+/* ── Dark: single soft navy family, elevated surfaces, no white panels ── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-primary: #f1f5f9;    /* Slate 100 — inverted: light on dark */
-    --color-primary-dark: #e2e8f0; /* Slate 200 — primary hover on dark */
-    --color-secondary: #94a3b8;  /* Slate 400 */
-    --color-secondary-dark: #64748b; /* Slate 500 */
-    --color-accent: #3b82f6;     /* Blue 500 — slightly brighter for dark bg */
-    --color-accent-hover: #60a5fa; /* Blue 400 */
-    --color-text: #e2e8f0;       /* Slate 200 */
-    --color-text-muted: #94a3b8; /* Slate 400 */
-    --color-border: #334155;     /* Slate 700 */
-    --color-bg: #0f172a;         /* Slate 900 */
-    --color-bg-alt: #1e293b;     /* Slate 800 */
-    --color-on-primary: #0f172a; /* Dark text on light primary chrome */
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5);
+    --color-bg: #0b1120;           /* page canvas */
+    --color-bg-alt: #111827;       /* subtle bands / footer */
+    --color-surface: #151c2e;      /* cards, inputs, elevated */
+    --color-border: #243044;       /* soft separators */
+
+    --color-text: #e6eaf2;
+    --color-text-muted: #94a3b8;
+    --color-heading: #f1f5f9;
+
+    --color-accent: #6ea8ff;       /* readable on dark */
+    --color-accent-hover: #93c5fd;
+    --color-accent-soft: color-mix(in srgb, var(--color-accent) 16%, var(--color-bg));
+
+    /* Filled controls: elevated slate, NEVER pure white */
+    --color-solid: #2a3548;
+    --color-solid-hover: #3b4a63;
+    --color-on-solid: #f8fafc;
+
+    /* Hero continuous with canvas (slightly elevated) */
+    --color-hero-bg: #111827;
+    --color-hero-fg: #f1f5f9;
+    --color-hero-muted: #94a3b8;
+
+    --color-success: #4ade80;
+    --color-warning: #fbbf24;
+    --color-error: #f87171;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.45);
+
+    --color-primary: var(--color-solid);
+    --color-primary-dark: var(--color-solid-hover);
+    --color-on-primary: var(--color-on-solid);
+    --color-secondary: #94a3b8;
+    --color-secondary-dark: #64748b;
   }
 }

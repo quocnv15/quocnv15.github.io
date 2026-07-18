@@ -8,7 +8,7 @@ permalink: /dashboard/
   <section class="dashboard-hero card">
     <p class="dashboard-badge">🟢 Active System</p>
     <h2>Portfolio Overview</h2>
-    <p>iOS Memory Hub đang theo dõi 5 app đang chạy, với 1 app performer đạt ROI 7.7x.</p>
+    <p>iOS Memory Hub đang theo dõi 5 app đang chạy, với 1 app performer đạt ROI [redacted].</p>
   </section>
 
   <section class="dashboard-stats-grid">
@@ -24,7 +24,7 @@ permalink: /dashboard/
     </article>
     <article class="dashboard-stat-card card">
       <p class="dashboard-stat-label">Star Performer</p>
-      <h3 class="dashboard-stat-value">7.7x</h3>
+      <h3 class="dashboard-stat-value">[redacted]</h3>
       <p class="dashboard-stat-note">App 010 - GPS Camera</p>
     </article>
     <article class="dashboard-stat-card card">

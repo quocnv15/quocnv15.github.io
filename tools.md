@@ -2,6 +2,8 @@
 layout: page
 title: Tools
 permalink: /tools/
+full_bleed: true
+hide_title: true
 ---
 
 <div class="tools-page">

@@ -3,15 +3,31 @@
 
   {%- include head.html -%}
 
-  <body>
+  {%- assign is_home = false -%}
+  {%- if page.layout == 'page' and page.title == 'Home' -%}
+    {%- assign is_home = true -%}
+  {%- endif -%}
+  {%- assign is_wide = false -%}
+  {%- if page.full_bleed or is_home -%}
+    {%- assign is_wide = true -%}
+  {%- endif -%}
+
+  <body class="{% if is_wide %}body--wide{% endif %}{% if page.full_bleed %} body--full-bleed{% endif %}{% if is_home %} body--home{% endif %}">
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     {% include header-nav.html %}
 
-    <main id="main-content" class="page-content" aria-label="Content" role="main">
-      <div class="wrapper container">
+    <main id="main-content"
+          class="site-main{% if is_wide %} site-main--wide{% endif %}"
+          aria-label="Content"
+          role="main">
+      {% if is_wide %}
         {{ content }}
-      </div>
+      {% else %}
+        <div class="wrapper container">
+          {{ content }}
+        </div>
+      {% endif %}
     </main>
 
     {%- include footer.html -%}
@@ -25,10 +41,9 @@
     <script type="module" src="{{ '/assets/js/navigation.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
     <!-- Search and Filter Modules - Lazy load on search focus -->
-    {% if page.layout == 'page' and page.title == 'Home' %}
+    {% if is_home %}
     <script type="module">
-      // Lazy load search and filter modules when search input is focused
-      const searchInput = document.getElementById('search-input');
+      const searchInput = document.getElementById('searchInput') || document.getElementById('search-input');
       if (searchInput) {
         searchInput.addEventListener('focus', () => {
           import('{{ '/assets/js/search.js' | relative_url }}?v={{ site.time | date: '%s' }}');
@@ -42,12 +57,12 @@
     <script type="application/json" id="site-config">
       {
         "theme": "system",
-        "searchEnabled": {% if page.layout == 'page' and page.title == 'Home' %}true{% else %}false{% endif %},
+        "searchEnabled": {% if is_home %}true{% else %}false{% endif %},
         "tocEnabled": false,
         "copyCodeEnabled": true,
         "shareButtonsEnabled": false,
         "isPost": false,
-        "isHomePage": {% if page.layout == 'page' and page.title == 'Home' %}true{% else %}false{% endif %},
+        "isHomePage": {% if is_home %}true{% else %}false{% endif %},
         "environment": "{{ jekyll.environment }}"
       }
     </script>

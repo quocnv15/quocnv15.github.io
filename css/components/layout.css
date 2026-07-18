@@ -3,17 +3,315 @@
  * Grid systems, containers, and layout utilities
  */
 
-/* Page wrapper */
+/* Site main shell */
+.site-main {
+  width: 100%;
+  min-height: 50vh;
+  background: var(--color-bg);
+}
+
+.site-main--wide {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Legacy class kept for older selectors */
 .page-content {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--space-xl) var(--space-md);
 }
 
+.site-main--wide.page-content,
+.site-main.site-main--wide {
+  max-width: none;
+  padding: 0;
+  margin: 0;
+}
+
 .wrapper {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 0 var(--space-md);
+}
+
+/* Page article shells */
+.page {
+  width: 100%;
+}
+
+.page-readable {
+  max-width: 72ch;
+  margin: 0 auto;
+  padding: var(--space-xl) 0 var(--space-3xl);
+}
+
+.page-readable .page-header {
+  margin-bottom: var(--space-xl);
+}
+
+.page-readable .page-title {
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: var(--space-sm);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.page-readable .page-body {
+  color: var(--color-text);
+  line-height: 1.75;
+}
+
+.page--full-bleed,
+.page-home {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page--full-bleed .page-body,
+.page-home .page-body {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hub prose below full-bleed heroes */
+.hub-content {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 46rem; /* ~736px — readable measure */
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1.25rem, 4vw, 2rem) clamp(2.5rem, 6vw, 4rem);
+  color: var(--color-text);
+  background: transparent;
+}
+
+.hub-content > h2:first-child,
+.hub-content > h1:first-child,
+.hub-content > h2:first-of-type {
+  margin-top: 0;
+}
+
+.hub-content h2,
+.hub-content h3,
+.hub-content h4 {
+  color: var(--color-heading);
+  font-weight: 700;
+  opacity: 1;
+}
+
+.hub-content h2 {
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  margin: clamp(2rem, 4vw, 2.75rem) 0 0.85rem;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.hub-content p {
+  color: var(--color-text);
+  line-height: 1.75;
+  margin: 0 0 1.1em;
+  opacity: 1;
+}
+
+/* Restore lists (global reset zeroes ol/ul) */
+.hub-content ol,
+.hub-content ul {
+  list-style: revert;
+  margin: 0 0 1.35em;
+  padding-left: 1.5rem;
+  color: var(--color-text);
+}
+
+.hub-content ol {
+  list-style-type: decimal;
+}
+
+.hub-content ul {
+  list-style-type: disc;
+}
+
+.hub-content li {
+  color: var(--color-text);
+  line-height: 1.7;
+  margin: 0 0 0.55em;
+  padding-left: 0.25rem;
+  opacity: 1;
+}
+
+.hub-content li:last-child {
+  margin-bottom: 0;
+}
+
+.hub-content li > ul,
+.hub-content li > ol {
+  margin: 0.4em 0 0.2em;
+}
+
+.hub-content a {
+  color: var(--color-accent);
+}
+
+.hub-content a:hover {
+  color: var(--color-accent-hover);
+}
+
+.hub-content code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.15em 0.4em;
+  color: var(--color-text);
+}
+
+/* Tables — real grid (never display:block on <table>) */
+.hub-content .table-wrap,
+.hub-section .table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.25rem 0 1.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+
+.hub-content table {
+  width: 100%;
+  min-width: 36rem;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-sm);
+  margin: 1.25rem 0 1.75rem;
+  display: table;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.hub-content table th,
+.hub-content table td {
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid color-mix(in srgb, var(--color-border) 85%, var(--color-text-muted));
+  padding: 0.9rem 1.15rem;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.hub-content table th:last-child,
+.hub-content table td:last-child {
+  border-right: none;
+}
+
+.hub-content table tr:last-child td {
+  border-bottom: none;
+}
+
+.hub-content table th {
+  background: var(--color-bg-alt);
+  font-weight: 600;
+  color: var(--color-heading);
+  white-space: nowrap;
+}
+
+.hub-content table td {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.hub-content table tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--color-bg-alt) 55%, var(--color-surface));
+}
+
+/* 3-col snapshot / 2-col operator links */
+.hub-content table th:nth-child(1),
+.hub-content table td:nth-child(1) {
+  width: 36%;
+}
+
+.hub-content table th:nth-child(2),
+.hub-content table td:nth-child(2) {
+  width: 28%;
+}
+
+.hub-content table th:nth-child(3),
+.hub-content table td:nth-child(3) {
+  width: 36%;
+}
+
+.hub-content blockquote {
+  margin: 1.25rem 0 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-bg-alt);
+  color: var(--color-text-muted);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.hub-content blockquote p {
+  margin: 0;
+}
+
+.hub-content pre {
+  overflow-x: auto;
+  padding: 1rem 1.15rem;
+  margin: 1.25rem 0 1.5rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
+  line-height: 1.55;
+}
+
+.hub-content pre code {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  .page-readable {
+    padding: var(--space-lg) 0 var(--space-2xl);
+  }
+
+  .hub-content {
+    padding: 1.75rem 1.15rem 2.5rem;
+  }
+
+  .hub-content h2 {
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .hub-content ol,
+  .hub-content ul {
+    padding-left: 1.25rem;
+  }
+
+  .hub-content table {
+    min-width: 28rem;
+    margin: 1rem 0 1.35rem;
+  }
+
+  .hub-content table th,
+  .hub-content table td {
+    padding: 0.7rem 0.85rem;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .hub-content {
+    padding: 1.5rem 1rem 2.25rem;
+  }
 }
 
 /* Container */

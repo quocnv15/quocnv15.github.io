@@ -6,6 +6,9 @@ back_label: "← Growth"
 permalink: /portfolio/growth/selfreview/009-holistic-self-portrait/
 ---
 
+> **Public-safe:** Dollar amounts and precise finance targets are redacted on this public mirror.
+
+
 # 🪞 Self-Review: Holistic Self-Portrait — Bức Tranh Tổng Thể
 
 > **Ngày:** 2026-03-14 | **Nguồn:** Tổng hợp từ SOUL.md, IDENTITY.md, AGENTLYTICS-PROFILE (1,241 sessions / 97K messages), 6 bài selfreview (001-006), Developer Biography KI, STRATEGIC_INSIGHTS.md
@@ -72,7 +75,7 @@ permalink: /portfolio/growth/selfreview/009-holistic-self-portrait/
 
 ### 3.3 Solo Mindset — Vừa Sức Mạnh Vừa Trần
 - 1,241 sessions, 97K messages — toàn bộ chỉ với AI, không collaborator
-- $100-200/tháng sau 2 tháng, target $2K — solo + AI liệu scale?
+[redacted]-200/tháng sau 2 tháng, target [private] — solo + AI liệu scale?
 - **Không nhất thiết hire**, nhưng cần **1 feedback loop bên ngoài**: community, mentor, hoặc user testing thật
 - AI là mirror tốt nhưng không thay thế góc nhìn thị trường
 
@@ -90,18 +93,18 @@ permalink: /portfolio/growth/selfreview/009-holistic-self-portrait/
 
 ### 4.2 Time Misallocation — Root Cause Thực Sự
 - 25h/month side project, hiện dồn vào tooling thay vì revenue-generating work
-- 2/4 apps **chưa có IAP/Ads** → $0 revenue dù có downloads = money left on table
+- 2/4 apps **chưa có IAP/Ads** →[redacted] revenue dù có downloads = money left on table
 - Revenue blocked by **time allocation**, NOT technical capability
 - **Action #1 ngay bây giờ:** 100% side project time → IAP/Ads cho 2 apps pending
 
 ### 4.3 Revenue Model Chưa Validate
-- Live wallpapers + utility = commodity, ceiling ~$25-50/app/month
-- Cần 40 apps × $50 = $2K/month → 20 tháng+ ở tốc độ hiện tại
+- Live wallpapers + utility = commodity, ceiling [redacted]-50/app/month
+- Cần 40 apps ×[redacted] =[redacted]/month → 20 tháng+ ở tốc độ hiện tại
 - **Missing:** Post-ship analytics loop — không biết app nào đáng iterate vs abandon
 - **Fix:** Validate trước volume — 30 ngày revenue data trước khi ship app mới
 
 ### 4.4 Partnership & Timeline
-- 30% share cho Quoc ở $200/mo total = $60/mo = ~$2-3/h — chỉ make sense nếu volume scale
+- 30% share cho Quoc ở [redacted]/mo total =[redacted]/mo = [redacted]-3/h — chỉ make sense nếu volume scale
 - Đối tác contribute thật (design + paid ads + ASO) → partnership hợp lý hiện tại
 - **Hard deadline:** Tháng 5/2026 → bắt đầu personal app (100% ownership) dù Moboco chưa "xong"
 

@@ -2,6 +2,8 @@
 layout: page
 title: Projects
 permalink: /projects/
+full_bleed: true
+hide_title: true
 ---
 
 <div class="projects-page">

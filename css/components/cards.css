@@ -5,7 +5,7 @@
 
 /* Base card */
 .card {
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
@@ -20,7 +20,7 @@
 
 /* Post card */
 .post-card {
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
@@ -50,7 +50,7 @@
 }
 
 .post-card-title a:hover {
-  color: var(--color-primary);
+  color: var(--color-heading);
 }
 
 .post-card-meta {
@@ -69,7 +69,7 @@
 
 /* Project card */
 .project-card {
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -118,18 +118,18 @@
 }
 
 .card-badge-primary {
-  background: var(--color-primary);
-  color: var(--color-bg);
+  background: var(--color-solid);
+  color: var(--color-on-solid);
 }
 
 .card-badge-success {
   background: var(--color-success);
-  color: var(--color-bg);
+  color: var(--color-on-solid);
 }
 
 .card-badge-warning {
   background: var(--color-warning);
-  color: var(--color-bg);
+  color: var(--color-on-solid);
 }
 
 /* Note card styles */
@@ -139,8 +139,8 @@
 
 .note-type {
   display: inline-block;
-  background: var(--color-primary);
-  color: var(--color-bg);
+  background: var(--color-solid);
+  color: var(--color-on-solid);
   padding: var(--space-xs) var(--space-sm);
   border-radius: 20px;
   font-size: var(--font-sm);

@@ -4,30 +4,32 @@ title: Memory Portfolio Overview
 permalink: /memory/portfolio-overview/
 ---
 
-## Portfolio Overview (Internal Summary)
+## Portfolio Overview (Public-safe)
 
-- **Active apps:** 5
-- **Target:** 50
-- **Average ROI:** ~1.24x
-- **Star performer:** App 010 (7.7x ROI)
+> Financial detail (revenue, spend, ROAS, per-app P&L) is **private** and not published on this site.
 
-### App-level Snapshot
+- **Tracked apps:** multi-app portfolio (live + pipeline)
+- **Target scale:** multi-app factory, not one-off apps
+- **Public proof:** [Featured cases](/#cases) · [Showcase](/portfolio/showcase/)
 
-| App | Status | ROI | Decision |
-| --- | --- | --- | --- |
-| 006 Silly Smile | Stable | 1.1x | Optimize monetization |
-| 009 Emoji Merge | Early | TBD | Watch & collect data |
-| 010 GPS Camera | Winner | 7.7x | Scale carefully |
-| 014 Zipper Wallpaper | New | TBD | Observe |
-| 017 Dual Camera | New | TBD | Observe |
+### App-level snapshot (status only)
 
-### Key Patterns
+| App | Role | Stance |
+| --- | --- | --- |
+| Silly Smile | Wallpaper engine | Optimize / protect efficiency |
+| Emoji Merge | Early traction | Watch & collect data |
+| GPS Camera | Utility camera | Scale carefully when efficient |
+| Zipper Wallpaper | Wallpaper | Observe / optimize |
+| Dual Camera | Showcase / early | Organic first |
 
-- Utility Camera hiện cho unit economics tốt nhất.
-- Wallpaper có doanh thu nhưng biên lợi nhuận còn mỏng.
-- App mới cần đủ data trước khi tăng spend.
+### Key patterns (qualitative)
 
-### Action Bridge
+- Utility camera has been a strong category pattern.
+- Wallpaper can work but needs tighter efficiency discipline.
+- New apps need enough signal before paid acquisition.
 
-- Vào [Dashboard](/dashboard/) để xem action tuần.
-- Vào [Quality Gaps](/memory/quality-gaps/) để theo dõi rủi ro hệ thống.
+### Action bridge
+
+- [Work hub](/work/) — weekly priorities (public-safe)
+- [Dashboard](/ios-memory/dashboard.html) — board without private finance tables
+- [Quality gaps](/memory/quality-gaps/) — systemic risks

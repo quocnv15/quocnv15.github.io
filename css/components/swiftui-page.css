@@ -10,9 +10,9 @@
   }
 
   .swiftui-hero {
-    background: var(--color-primary);
+    background: var(--color-solid);
     border-radius: var(--radius-lg);
-    color: var(--color-on-primary);
+    color: var(--color-on-solid);
     padding: var(--space-2xl) var(--space-md);
     text-align: center;
     margin-bottom: var(--space-xl);
@@ -111,7 +111,7 @@
 
   .search-input-field:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--color-solid);
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 15%, transparent);
   }
 
@@ -174,15 +174,15 @@
   }
 
   .author-filter-btn:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
+    color: var(--color-heading);
+    border-color: var(--color-solid);
     background: color-mix(in srgb, var(--color-primary) 5%, var(--color-bg));
   }
 
   .author-filter-btn.active {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-bg);
+    background: var(--color-solid);
+    border-color: var(--color-solid);
+    color: var(--color-on-solid);
     box-shadow: 0 2px 6px color-mix(in srgb, var(--color-primary) 30%, transparent);
   }
 
@@ -201,7 +201,7 @@
   .swiftui-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--color-primary);
+    border-color: var(--color-solid);
   }
 
   .card-media {
@@ -262,7 +262,7 @@
   .card-author-tag {
     font-size: var(--font-xs);
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-heading);
     margin-bottom: 2px;
   }
 
@@ -318,15 +318,15 @@
   }
 
   .btn-action-primary {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-bg);
+    background: var(--color-solid);
+    border-color: var(--color-solid);
+    color: var(--color-on-solid);
   }
 
   .btn-action-primary:hover {
     background: color-mix(in srgb, var(--color-primary) 85%, var(--color-accent));
     border-color: color-mix(in srgb, var(--color-primary) 85%, var(--color-accent));
-    color: var(--color-bg);
+    color: var(--color-on-solid);
   }
 
   .btn-action-secondary {
@@ -336,7 +336,7 @@
 
   .btn-action-secondary:hover {
     color: var(--color-text);
-    border-color: var(--color-primary);
+    border-color: var(--color-solid);
     background: color-mix(in srgb, var(--color-primary) 4%, var(--color-bg));
   }
 
@@ -357,18 +357,18 @@
   }
 
   /* Specific category gradient mappings for placeholders */
-  .placeholder-text_typography { background: var(--color-primary); }
-  .placeholder-animations_loaders { background: var(--color-primary); }
-  .placeholder-buttons_interaction { background: var(--color-primary); }
-  .placeholder-pickers_selection { background: var(--color-primary); }
-  .placeholder-ui_layouts { background: var(--color-primary); }
-  .placeholder-visual_effects_3d { background: var(--color-primary); }
-  .placeholder-forms_inputs { background: var(--color-primary); }
-  .placeholder-lists_alerts_progress { background: var(--color-primary); }
-  .placeholder-concepts_tutorials { background: var(--color-primary); }
-  .placeholder-premium_advanced { background: var(--color-primary); }
-  .placeholder-games_media { background: var(--color-primary); }
-  .placeholder-other { background: var(--color-primary); }
+  .placeholder-text_typography { background: var(--color-solid); }
+  .placeholder-animations_loaders { background: var(--color-solid); }
+  .placeholder-buttons_interaction { background: var(--color-solid); }
+  .placeholder-pickers_selection { background: var(--color-solid); }
+  .placeholder-ui_layouts { background: var(--color-solid); }
+  .placeholder-visual_effects_3d { background: var(--color-solid); }
+  .placeholder-forms_inputs { background: var(--color-solid); }
+  .placeholder-lists_alerts_progress { background: var(--color-solid); }
+  .placeholder-concepts_tutorials { background: var(--color-solid); }
+  .placeholder-premium_advanced { background: var(--color-solid); }
+  .placeholder-games_media { background: var(--color-solid); }
+  .placeholder-other { background: var(--color-solid); }
 
   /* Toast Notification */
   .toast-alert {
@@ -377,7 +377,7 @@
     left: 50%;
     transform: translateX(-50%) translateY(100px);
     background: rgba(15, 23, 42, 0.95);
-    color: var(--color-bg);
+    color: var(--color-on-solid);
     padding: var(--space-sm) var(--space-lg);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);

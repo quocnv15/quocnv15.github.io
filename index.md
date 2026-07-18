@@ -3,20 +3,7 @@ layout: page
 title: Home
 ---
 
-<section class="portfolio-hero">
-  <p class="portfolio-hero__eyebrow">PERSONAL SITE</p>
-  <h1 class="portfolio-hero__title">iOS indie · systems · agent OS</h1>
-  <p class="portfolio-hero__subtitle">
-    I build multi-app iOS products and the harness around them.
-    Use this site to <strong>review the work</strong> or <strong>browse public cases</strong>.
-  </p>
-  <div class="portfolio-hero__cta-row">
-    <a class="portfolio-hero__cta" href="{{ '/work/' | relative_url }}"><strong>Work</strong> — weekly review hub</a>
-    <a class="portfolio-hero__cta" href="{{ '/cases/' | relative_url }}"><strong>Cases</strong> — public stories</a>
-    <a class="portfolio-hero__cta" href="{{ '/archive.html' | relative_url }}"><strong>Writing</strong> — blog</a>
-  </div>
-</section>
-<link href="{{ '/css/portfolio-hub.css' | relative_url }}" rel="stylesheet">
+<link href="{{ '/css/portfolio-hub.css' | relative_url }}?v=3" rel="stylesheet">
 
 <div class="post-list-container">
   <!-- Sidebar with categories -->
@@ -137,6 +124,73 @@ title: Home
   <!-- Main content area -->
   <div class="post-list-main">
     <div class="posts-homepage">
+
+  <section class="portfolio-hero home-hero">
+    <p class="portfolio-hero__eyebrow">PERSONAL SITE</p>
+    <h1 class="portfolio-hero__title">iOS indie · systems · agent OS</h1>
+    <p class="portfolio-hero__subtitle">
+      I build multi-app iOS products and the harness around them.
+      Use this site to <strong>review the work</strong>, browse <strong>public cases</strong>, or read the <strong>writing</strong>.
+    </p>
+    <div class="portfolio-hero__cta-row">
+      <a class="portfolio-hero__cta" href="{{ '/work/' | relative_url }}"><strong>Work</strong> — weekly review hub</a>
+      <a class="portfolio-hero__cta" href="#cases"><strong>Cases</strong> — public stories</a>
+      <a class="portfolio-hero__cta" href="{{ '/archive.html' | relative_url }}"><strong>Writing</strong> — blog</a>
+    </div>
+  </section>
+
+  <section id="cases" class="home-cases hub-section" aria-labelledby="cases-heading">
+    <div class="section-header">
+      <h2 id="cases-heading" class="section-title">Featured cases</h2>
+    </div>
+    <p class="home-cases__lead">
+      Public case studies — systems, monetization, quality gates, and hard lessons.
+    </p>
+
+    <div class="portfolio-grid home-cases__grid">
+      <a href="{{ '/portfolio/showcase/case-studies/001-system-behind-14-apps/' | relative_url }}" class="portfolio-card">
+        <span class="portfolio-card__badge">001</span>
+        <h3 class="portfolio-card__title">System behind 14 apps</h3>
+        <p class="portfolio-card__description">Factory model &gt; hand-crafted. Systems thinking + 20% judgment.</p>
+      </a>
+
+      <a href="{{ '/portfolio/showcase/case-studies/010-shared-monetization-infrastructure/' | relative_url }}" class="portfolio-card">
+        <span class="portfolio-card__badge">010</span>
+        <h3 class="portfolio-card__title">Shared monetization infrastructure</h3>
+        <p class="portfolio-card__description">Ads/IAP patterns shared across the portfolio.</p>
+      </a>
+
+      <a href="{{ '/portfolio/showcase/case-studies/011-quality-gate-co-founder/' | relative_url }}" class="portfolio-card">
+        <span class="portfolio-card__badge">011</span>
+        <h3 class="portfolio-card__title">Quality Gate co-founder</h3>
+        <p class="portfolio-card__description">AI ships fast; gates keep quality from collapsing.</p>
+      </a>
+
+      <a href="{{ '/portfolio/showcase/case-studies/004-aso-13-locales-automation/' | relative_url }}" class="portfolio-card">
+        <span class="portfolio-card__badge">004</span>
+        <h3 class="portfolio-card__title">ASO 13 locales automation</h3>
+        <p class="portfolio-card__description">Localization at portfolio scale, not per-app heroics.</p>
+      </a>
+
+      <a href="{{ '/portfolio/showcase/case-studies/019-live-photo-conversion-optimization/' | relative_url }}" class="portfolio-card">
+        <span class="portfolio-card__badge">019</span>
+        <h3 class="portfolio-card__title">Live Photo conversion</h3>
+        <p class="portfolio-card__description">Performance / media pipeline lessons under real constraints.</p>
+      </a>
+
+      <a href="{{ '/portfolio/showcase/case-studies/020-iapservice-premium-production-incident/' | relative_url }}" class="portfolio-card">
+        <span class="portfolio-card__badge">020</span>
+        <h3 class="portfolio-card__title">IAPService production incident</h3>
+        <p class="portfolio-card__description">Premium path breakage — postmortem discipline.</p>
+      </a>
+    </div>
+
+    <ul class="hub-list home-cases__links">
+      <li><a href="{{ '/portfolio/showcase/' | relative_url }}">Showcase hub</a> — cards for every case</li>
+      <li><a href="{{ '/portfolio/case-studies/' | relative_url }}">Case studies index</a> — by category</li>
+      <li><a href="{{ '/portfolio/' | relative_url }}">Portfolio</a> — apps + playbooks</li>
+    </ul>
+  </section>
 
   <!-- Search Results -->
   <div class="search-results" id="searchResults" style="display: none;" role="region" aria-label="Search results" aria-live="polite">
@@ -539,10 +593,18 @@ title: Home
   </div>
 </div>
 
-<!-- Mobile sidebar toggle button -->
-<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle categories sidebar">
-  ☰
+<!-- Sidebar show/hide (desktop collapse + mobile drawer) -->
+<button
+  class="sidebar-toggle"
+  id="sidebar-toggle"
+  type="button"
+  aria-label="Hide categories sidebar"
+  aria-controls="post-sidebar"
+  aria-expanded="true"
+  title="Hide sidebar"
+>
+  «
 </button>
 
-<!-- Sidebar overlay for mobile -->
+<!-- Sidebar overlay for mobile drawer -->
 <div class="sidebar-overlay" id="sidebar-overlay"></div>

@@ -13,13 +13,13 @@ permalink: /memory/
 1. [/work/](/work/) — hub review tuần.  
 2. [Dashboard](/ios-memory/dashboard.html) — board metrics.  
 3. Mục dưới — snapshot.  
-4. [/cases/](/cases/) — stories public.
+4. [Home → Featured cases](/#cases) — stories public.
 
 ## Current State (indicative)
 
 - **Tracked apps:** multi-app portfolio (see [overview](/portfolio/_overview.md))
-- **Regime:** scale with efficiency baseline (June band) — not vanity spend
-- **Public stories:** [/cases/](/cases/)
+- **Regime:** scale only when efficiency holds — not vanity volume
+- **Public stories:** [Home → Featured cases](/#cases)
 
 ### Focus lanes
 
@@ -32,8 +32,8 @@ permalink: /memory/
 ## This Week Priorities
 
 - Review on [/work/](/work/) first.
-- **Scale carefully** where unit economics hold.
-- **Optimize** before opening spend.
+- **Scale carefully** where unit economics hold (detail private).
+- **Optimize** before opening paid acquisition.
 - **Publish** only allowlisted case studies / dashboard.
 
 ## Systemic Risks

@@ -15,10 +15,106 @@ let filterStatusText;
 let clearFilterBtn;
 let sidebar;
 let sidebarOverlay;
+let sidebarToggle;
 
 // Filter state
 let activeCategories = new Set();
 let activeTag = null;
+
+const SIDEBAR_STORAGE_KEY = 'home-sidebar-collapsed';
+const DESKTOP_MQ = '(min-width: 1025px)';
+
+/**
+ * True when layout is desktop (sidebar always-present mode)
+ */
+function isDesktopSidebar() {
+  return window.matchMedia(DESKTOP_MQ).matches;
+}
+
+/**
+ * Update toggle button label / icon to match current open state
+ */
+function syncSidebarToggleUi(isVisible) {
+  if (!sidebarToggle) return;
+
+  sidebarToggle.setAttribute('aria-expanded', isVisible ? 'true' : 'false');
+  sidebarToggle.setAttribute(
+    'aria-label',
+    isVisible ? 'Hide categories sidebar' : 'Show categories sidebar'
+  );
+  sidebarToggle.title = isVisible ? 'Hide sidebar' : 'Show sidebar';
+  sidebarToggle.classList.toggle('is-open', isVisible);
+  // ☰ when closed, × when open (mobile drawer) / « when open (desktop collapse)
+  sidebarToggle.textContent = isVisible
+    ? (isDesktopSidebar() ? '«' : '×')
+    : '☰';
+}
+
+/**
+ * Apply sidebar visibility. Desktop uses body.sidebar-collapsed;
+ * mobile uses .active slide-in + overlay.
+ */
+function setSidebarVisible(visible, { persist = true } = {}) {
+  if (!sidebar) return;
+
+  if (isDesktopSidebar()) {
+    document.body.classList.toggle('sidebar-collapsed', !visible);
+    sidebar.classList.remove('active');
+    if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+    if (persist) {
+      try {
+        localStorage.setItem(SIDEBAR_STORAGE_KEY, visible ? '0' : '1');
+      } catch (_) {
+        /* ignore quota / private mode */
+      }
+    }
+  } else {
+    document.body.classList.remove('sidebar-collapsed');
+    sidebar.classList.toggle('active', visible);
+    if (sidebarOverlay) sidebarOverlay.classList.toggle('active', visible);
+    document.body.classList.toggle('sidebar-drawer-open', visible);
+  }
+
+  syncSidebarToggleUi(visible);
+}
+
+function isSidebarVisible() {
+  if (!sidebar) return false;
+  if (isDesktopSidebar()) {
+    return !document.body.classList.contains('sidebar-collapsed');
+  }
+  return sidebar.classList.contains('active');
+}
+
+function toggleSidebar() {
+  setSidebarVisible(!isSidebarVisible());
+}
+
+function closeMobileSidebar() {
+  if (!isDesktopSidebar()) {
+    setSidebarVisible(false, { persist: false });
+  }
+}
+
+/**
+ * Restore desktop collapse preference from localStorage
+ */
+function restoreSidebarPreference() {
+  if (!sidebar) return;
+
+  if (isDesktopSidebar()) {
+    let collapsed = false;
+    try {
+      collapsed = localStorage.getItem(SIDEBAR_STORAGE_KEY) === '1';
+    } catch (_) {
+      collapsed = false;
+    }
+    setSidebarVisible(!collapsed, { persist: false });
+  } else {
+    // Mobile: start closed
+    setSidebarVisible(false, { persist: false });
+  }
+}
 
 /**
  * Initialize filter functionality on DOM content loaded
@@ -32,9 +128,11 @@ function init() {
   clearFilterBtn = document.getElementById('clearFilterBtn');
   sidebar = document.getElementById('post-sidebar');
   sidebarOverlay = document.getElementById('sidebar-overlay');
+  sidebarToggle = document.getElementById('sidebar-toggle');
 
   // Attach event listeners
   attachEventListeners();
+  restoreSidebarPreference();
 }
 
 /**
@@ -59,19 +157,32 @@ function attachEventListeners() {
     clearFilterBtn.addEventListener('click', handleClearFilter);
   }
 
-  // Sidebar toggle for mobile
-  const sidebarToggle = document.getElementById('sidebar-toggle');
-  if (sidebarToggle && sidebar && sidebarOverlay) {
-    sidebarToggle.addEventListener('click', function() {
-      sidebar.classList.toggle('active');
-      sidebarOverlay.classList.toggle('active');
-    });
-
-    sidebarOverlay.addEventListener('click', function() {
-      sidebar.classList.remove('active');
-      sidebarOverlay.classList.remove('active');
+  // Sidebar show/hide (desktop collapse + mobile drawer)
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggleSidebar();
     });
   }
+
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener('click', function () {
+      closeMobileSidebar();
+    });
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && isSidebarVisible() && !isDesktopSidebar()) {
+      closeMobileSidebar();
+    }
+  });
+
+  // Re-apply correct mode when crossing desktop/mobile breakpoint
+  let resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(restoreSidebarPreference, 150);
+  });
 }
 
 /**
@@ -107,9 +218,8 @@ function handleCategoryClick(e) {
     filterByCategories();
   }
 
-  // Close mobile sidebar
-  if (sidebar) sidebar.classList.remove('active');
-  if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+  // Close mobile drawer after pick (desktop stays as-is)
+  closeMobileSidebar();
 }
 
 /**
@@ -152,9 +262,8 @@ function handleTagClick(e) {
     filterByTag(tagText);
   }
 
-  // Close mobile sidebar
-  if (sidebar) sidebar.classList.remove('active');
-  if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+  // Close mobile drawer after pick (desktop stays as-is)
+  closeMobileSidebar();
 }
 
 /**
@@ -406,5 +515,9 @@ function hideFilterStatus() {
   }
 }
 
-// Initialize on DOM content loaded
-document.addEventListener('DOMContentLoaded', init);
+// Initialize when DOM is ready (module may load after DOMContentLoaded)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}

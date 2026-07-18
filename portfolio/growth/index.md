@@ -118,7 +118,7 @@ permalink: /portfolio/growth/
 
     <a href="/portfolio/growth/selfreview/008-token-economics-knowledge-retention/" class="portfolio-card">
       <span class="portfolio-card__badge">008</span>
-      <h3 class="portfolio-card__title">~19.2% tokens lãng phí (~$452)</h3>
+      <h3 class="portfolio-card__title">Token waste band (detail private)</h3>
       <p class="portfolio-card__description">Phân tích token economics: chi phí lãng phí do pattern không hiệu quả và cách tối ưu.</p>
       <div class="portfolio-card__tags">
         <span class="portfolio-tag portfolio-tag--primary">Economics</span>
@@ -145,8 +145,8 @@ permalink: /portfolio/growth/
 
     <a href="/portfolio/growth/selfreview/010-q2-strategic-pivot-audit/" class="portfolio-card portfolio-card--featured">
       <span class="portfolio-card__badge">010</span>
-      <h3 class="portfolio-card__title">Q2 Strategic Pivot: Star Performer 7.7x ROI</h3>
-      <p class="portfolio-card__description">Audit Q2 Strategic Pivot: phân tích quyết định chiến lược và kết quả 7.7x ROI.</p>
+      <h3 class="portfolio-card__title">Q2 Strategic Pivot: Star Performer pattern</h3>
+      <p class="portfolio-card__description">Audit Q2 Strategic Pivot: phân tích quyết định chiến lược và kết quả efficiency pattern (số liệu private).</p>
       <div class="portfolio-card__tags">
         <span class="portfolio-tag portfolio-tag--primary">Strategy</span>
       </div>

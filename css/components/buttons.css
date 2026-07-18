@@ -19,14 +19,15 @@ button,
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--color-primary);
-  color: var(--color-bg);
+  background: var(--color-solid);
+  color: var(--color-on-solid);
 }
 
 .button:hover,
 .btn:hover,
 button:hover {
-  background: var(--color-primary-dark);
+  background: var(--color-solid-hover);
+  color: var(--color-on-solid);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -48,13 +49,13 @@ button:active {
 
 .button-outline {
   background: transparent;
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: var(--color-solid);
+  color: var(--color-heading);
 }
 
 .button-outline:hover {
-  background: var(--color-primary);
-  color: var(--color-bg);
+  background: var(--color-solid);
+  color: var(--color-on-solid);
 }
 
 /* Button sizes */

@@ -133,7 +133,7 @@ ROI > 3x AND payback_days < 7 AND trending_up
 - Expand to new markets/locales
 - Document winning formula
 
-**Examples:** App 010 (7.7x ROI, immediate payback)
+**Examples:** App 010 ([redacted]x ROI, immediate payback)
 
 ---
 
@@ -156,7 +156,7 @@ ROI > 3x AND payback_days < 7 AND trending_up
 
 **If ROI > 1.2x after optimization → SCALE**
 
-**Examples:** App 006 (1.1x ROI, needs optimization)
+**Examples:** App 006 ([redacted]x ROI, needs optimization)
 
 ---
 
@@ -204,7 +204,7 @@ roi < 0.8x AND declining_for_14_days
 
 **Signals:**
 ```
-days_live > 14 AND installs < 100 AND revenue < $10
+days_live > 14 AND installs < 100 AND revenue < [threshold private]
 ```
 
 **Characteristics:**
@@ -276,7 +276,7 @@ GROUP BY pricing_model
 - A/B test tiers
 - Bundle features
 
-**Example Discovery:** "$0.99 impulse purchases (App 010) convert 3x better than $4.99 premium (App 006)"
+**Example Discovery:** "Low-friction impulse pricing (App 010) converted better than higher premium tiers (App 006) — exact prices private"
 
 ---
 
@@ -535,7 +535,7 @@ When launching new app in this category:
 - Agent pattern awareness: All agents trained
 
 **Business Output:**
-- Monthly recurring revenue: Target $2K+
+- Monthly recurring revenue: Target [private]
 - Winner discovery rate: Target 1 winner per 5 apps
 - Time from launch to scale decision: Target < 30 days
 

@@ -28,17 +28,18 @@ function ok(msg) {
 const variablesPath = path.join(root, 'css/variables.css');
 const variables = fs.readFileSync(variablesPath, 'utf8');
 const requiredTokens = [
-  '--color-primary',
-  '--color-primary-dark',
-  '--color-secondary',
-  '--color-secondary-dark',
-  '--color-accent',
-  '--color-on-primary',
   '--color-bg',
   '--color-bg-alt',
+  '--color-surface',
   '--color-border',
   '--color-text',
   '--color-text-muted',
+  '--color-heading',
+  '--color-accent',
+  '--color-solid',
+  '--color-on-solid',
+  '--color-hero-bg',
+  '--color-hero-fg',
   '--font-family',
 ];
 for (const token of requiredTokens) {

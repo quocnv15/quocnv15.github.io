@@ -1,6 +1,7 @@
 ---
 layout: page
 title: Archive
+hide_title: true
 ---
 
 <div class="archive-page">

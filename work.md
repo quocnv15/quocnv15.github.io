@@ -2,9 +2,11 @@
 layout: page
 title: Work
 permalink: /work/
+full_bleed: true
+hide_title: true
 ---
 
-<link href="{{ '/css/portfolio-hub.css' | relative_url }}" rel="stylesheet">
+<link href="{{ '/css/portfolio-hub.css' | relative_url }}?v=work2" rel="stylesheet">
 
 <section class="portfolio-hero">
   <p class="portfolio-hero__eyebrow">REVIEW HUB</p>
@@ -19,52 +21,129 @@ permalink: /work/
   </p>
 </section>
 
-## Now
+<div class="hub-section work-hub">
 
-1. **Ship / learn** — keep live apps in a disciplined spend band; watch ROAS vs June efficiency baseline.  
-2. **Systems** — harness + quality gates over feature thrash.  
-3. **Public proof** — keep case studies honest and current on [/cases/](/cases/).
+  <h2 class="hub-section__title">Now</h2>
+  <p class="work-lead">Focus this week — ship, systems, public proof.</p>
 
-> Deep private dailies stay in `ios-memory` (not published). This page is public-safe only.
+  <div class="portfolio-grid">
+    <div class="portfolio-card work-priority">
+      <span class="portfolio-card__badge">01</span>
+      <h3 class="portfolio-card__title">Ship / learn</h3>
+      <p class="portfolio-card__description">Keep live apps in a disciplined acquisition band; protect efficiency before scaling.</p>
+    </div>
+    <div class="portfolio-card work-priority">
+      <span class="portfolio-card__badge">02</span>
+      <h3 class="portfolio-card__title">Systems</h3>
+      <p class="portfolio-card__description">Harness + quality gates over feature thrash.</p>
+    </div>
+    <div class="portfolio-card work-priority">
+      <span class="portfolio-card__badge">03</span>
+      <h3 class="portfolio-card__title">Public proof</h3>
+      <p class="portfolio-card__description">Keep case studies honest and current on the <a href="{{ '/' | relative_url }}#cases">home featured cases</a>.</p>
+    </div>
+  </div>
 
-## Portfolio snapshot
+  <aside class="work-callout" role="note">
+    Deep private dailies stay in <code>ios-memory</code> (not published). This page is public-safe only.
+  </aside>
 
-Curated from portfolio overview (see raw metrics on [dashboard](/ios-memory/dashboard.html) / `_overview`).
+  <h2 class="hub-section__title">Portfolio snapshot</h2>
+  <p class="work-lead">
+    Curated from portfolio overview
+    (<a href="{{ '/ios-memory/dashboard.html' | relative_url }}">dashboard</a>
+    /
+    <a href="{{ '/portfolio/_overview.md' | relative_url }}">_overview</a>).
+  </p>
 
-| Focus | Status | Note |
-|-------|--------|------|
-| Utility camera / GPS lane | Scale carefully | Star category historically |
-| Wallpaper / emoji lanes | Optimize | Efficiency over spend |
-| Pipeline / harness | Active | Agent OS + CI discipline |
+  <div class="portfolio-grid">
+    <div class="portfolio-card work-snapshot">
+      <h3 class="portfolio-card__title">Utility camera / GPS lane</h3>
+      <span class="work-status-pill">Scale carefully</span>
+      <p class="portfolio-card__description">Star category historically</p>
+    </div>
+    <div class="portfolio-card work-snapshot">
+      <h3 class="portfolio-card__title">Wallpaper / emoji lanes</h3>
+      <span class="work-status-pill">Optimize</span>
+      <p class="portfolio-card__description">Efficiency before volume</p>
+    </div>
+    <div class="portfolio-card work-snapshot">
+      <h3 class="portfolio-card__title">Pipeline / harness</h3>
+      <span class="work-status-pill">Active</span>
+      <p class="portfolio-card__description">Agent OS + CI discipline</p>
+    </div>
+  </div>
 
-**Full metrics dump:** [Portfolio overview (synced)](/portfolio/_overview.md) · [Live dashboard](/ios-memory/dashboard.html)
+  <p class="work-meta-line">
+    <strong>Full metrics:</strong>
+    <a href="{{ '/portfolio/_overview.md' | relative_url }}">Portfolio overview</a>
+    ·
+    <a href="{{ '/ios-memory/dashboard.html' | relative_url }}">Live dashboard</a>
+  </p>
 
-## Operator links
+  <h2 class="hub-section__title">Operator links</h2>
+  <p class="work-lead">Jump surfaces by intent.</p>
 
-| Surface | Use when |
-|---------|----------|
-| [Dashboard](/ios-memory/dashboard.html) | Visual portfolio / memory board |
-| [Memory summary](/memory/) | 5–10 min reading order |
-| [Quality gaps (memory)](/memory/quality-gaps/) | Open product/tech debt themes |
-| [Cases show-off](/cases/) | Public stories worth sharing |
-| [Portfolio hub](/portfolio/) | Catalog + playbooks |
-| [Writing](/archive.html) | Blog archive |
+  <div class="portfolio-grid portfolio-grid--2col">
+    <a class="portfolio-card" href="{{ '/ios-memory/dashboard.html' | relative_url }}">
+      <h3 class="portfolio-card__title">Dashboard</h3>
+      <p class="portfolio-card__description">Visual portfolio / memory board</p>
+    </a>
+    <a class="portfolio-card" href="{{ '/memory/' | relative_url }}">
+      <h3 class="portfolio-card__title">Memory summary</h3>
+      <p class="portfolio-card__description">5–10 min reading order</p>
+    </a>
+    <a class="portfolio-card" href="{{ '/memory/quality-gaps/' | relative_url }}">
+      <h3 class="portfolio-card__title">Quality gaps</h3>
+      <p class="portfolio-card__description">Open product / tech debt themes</p>
+    </a>
+    <a class="portfolio-card" href="{{ '/' | relative_url }}#cases">
+      <h3 class="portfolio-card__title">Featured cases</h3>
+      <p class="portfolio-card__description">Public stories on the home page</p>
+    </a>
+    <a class="portfolio-card" href="{{ '/portfolio/' | relative_url }}">
+      <h3 class="portfolio-card__title">Portfolio hub</h3>
+      <p class="portfolio-card__description">Catalog + playbooks</p>
+    </a>
+    <a class="portfolio-card" href="{{ '/archive.html' | relative_url }}">
+      <h3 class="portfolio-card__title">Writing</h3>
+      <p class="portfolio-card__description">Blog archive</p>
+    </a>
+  </div>
 
-## Weekly review ritual (2 minutes)
+  <h2 class="hub-section__title">Weekly review ritual</h2>
+  <p class="work-lead">Two minutes. Same order every week.</p>
 
-1. Open **this page** → skim *Now*.  
-2. Open **Dashboard** → check spend/ROI band.  
-3. Open **Cases** → if a story improved, note for next sync.  
-4. Private deep work stays in `ios-memory` dailies / plans.
+  <ol class="work-ritual">
+    <li class="work-ritual__item">
+      <span class="work-ritual__num" aria-hidden="true">1</span>
+      <span class="work-ritual__text">Open <strong>this page</strong> → skim <em>Now</em>.</span>
+    </li>
+    <li class="work-ritual__item">
+      <span class="work-ritual__num" aria-hidden="true">2</span>
+      <span class="work-ritual__text">Open <strong>Dashboard</strong> → review public-safe portfolio status.</span>
+    </li>
+    <li class="work-ritual__item">
+      <span class="work-ritual__num" aria-hidden="true">3</span>
+      <span class="work-ritual__text">Open <strong>Cases</strong> → if a story improved, note for next sync.</span>
+    </li>
+    <li class="work-ritual__item">
+      <span class="work-ritual__num" aria-hidden="true">4</span>
+      <span class="work-ritual__text">Private deep work stays in <code>ios-memory</code> dailies / plans.</span>
+    </li>
+  </ol>
 
-## Sync
+  <h2 class="hub-section__title">Sync</h2>
+  <p class="work-lead">Public content is refreshed via:</p>
 
-Public content is refreshed via:
+  <div class="work-code">
+    <pre class="work-code__pre"><code># from quocnv15.github.io
+./scripts/sync-content.sh</code></pre>
+  </div>
 
-```bash
-# from quocnv15.github.io
-./scripts/sync-content.sh
-```
+  <ul class="hub-list work-sync-notes">
+    <li><strong>Allowlist only:</strong> dashboard HTML, case studies, portfolio overview.</li>
+    <li><strong>Never synced:</strong> mentors full corpus, SOUL, dailies, beads.</li>
+  </ul>
 
-Allowlist only: dashboard HTML, case studies, portfolio overview.  
-**Never** synced: mentors full corpus, SOUL, dailies, beads.
+</div>

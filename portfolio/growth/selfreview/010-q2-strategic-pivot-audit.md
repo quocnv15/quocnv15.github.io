@@ -6,6 +6,9 @@ back_label: "← Growth"
 permalink: /portfolio/growth/selfreview/010-q2-strategic-pivot-audit/
 ---
 
+> **Public-safe:** Dollar amounts and precise finance targets are redacted on this public mirror.
+
+
 # 🪞 Self-Review: #010 — The Factory Pivot (May 2026 Audit)
 
 > **Bối cảnh:** 1.5 tháng sau bản "Holistic Portrait" (W11-2026). Đây là kỳ rà soát giữa Quý 2 để đánh giá hiệu quả của việc chuyển dịch từ "Xây Tool" sang "Xây App" và tích hợp kiến trúc "Harness System".
@@ -15,7 +18,7 @@ permalink: /portfolio/growth/selfreview/010-q2-strategic-pivot-audit/
 ## 1. Kiểm chứng "The Star Performer" (App 010)
 
 Data từ `PORTFOLIO-OVERVIEW.md` (2026-04-24) cho thấy một bước ngoặt quan trọng:
-- **GPS Camera (ios010):** Đạt **7.7x ROI** với chỉ $13 ad spend. 
+- **GPS Camera (ios010):** Đạt **[redacted]x ROI** với chỉ [redacted] ad spend. 
 - **Ý nghĩa:** Đây là "Proof of Concept" cho toàn bộ hệ thống. Bạn đã tìm thấy **Winner**.
 - **Hành động:** Thay vì tiếp tục xây "Tool tổng quát", nhiệm vụ số 1 là **Replicate cái Winner này**. (Xem: [Pattern Detection Framework](../../showcase/framework/11-pattern-detection-50apps.md)).
 
@@ -66,4 +69,4 @@ Mọi thứ bạn đang build (Harness, Exocortex) phải phục vụ mục tiê
 
 ---
 
-> **Kết luận:** Bạn không còn là một "Builder cô đơn xây nhà máy trong đêm". Bạn đang là **CEO của một Factory đã có sản phẩm thắng**. Hãy ngừng sửa máy (Tooling) và bắt đầu điều hành dây chuyền (Orchestration) để đạt mục tiêu $2K/mo.
+> **Kết luận:** Bạn không còn là một "Builder cô đơn xây nhà máy trong đêm". Bạn đang là **CEO của một Factory đã có sản phẩm thắng**. Hãy ngừng sửa máy (Tooling) và bắt đầu điều hành dây chuyền (Orchestration) để đạt mục tiêu doanh thu private.

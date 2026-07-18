@@ -1,18 +1,20 @@
 ---
 layout: default
 ---
-<link href="/css/override.css" rel="stylesheet" type="text/css">
+{%- comment -%}
+  Page shell — content only (default.html already provides <main> + optional wrapper).
+  Front matter:
+    hide_title: true  — skip auto H1 (page has its own hero/title)
+    full_bleed: true  — break out of constrained wrapper (hub pages)
+{%- endcomment -%}
+<article class="page{% if page.full_bleed %} page--full-bleed{% elsif page.title == 'Home' %} page-home{% else %} page-readable{% endif %}">
+  {% unless page.hide_title or page.full_bleed or page.title == 'Home' %}
+  <header class="page-header">
+    <h1 class="page-title">{{ page.title | escape }}</h1>
+  </header>
+  {% endunless %}
 
-<main class="page-content" role="main">
-  <div class="wrapper container">
-    <article class="page card {% if page.title == 'Home' %}page-home{% else %}page-readable{% endif %}">
-      <header class="page-header card-header">
-        <h1 class="page-title">{{ page.title | escape }}</h1>
-      </header>
-
-      <div class="page-content card-body">
-        {{ content }}
-      </div>
-    </article>
+  <div class="page-body">
+    {{ content }}
   </div>
-</main>
+</article>

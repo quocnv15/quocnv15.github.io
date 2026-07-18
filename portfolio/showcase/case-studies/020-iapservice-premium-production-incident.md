@@ -87,7 +87,7 @@ extension IAPService {
 - App **không crash**, không có error log.
 - UI hoạt động **hoàn hảo** — thậm chí trông đẹp hơn (vì không có ads).
 - Apple reviewer thấy app **chạy tốt** → Approve ngay.
-- Chỉ phát hiện khi **kiểm tra dashboard revenue** và thấy $0.
+- Chỉ phát hiện khi **kiểm tra dashboard revenue** và thấy doanh thu về 0.
 
 ---
 

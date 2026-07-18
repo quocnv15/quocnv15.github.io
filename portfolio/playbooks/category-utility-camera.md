@@ -1,8 +1,10 @@
+> **Public-safe:** Exact finance metrics redacted.
+
 # Category Playbook: Utility Camera
 
 > **First Winner Discovery:** App 010 (GPS Camera)  
 > **Discovery Date:** 2026-04-24  
-> **Key Metrics:** 7.7x ROI, $13 CAC, ~$100 LTV (early), immediate payback
+> **Key Metrics:** Strong early efficiency signal (exact CAC/LTV/ROI private)
 
 ---
 
@@ -11,10 +13,7 @@
 **Winner:** App 010 - GPS Camera  
 **Pattern:** Low-friction utility IAP outperforms complex subscription models  
 **Unit Economics:**
-- Ad Spend: $13
-- IAP Revenue: ~$100
-- Net: +$87
-- **ROI: 7.7x** ⭐
+- Ad Spend / IAP / Net / ROI: **[redacted — private]**
 - Payback: Immediate
 
 ---
@@ -63,19 +62,19 @@
 - One-time unlock (not recurring subscription)
 - Clear value: "Pay $X, GPS stamp forever"
 
-**Conversion Rate:** Estimated ~10-15% (based on ~$100 revenue from $13 spend)
+**Conversion Rate:** Estimated ~10-15% (based on [redacted] revenue from [redacted] spend)
 - Low friction = higher conversion
 - Clear utility = willingness to pay
 
-**ARPU:** ~$10-15 (estimated from 9 IAP in App 009 pattern)
+**ARPU:** [redacted]-15 (estimated from 9 IAP in App 009 pattern)
 
 ### Growth
 
 **Primary Channel:** Apple Search Ads (ASA)
-- Low CAC ($13 for utility app)
+- Low CAC ([redacted] for utility app)
 - High intent searches ("GPS camera", "location stamp photo")
 
-**CAC:** $13 (very low for camera category)
+**CAC:**[redacted] (very low for camera category)
 - Specific keywords cheaper than generic "camera"  
 - Less competition than wallpaper/game categories
 
@@ -93,7 +92,7 @@ When launching new app in **Utility Camera** category:
 
 - [ ] **Feature:** Core utility (1-2 features max, not feature-heavy)
 - [ ] **Feature:** Clear output (photo/video with stamp/overlay)
-- [ ] **Pricing:** $0.99-$4.99 one-time (not subscription)
+- [ ] **Pricing:**[redacted]-$4.99 one-time (not subscription)
 - [ ] **ASO:** Keywords: specific utility terms ("GPS stamp", "location photo", NOT generic "camera")
 - [ ] **ASO:** Screenshots: show before/after (photo without stamp → with stamp)
 - [ ] **Tech Stack:** UIKit + AVFoundation (camera apps need UIKit, not SwiftUI yet)
@@ -101,7 +100,7 @@ When launching new app in **Utility Camera** category:
 
 ### Launch Week
 
-- [ ] **Ads:** Apple Search Ads basic only (start small, $10-20/day)
+- [ ] **Ads:** Apple Search Ads basic only (start small,[redacted]-20/day)
 - [ ] **Tracking:** Daily IAP count, ad spend, revenue
 - [ ] **Optimization:** If 7+ days with < 3 IAP → revisit ASO/keywords
 
@@ -120,7 +119,7 @@ When launching new app in **Utility Camera** category:
 | **Week 1** | Installs | > 50 | Continue |
 | **Week 1** | IAP purchases | > 3 | Good signal |
 | **Week 2** | ROI | > 2x | Scale budget |
-| **Week 4** | Net profit | > $50 | Validate category |
+| **Week 4** | Net profit | >[redacted] | Validate category |
 | **Week 8** | Payback period | < 7 days | Double down |
 
 ---
@@ -132,7 +131,7 @@ When launching new app in **Utility Camera** category:
 | **Week 1** | Installs | < 20 | Revisit ASO keywords |
 | **Week 2** | IAP purchases | < 2 | Check pricing (too high?) |
 | **Week 4** | ROI | < 1x | Kill or pivot |
-| **Any time** | Ad CAC | > $30 | Stop ads, reassess market |
+| **Any time** | Ad CAC | >[redacted] | Stop ads, reassess market |
 
 ---
 
@@ -179,8 +178,8 @@ NSLocationWhenInUseUsageDescription: "Add your location to photos"
 
 ### ❌ Subscription pricing for simple utility
 
-**Bad:** $0.99/month for GPS stamp  
-**Good:** $2.99 one-time "forever"
+**Bad:**[redacted]/month for GPS stamp  
+**Good:**[redacted] one-time "forever"
 
 **Lesson:** Utility apps don't have ongoing value to justify subscription. One-time purchase aligns with user psychology.
 
@@ -189,7 +188,7 @@ NSLocationWhenInUseUsageDescription: "Add your location to photos"
 **Bad:** ASO keywords: "camera", "photo", "video"  
 **Good:** "GPS stamp", "location photo", "geotag camera"
 
-**Lesson:** Generic keywords = expensive ($5+ CAC). Specific utility keywords = cheap ($1-2 CAC).
+**Lesson:** Generic keywords = expensive ([redacted]+ CAC). Specific utility keywords = cheap ([redacted]-2 CAC).
 
 ### ❌ Preview ≠ Capture coordinates
 
@@ -239,12 +238,12 @@ One-time purchase = higher conversion = happier users.
 ## Related Documents
 
 - [App 010 Retrospective](../../ios-memory/apps/ios010-gps-camera/retrospective-gps-camera.md) — Technical lessons
-- [Case Study 018: Unit Economics Validation](../case-studies/018-unit-economics-validation.md) — 7.7x ROI proof
+- [Case Study 018: Unit Economics Validation](../case-studies/018-unit-economics-validation.md) — [redacted]x ROI proof
 - [Portfolio Overview](../../ios-memory/apps/PORTFOLIO-OVERVIEW.md) — All apps snapshot
 
 ---
 
-**Status:** ✅ Validated Pattern (1 winner with 7.7x ROI)  
+**Status:** ✅ Validated Pattern (1 winner with [redacted]x ROI)  
 **Next:** Launch 2-3 more utility camera apps to confirm pattern holds  
 **Owner:** Quoc Nguyen Van  
 **Last Updated:** 2026-04-24

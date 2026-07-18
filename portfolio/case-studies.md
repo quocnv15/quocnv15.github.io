@@ -6,7 +6,7 @@ permalink: /portfolio/case-studies/
 
 Case studies from building a multi-app iOS portfolio and agent-assisted systems.
 
-**Prefer the curated view?** → [**/cases/**](/cases/)
+**Prefer the curated view?** → [**Home → Featured cases**](/#cases)
 
 ## Featured
 

@@ -13,16 +13,16 @@ Jekyll + TypeScript frontend · GitHub Pages.
 
 | Mode | URL | Purpose |
 |------|-----|---------|
+| **Home** | [/](https://quocnv15.github.io/) | Featured cases + writing |
 | **Work (review)** | [/work/](https://quocnv15.github.io/work/) | Weekly operator hub |
-| **Cases (show-off)** | [/cases/](https://quocnv15.github.io/cases/) | Featured public case studies |
 | **Dashboard** | [/ios-memory/dashboard.html](https://quocnv15.github.io/ios-memory/dashboard.html) | Portfolio board |
 | **Writing** | [/archive.html](https://quocnv15.github.io/archive.html) | Blog |
 
 ## How I use this site weekly (2 min)
 
 1. Open **/work/** → priorities + links.  
-2. Open **Dashboard** → spend / ROI band.  
-3. Open **/cases/** → if a story improved, plan next sync.  
+2. Open **Dashboard** → public-safe portfolio board (finance redacted).  
+3. Open **/** → `#cases` if a story improved, plan next sync.  
 4. Deep private work stays in `ios-memory` (never bulk-published).
 
 ## Sync public content from ios-memory

@@ -28,7 +28,7 @@ Kiến trúc thư mục được phân tách chuẩn xác theo nguyên lý Tri t
 - **`portfolio/showcase/framework`:** Lớp Triết lý (Hệ tư duy hệ thống).
 - **`portfolio/showcase/playbooks` & `case-studies`:** Lớp Thực thi (Bằng chứng thực địa).
 
-Tính thực chiến nằm ở việc dự án không lý thuyết suông. Báo cáo `category-utility-camera.md` chứa số liệu thật (Chi phí CAC $13, Tỷ suất lợi nhuận 7.7x, và lời khuyên bỏ qua SwiftUI để xài AVFoundation) chứng minh rằng đây là một Cỗ Máy Sinh Lãi chứ không chỉ là đống ghi chép kỹ thuật.
+Tính thực chiến nằm ở việc dự án không lý thuyết suông. Báo cáo `category-utility-camera.md` chứa pattern vận hành thật (CAC/ROI chi tiết private; lời khuyên bỏ qua SwiftUI để xài AVFoundation) chứng minh rằng đây là một Cỗ Máy Sinh Lãi chứ không chỉ là đống ghi chép kỹ thuật.
 
 ---
 
@@ -56,7 +56,7 @@ Dựa trên chính hệ tư duy "Khung xương mỏng, Kỹ năng dày" (Thin Ha
    - Dựa theo tư duy "Đẩy luồng thực thi xuống tận máy" (Push execution down).
    - **Hành động:** Thêm thư mục `scripts/` chứa Bash/Python file như `check-quality-gate.sh`. Khi chạy, lệnh này tự động lấy luật từ các Framework ép vào linter (như kiểm tra Code Sạch, bắt buộc đính kèm Đặc tả thiết kế). Đạo lý phải đi kèm với công cụ cưỡng chế.
 3. **Mở Rộng Góc "Khám Nghiệm Tử Thi" (Phân tích Thất Bại Ngầm):**
-   - Một hệ thống đỉnh cao không chỉ khoe mức lợi nhuận 7x. Nó phải tự hào khoe vết sẹo.
+   - Một hệ thống đỉnh cao không chỉ khoe mức lợi nhuận strong multiple. Nó phải tự hào khoe vết sẹo.
    - **Hành động:** Ghi chép lại những cú vấp ngã từ AI (ví dụ: bị bòn rút vốn thời gian do để AI phá kiến trúc cũ). Nó chứng minh rõ ràng vai trò "Thẩm định 20%" của bạn trong việc giải cứu "Đống rác" do "80% AI" xổ ra.
 
 ---

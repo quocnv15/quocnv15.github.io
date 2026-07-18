@@ -9,21 +9,21 @@ permalink: /portfolio/
 
 ## Portfolio Snapshot
 
-**Active Apps:** 5 | **Target:** 50 | **Average ROI:** 1.24x
+**Active Apps:** 5 | **Target:** 50 | **Average ROI:** [redacted]x
 
 ### Current Portfolio
 
 | App | Category | Status | ROI | App Store |
 |-----|----------|--------|-----|-----------|
-| 006 Silly Smile | Wallpaper | Live | 1.1x | [View](https://appstoreconnect.apple.com/apps/6756903565) |
+| 006 Silly Smile | Wallpaper | Live | [redacted]x | [View](https://appstoreconnect.apple.com/apps/6756903565) |
 | 009 Emoji Merge | Entertainment | Testing | TBD | [View](https://appstoreconnect.apple.com/apps/6758211252) |
-| 010 GPS Camera | Utility | **Winner** | **7.7x** | [View](https://appstoreconnect.apple.com/apps/6759522440) |
+| 010 GPS Camera | Utility | **Winner** | **[redacted]x** | [View](https://appstoreconnect.apple.com/apps/6759522440) |
 | 014 Zipper Wallpaper | Wallpaper | Live | TBD | [View](https://appstoreconnect.apple.com/apps/6759516562) |
 | 017 Dual Camera | Utility | Live | TBD | [View](https://appstoreconnect.apple.com/apps/6761648608) |
 
 ### Winning Category: Utility Camera
 
-**Key Pattern:** 7.7x ROI demonstrates the utility camera category as the most profitable segment.
+**Key Pattern:** Utility camera category has shown a strong early efficiency pattern (exact ROI private).
 
 - **Lower CAC:** Users actively search for camera utilities
 - **Higher LTV:** Utility apps have longer retention

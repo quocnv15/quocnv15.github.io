@@ -270,7 +270,7 @@ git push
 ```
 
 ### Dashboard Page
-- **Hero Section:** Portfolio snapshot (5 apps, 1.24x ROI)
+- **Hero Section:** Portfolio snapshot (apps + status; ROI private)
 - **Stats Cards:** Key metrics at glance
 - **Apps Grid:** Interactive cards with metrics
 - **Quick Nav:** Links to key documents

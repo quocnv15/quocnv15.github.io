@@ -16,7 +16,7 @@ permalink: /memory/site-map/
 
 ### 2) Portfolio Analysis Tracks
 
-- Business snapshot: active apps, ROI, status theo app.
+- Business snapshot: active apps & status (ROI/finance private).
 - Category lens: utility camera vs wallpaper vs game.
 - Monetization lens: IAP impulse vs subscription mix.
 - Tech debt lens: issues hệ thống cần fix cấp nền.

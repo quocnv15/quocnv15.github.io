@@ -2,6 +2,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
 
   <!-- Resource Hints -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -10,54 +11,34 @@
 
   {%- seo -%}
 
-  <!-- Critical CSS Inline - Above-fold styles -->
+  <!-- Critical CSS Inline — mirrors canvas tokens -->
   <style>
-    /* Critical above-fold styles */
     body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.6;color:#1e293b;background:#ffffff}
+    @media (prefers-color-scheme: dark){
+      body{color:#e6eaf2;background:#0b1120}
+    }
     *{box-sizing:border-box}
     .wrapper{max-width:1200px;margin:0 auto;padding:0 20px}
     .container{width:100%}
-    main{display:block;min-height:100vh}
+    main{display:block;min-height:100vh;background:inherit}
   </style>
 
-  <!-- CSS Variables (must load first) -->
+  <!-- Design system (order = cascade; last wins for conflicts) -->
   <link rel="stylesheet" href="{{ "/css/variables.css" | relative_url }}">
-
-  <!-- Base CSS -->
   <link rel="stylesheet" href="{{ "/css/base/reset.css" | relative_url }}">
   <link rel="stylesheet" href="{{ "/css/base/typography.css" | relative_url }}">
-
-  <!-- Component CSS - Defer non-critical -->
-  <link rel="preload" href="{{ "/css/components/buttons.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/css/components/buttons.css" | relative_url }}"></noscript>
-
-  <link rel="preload" href="{{ "/css/components/cards.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/css/components/cards.css" | relative_url }}"></noscript>
-
   <link rel="stylesheet" href="{{ "/css/components/navigation.css" | relative_url }}">
-
-  <link rel="preload" href="{{ "/css/components/forms.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/css/components/forms.css" | relative_url }}"></noscript>
-
-  <link rel="preload" href="{{ "/css/components/layout.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/css/components/layout.css" | relative_url }}"></noscript>
-
-  <link rel="preload" href="{{ "/css/components/projects-tools.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/css/components/projects-tools.css" | relative_url }}"></noscript>
-
-  <link rel="preload" href="{{ "/css/components/lifetime-calculator.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/css/components/lifetime-calculator.css" | relative_url }}"></noscript>
-
-  <link rel="preload" href="{{ "/css/components/swiftui-page.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/css/components/swiftui-page.css" | relative_url }}"></noscript>
-
-  <!-- Utility CSS -->
+  <link rel="stylesheet" href="{{ "/css/components/layout.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/components/buttons.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/components/cards.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/components/forms.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/components/projects-tools.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/components/lifetime-calculator.css" | relative_url }}">
+  <link rel="stylesheet" href="{{ "/css/components/swiftui-page.css" | relative_url }}">
   <link rel="stylesheet" href="{{ "/css/utilities/spacing.css" | relative_url }}">
-
-  <!-- Legacy CSS (kept for backwards compatibility during transition) -->
-  <link rel="preload" href="{{ "/assets/main.css" | relative_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}"></noscript>
-
+  <!-- Portfolio / Work / Cases hub surfaces (also linked per-page for cache-bust) -->
+  <link rel="stylesheet" href="{{ "/css/portfolio-hub.css" | relative_url }}?v=3">
+  <!-- App chrome last — never load minima main.css after this (it forced #fdfdfd body) -->
   <link rel="stylesheet" href="{{ "/css/override.css" | relative_url }}">
 
   {%- feed_meta -%}
@@ -65,18 +46,13 @@
     {%- include google-analytics.html -%}
   {%- endif -%}
 
-  <!-- Legacy highlight.js support (deprecated - use syntax highlighting in posts) -->
-  <!-- Note: This is deprecated and will be removed in future versions -->
   {% if page.highlight_js %}
   <link rel="stylesheet" href="/js/highlightjs/styles/github.css">
   <link rel="stylesheet" href="/js/highlightjs/styles/ssms.css" />
-
   <script type="text/javascript" src="/js/highlightjs/highlight.min.js"></script>
   <script type="text/javascript" src="/js/highlightjs/languages/plaintext.min.js"></script>
   <script type="text/javascript" src="/js/highlightjs/languages/powershell.min.js"></script>
   <script type="text/javascript" src="/js/highlightjs/languages/tsql.min.js"></script>
-
   <script type="text/javascript"> hljs.highlightAll(); </script>
   {% endif %}
-  <!-- end highlight.js support -->
 </head>

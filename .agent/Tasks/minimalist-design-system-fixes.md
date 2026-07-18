@@ -3,6 +3,11 @@
 ## Status
 ✅ Fixed locally (pending commit/ship)
 
+### 2026-07-18 — Unified dark mode surfaces
+- Stopped inverting `--color-primary` to white (caused light islands).
+- Surface ladder: `bg` → `bg-alt` → `surface` + `solid` / `on-solid` + `hero-*`.
+- Dark canvas: `#0b1120` / `#111827` / `#151c2e`, soft borders, readable accent.
+
 ## Root causes fixed
 
 1. **Archive styles nested in ultra-wide media query**  

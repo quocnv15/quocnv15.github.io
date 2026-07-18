@@ -6,6 +6,9 @@ back_label: "← Growth"
 permalink: /portfolio/growth/selfreview/008-token-economics-knowledge-retention/
 ---
 
+> **Public-safe:** Dollar amounts and precise finance targets are redacted on this public mirror.
+
+
 # 💸 Self-Review: Token Economics & Knowledge Retention
 
 > **Ngày:** 2026-03-14 | **Data:** 145M input tokens, 7.8M output tokens, 596M cache reads
@@ -26,10 +29,10 @@ permalink: /portfolio/growth/selfreview/008-token-economics-knowledge-retention/
 ### Nếu quy đổi chi phí (Claude Opus pricing estimate):
 | | Input | Output | Total |
 |---|---|---|---|
-| **Total spent** | ~$2,175 | ~$117 | **~$2,292** |
-| **Wasted** | ~$417 | ~$35 | **~$452** |
+| **Total spent** | [redacted] | [redacted] | **[redacted]** |
+| **Wasted** | [redacted] | [redacted] | **[redacted]** |
 
-> ⚠️ ~$452 wasted tokens do iteration overhead. Cải thiện prompt quality 20% → tiết kiệm ~$90/tháng.
+> ⚠️ [redacted] wasted tokens do iteration overhead. Cải thiện prompt quality 20% → tiết kiệm [redacted]/tháng.
 
 ---
 
@@ -132,7 +135,7 @@ Tooling:       ~20 sessions/month = INVESTMENT mode
 | Prompt dài hơn 20% → giảm retries | ~8% tokens |
 | Session scope gate → ít marathon | ~5% tokens |
 | Summary file giữa sessions → ít rework | ~3% tokens |
-| **Total** | **~16% (~$370/tháng)** |
+| **Total** | **~16% ([redacted]/tháng)** |
 
 ### Medium-term (Tháng 1-2)
 | Action | Est. Savings |
@@ -152,13 +155,13 @@ Tooling:       ~20 sessions/month = INVESTMENT mode
 
 | Investment | Sessions | Est. Token Cost | Output Value |
 |------------|----------|-----------------|-------------|
-| **ios006** (app shipped) | 93 | ~$300 | ✅ Revenue-generating |
-| **ios-kit** (tooling) | 45 | ~$150 | ✅ Force multiplier |
-| **ios-hub** (meta) | 48 | ~$160 | ✅ Long-term knowledge |
-| **Flutter experiments** | 50 | ~$165 | 🟡 Learning investment |
-| **Outsource projects** | 55 | ~$180 | ✅ Income |
+| **ios006** (app shipped) | 93 | [redacted] | ✅ Revenue-generating |
+| **ios-kit** (tooling) | 45 | [redacted] | ✅ Force multiplier |
+| **ios-hub** (meta) | 48 | [redacted] | ✅ Long-term knowledge |
+| **Flutter experiments** | 50 | [redacted] | 🟡 Learning investment |
+| **Outsource projects** | 55 | [redacted] | ✅ Income |
 
-**Insight:** Phần lớn token spend (70%+) đổ vào projects tạo giá trị (apps, income, tooling). Chỉ ~$165 cho pure learning (Flutter) — đây là allocation hợp lý.
+**Insight:** Phần lớn token spend (70%+) đổ vào projects tạo giá trị (apps, income, tooling). Chỉ [redacted] cho pure learning (Flutter) — đây là allocation hợp lý.
 
 ---
 

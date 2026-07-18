@@ -10,7 +10,7 @@ Proven patterns and execution checklists for scaling the app portfolio.
 
 ### 📷 Utility Camera Playbook
 
-**ROI:** 7.7x (App 010: GPS Camera)
+**Signal:** Strong early efficiency (App 010: GPS Camera) — exact ROI private
 
 [View Playbook →](/portfolio/playbooks/category-utility-camera.md)
 

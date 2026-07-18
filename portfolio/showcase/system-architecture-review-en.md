@@ -28,7 +28,7 @@ The directory architecture is meticulously separated according to Clean Knowledg
 - **`portfolio/showcase/framework`:** The Philosophy layer (Core system mindset).
 - **`portfolio/showcase/playbooks` & `case-studies`:** The Execution layer (Real-world evidence).
 
-Its pragmatism lies in not being purely theoretical. The `category-utility-camera.md` report contains hard numbers ($13 CAC, 7.7x ROI, and practical advice like skipping SwiftUI for AVFoundation), proving that this is a Revenue-Generating Machine rather than just a dump of technical notes.
+Its pragmatism lies in not being purely theoretical. The `category-utility-camera.md` report contains operating patterns (exact CAC/ROI private; practical advice like skipping SwiftUI for AVFoundation), proving that this is a Revenue-Generating Machine rather than just a dump of technical notes.
 
 ---
 
@@ -56,7 +56,7 @@ Based on the "Thin Harness, Fat Skills" and "Context Engineering" mindsets, the 
    - Following the "Push execution down" philosophy (moving logic down to deterministic scripts).
    - **Action:** Accumulate a `scripts/` directory with Bash/Python tools like `check-quality-gate.sh`. Upon running, this command automatically extracts rules from the Frameworks and enforces them in a linter (e.g., enforcing Clean Code or mandatory Design Specs). Philosophy must be enforced by tools.
 3. **Expand the "Post-Mortems" Section (Analysis of Hidden Failures):**
-   - An elite system doesn't only boast a 7.7x ROI. It must proudly show its scars.
+   - An elite system doesn't only boast a strong efficiency multiple. It must proudly show its scars.
    - **Action:** Document the failures caused by AI (e.g., "how letting AI refactor legacy code drained the time budget and corrupted the DB, and how it was resolved"). This concretely proves your "20% Judgment" role in rescuing the slop produced by the "80% AI."
 
 ---

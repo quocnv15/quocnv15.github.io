@@ -108,7 +108,7 @@ Tony viết: *"Khả năng articulate tại sao 20% đó quan trọng... đang t
 |--------|------------|
 | Portfolio chỉ show app | Không ai thấy ios-kit, ios-memory, Spec-to-Ship flow |
 | Tooling > Product | 36K LOC tooling > tổng product LOC (80:20 time ratio) |
-| Revenue chưa match giá trị | $500/tháng side project, $60/tháng Moboco share |
+| Revenue chưa match giá trị | Side project + portfolio share (amounts private) |
 | Thiếu content showcase | 0 bài viết/case study về workflow system |
 
 ### 3.3 Với AI — Quá Delegate, Thiếu Challenge
@@ -143,7 +143,7 @@ Tony viết: *"Khả năng articulate tại sao 20% đó quan trọng... đang t
 
 | # | Action | Revenue potential |
 |---|--------|-------------------|
-| 7 | **Consulting "AI-augmented dev workflow"** cho iOS teams | $50-100/h |
+| 7 | **Consulting "AI-augmented dev workflow"** cho iOS teams | rate private |
 | 8 | **Course/Guide:** "Spec-to-Ship: From Idea to App Store in 7 Days" | Passive income |
 | 9 | **ios-kit as SaaS** — template + workflow + agent config package | Recurring |
 
@@ -164,7 +164,7 @@ Tony viết: *"Khả năng articulate tại sao 20% đó quan trọng... đang t
 **Có.**
 - Fix-first bias khiến Quoc nhảy vào 80% (debug, implement) thay vì ở lại 20% (design, review)
 - Tooling 36K LOC impressive nhưng chưa ai biết
-- Revenue $500/tháng chưa phản ánh giá trị thật của hệ thống
+- Revenue hiện tại chưa phản ánh giá trị thật của hệ thống (số liệu private)
 
 ---
 

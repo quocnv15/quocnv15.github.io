@@ -583,28 +583,14 @@ title: Home
       <a href="/projects.html" class="quick-link">Projects</a>
     </div>
   </div>
-</div>
 
-<script type="module" src="/assets/js/search.js"></script>
-<script type="module" src="/assets/js/filter.js"></script>
+</div><!-- /.posts-homepage -->
+</div><!-- /.post-list-main -->
+</div><!-- /.post-list-container -->
 
-<!-- Close main content and container divs -->
-    </div>
-  </div>
-</div>
+<script type="module" src="{{ '/assets/js/search.js' | relative_url }}"></script>
+<script type="module" src="{{ '/assets/js/filter.js' | relative_url }}"></script>
 
-<!-- Sidebar show/hide (desktop collapse + mobile drawer) -->
-<button
-  class="sidebar-toggle"
-  id="sidebar-toggle"
-  type="button"
-  aria-label="Hide categories sidebar"
-  aria-controls="post-sidebar"
-  aria-expanded="true"
-  title="Hide sidebar"
->
-  «
-</button>
-
-<!-- Sidebar overlay for mobile drawer -->
+<!-- Sidebar show/hide (desktop collapse + mobile drawer). Keep on one line so Kramdown does not break HTML. -->
+<button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-label="Hide categories sidebar" aria-controls="post-sidebar" aria-expanded="true" title="Hide sidebar">&#9776;</button>
 <div class="sidebar-overlay" id="sidebar-overlay"></div>

@@ -1,0 +1,39 @@
+<footer class="site-footer h-card" role="contentinfo">
+  <data class="u-url" href="{{ '/' | relative_url }}"></data>
+
+  <div class="site-footer-inner wrapper">
+    <div class="site-footer-brand">
+      <p class="site-footer-title p-name">
+        {%- if site.author -%}
+          {{ site.author | escape }}
+        {%- else -%}
+          {{ site.title | escape }}
+        {%- endif -%}
+      </p>
+      {%- if site.description -%}
+      <p class="site-footer-desc">{{ site.description | escape }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="site-footer-meta">
+      {%- if site.email -%}
+      <a class="site-footer-link u-email" href="mailto:{{ site.email }}">{{ site.email }}</a>
+      {%- endif -%}
+
+      <nav class="site-footer-social" aria-label="Social links">
+        {%- if site.github_username -%}
+        <a class="site-footer-link" href="https://github.com/{{ site.github_username | cgi_escape | escape }}" rel="me noopener" target="_blank">GitHub</a>
+        {%- endif -%}
+        {%- if site.linkedin_username -%}
+        <a class="site-footer-link" href="https://www.linkedin.com/in/{{ site.linkedin_username | cgi_escape | escape }}" rel="me noopener" target="_blank">LinkedIn</a>
+        {%- endif -%}
+        <a class="site-footer-link" href="{{ '/feed.xml' | relative_url }}">RSS</a>
+      </nav>
+    </div>
+
+    <p class="site-footer-copy">
+      &copy; {{ site.time | date: '%Y' }}{% if site.author %} {{ site.author | escape }}{% else %} {{ site.title | escape }}{% endif %}.
+      Public-safe portfolio &amp; writing.
+    </p>
+  </div>
+</footer>

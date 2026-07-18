@@ -2504,11 +2504,18 @@ mark {
   scroll-margin-top: 5.5rem;
 }
 
-/* Override wrapper for home page to allow full-width layout */
-body:has(.post-list-container) .wrapper,
+/* Override wrapper for home page full-width content — NEVER touch .site-footer .wrapper */
 body:has(.post-list-container) .page,
 body:has(.post-list-container) .page-content,
-body:has(.post-list-container) main {
+body:has(.post-list-container) main.site-main {
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+/* Only content wrappers inside main — exclude footer */
+body:has(.post-list-container) main .wrapper {
   max-width: none !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -2526,7 +2533,7 @@ body:has(.post-list-container) .page-header {
   margin: 0 !important;
 }
 
-.wrapper:has(.post-list-container) {
+main .wrapper:has(.post-list-container) {
   max-width: none !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -2535,6 +2542,20 @@ body:has(.post-list-container) .page-header {
 .page-content:has(.post-list-container) {
   padding: 0 !important;
   margin: 0 !important;
+}
+
+/* Footer always keeps readable measure, even on home */
+body:has(.post-list-container) .site-footer .wrapper,
+body:has(.post-list-container) .site-footer .site-footer-inner,
+.site-footer .wrapper,
+.site-footer .site-footer-inner {
+  max-width: var(--max-width, 1200px) !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--space-md, 1rem) !important;
+  padding-right: var(--space-md, 1rem) !important;
+  box-sizing: border-box;
 }
 
 .posts-homepage .page-header {

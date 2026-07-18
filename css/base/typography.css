@@ -1,34 +1,31 @@
 /**
- * Base Typography
- * Uses CSS variables from variables.css
+ * Base Typography — Minimalist Clean
+ * Inter as primary typeface, system fonts as fallback
  */
 
-@font-face {
-  font-family: -apple-system;
-  font-display: swap;
-}
-
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-display: swap;
+  font-family: var(--font-family);
   font-size: var(--font-base);
   color: var(--color-text);
   line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text);
-  line-height: 1.3;
+  line-height: 1.2;
+  letter-spacing: -0.011em;
 }
 
 h1 { font-size: var(--font-3xl); }
-h2 { font-size: var(--font-2xl); }
-h3 { font-size: var(--font-xl); }
-h4 { font-size: var(--font-lg); }
-h5 { font-size: var(--font-base); }
-h6 { font-size: var(--font-sm); }
+h2 { font-size: var(--font-2xl); font-weight: 700; }
+h3 { font-size: var(--font-xl); font-weight: 600; }
+h4 { font-size: var(--font-lg); font-weight: 600; }
+h5 { font-size: var(--font-base); font-weight: 600; }
+h6 { font-size: var(--font-sm); font-weight: 600; }
 
 p {
   margin: var(--space-md) 0;
@@ -45,6 +42,16 @@ strong, b {
 
 em, i {
   font-style: italic;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 /* Headings with spacing */

@@ -9,7 +9,7 @@
   top: -40px;
   left: 0;
   background: var(--color-primary);
-  color: white;
+  color: var(--color-on-primary);
   padding: 8px;
   text-decoration: none;
   z-index: 10000;

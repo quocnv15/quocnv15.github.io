@@ -14,7 +14,7 @@
   left: 0;
   width: 0%;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-accent));
+  background: var(--color-accent);
   z-index: 9999;
   transition: width 0.1s linear;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
@@ -86,22 +86,10 @@
    ============================================================ */
 
 .portfolio-hero {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 50%, var(--color-accent) 100%);
-  color: #fff;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   padding: var(--space-3xl) var(--space-md) var(--space-2xl);
   text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.portfolio-hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 20% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 60%),
-    radial-gradient(ellipse at 80% 20%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
-  pointer-events: none;
 }
 
 .portfolio-hero__eyebrow {
@@ -148,6 +136,32 @@
   margin-top: var(--space-xl);
 }
 
+/* Hero CTA row */
+.portfolio-hero__cta-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-xl);
+}
+
+.portfolio-hero__cta {
+  padding: var(--space-sm) var(--space-lg);
+  text-decoration: none;
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.portfolio-hero__cta:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+}
+
 /* ============================================================
    STAT CARDS
    ============================================================ */
@@ -164,7 +178,7 @@
   font-size: var(--font-2xl);
   font-weight: 800;
   line-height: 1;
-  color: #fff;
+  color: var(--color-on-primary);
 }
 
 .portfolio-stat__label {
@@ -302,7 +316,7 @@
 .portfolio-filter[aria-pressed="true"] {
   background: var(--color-primary);
   border-color: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   box-shadow: 0 2px 8px color-mix(in srgb, var(--color-primary) 35%, transparent);
 }
 
@@ -389,7 +403,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Left accent bar */
+/* Left accent bar on hover */
 .portfolio-card::before {
   content: '';
   position: absolute;
@@ -397,7 +411,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+  background: var(--color-accent);
   border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   transform: scaleY(0);
   transform-origin: center;
@@ -411,9 +425,8 @@
 
 .portfolio-card:hover,
 .portfolio-card:focus-visible {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--color-accent) 30%, var(--color-border));
   outline: none;
 }
 
@@ -565,12 +578,8 @@
 
 /* Featured / highlighted card */
 .portfolio-card--featured {
-  border-color: color-mix(in srgb, var(--color-primary) 25%, var(--color-border));
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--color-primary) 4%, var(--color-bg)) 0%,
-    var(--color-bg) 100%
-  );
+  border-color: color-mix(in srgb, var(--color-accent) 25%, var(--color-border));
+  background: color-mix(in srgb, var(--color-accent) 4%, var(--color-bg));
 }
 
 .portfolio-card--featured::before {
@@ -599,24 +608,14 @@
    ============================================================ */
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f172a;
-    --color-bg-alt: #1e293b;
-    --color-text: #e2e8f0;
-    --color-text-muted: #94a3b8;
-    --color-border: #334155;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
-  }
-
   .portfolio-back-bar {
     background: rgba(15, 23, 42, 0.85);
     border-bottom-color: var(--color-border);
   }
 
   .portfolio-hero {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #6b21a8 100%);
+    background: var(--color-bg-alt);
+    color: var(--color-text);
   }
 
   .portfolio-card {
@@ -625,11 +624,7 @@
   }
 
   .portfolio-card--featured {
-    background: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-primary) 8%, var(--color-bg-alt)) 0%,
-      var(--color-bg-alt) 100%
-    );
+    background: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg-alt));
   }
 
   .portfolio-card__badge {
@@ -691,6 +686,6 @@
   .portfolio-card {
     break-inside: avoid;
     box-shadow: none;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
   }
 }

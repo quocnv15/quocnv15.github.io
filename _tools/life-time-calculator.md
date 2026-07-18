@@ -7,7 +7,7 @@ title: Life Time Calculator
   <div class="calculator-container">
     <!-- Header -->
     <div class="calculator-header">
-      <h1 class="calculator-title">⏳ Life Time Calculator</h1>
+      <h1 class="calculator-title">Life Time Calculator</h1>
       <p class="calculator-subtitle">Bạn thực sự có bao nhiêu thời gian?</p>
     </div>
 
@@ -107,7 +107,7 @@ title: Life Time Calculator
 
       <!-- CTA -->
       <div class="cta-section">
-        <h2 class="cta-title">🔥 Never Go To Zero</h2>
+        <h2 class="cta-title">Never Go To Zero</h2>
         <p class="cta-text">
           Bạn chỉ còn <span class="cta-highlight" id="ctaDays">0</span> ngày để làm những điều ý nghĩa. 
           Hôm nay, hãy bắt đầu với ít nhất 1 việc!
@@ -127,367 +127,6 @@ title: Life Time Calculator
 <!-- Chart.js Library -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-<style>
-.lifetime-calculator-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 2rem 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.calculator-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.calculator-header {
-  text-align: center;
-  margin-bottom: 3rem;
-  padding: 2rem 0;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.calculator-title {
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: #2c3e50;
-  margin: 0 0 0.8rem 0;
-  background: linear-gradient(135deg, #3498db, #2980b9);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.calculator-subtitle {
-  font-size: 1.2rem;
-  color: #5a6c7d;
-  margin: 0;
-  opacity: 0.9;
-  font-weight: 400;
-}
-
-.input-section {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  border: 1px solid #e8e8e8;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.input-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.input-label {
-  display: block;
-  color: #2c3e50;
-  margin-bottom: 0.75rem;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.range-input {
-  flex: 1;
-  height: 8px;
-  background: #e8e8e8;
-  border-radius: 8px;
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.range-input::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #3498db;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
-}
-
-.range-input::-webkit-slider-thumb:hover {
-  background: #2980b9;
-  transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
-}
-
-.range-input::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  background: #3498db;
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s;
-  box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
-}
-
-.range-input::-moz-range-thumb:hover {
-  background: #2980b9;
-  transform: scale(1.1);
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
-}
-
-.input-value {
-  font-size: 1.875rem;
-  font-weight: bold;
-  min-width: fit-content;
-  color: #3498db;
-}
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.metric-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
-  border: 1px solid #e8e8e8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-  border-left: 4px solid;
-}
-
-.metric-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
-
-.metric-blue {
-  border-left-color: #3498db;
-}
-
-.metric-blue .metric-value {
-  color: #3498db;
-}
-
-.metric-purple {
-  border-left-color: #9b59b6;
-}
-
-.metric-purple .metric-value {
-  color: #9b59b6;
-}
-
-.metric-pink {
-  border-left-color: #e91e63;
-}
-
-.metric-pink .metric-value {
-  color: #e91e63;
-}
-
-.metric-orange {
-  border-left-color: #f39c12;
-}
-
-.metric-orange .metric-value {
-  color: #f39c12;
-}
-
-.metric-label {
-  color: #5a6c7d;
-  margin: 0 0 0.5rem 0;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.metric-value {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-.metric-unit {
-  color: #7f8c8d;
-  font-size: 0.875rem;
-  margin: 0.25rem 0 0 0;
-}
-
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.chart-card {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid #e8e8e8;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.chart-title {
-  color: #2c3e50;
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin: 0 0 1rem 0;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 0.5rem;
-}
-
-.table-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid #e8e8e8;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.activities-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.activities-table thead {
-  background: #f8f9fa;
-}
-
-.activities-table th {
-  padding: 0.75rem 1.5rem;
-  text-align: left;
-  color: #2c3e50;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.activities-table th.text-right {
-  text-align: right;
-}
-
-.activities-table tbody tr {
-  border-top: 1px solid #e8e8e8;
-  transition: background 0.2s;
-}
-
-.activities-table tbody tr:hover {
-  background: #f8f9fa;
-}
-
-.activities-table td {
-  padding: 0.75rem 1.5rem;
-  color: #2c3e50;
-}
-
-.activities-table td.text-right {
-  text-align: right;
-}
-
-.activities-table td:last-child {
-  font-weight: 600;
-  color: #3498db;
-}
-
-.cta-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
-  padding: 2rem;
-  text-align: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.cta-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: white;
-  margin: 0 0 1rem 0;
-}
-
-.cta-text {
-  font-size: 1.125rem;
-  color: white;
-  margin: 0 0 1.5rem 0;
-  opacity: 0.95;
-}
-
-.cta-highlight {
-  font-weight: bold;
-  font-size: 1.25rem;
-}
-
-.cta-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 0.75rem;
-  font-size: 0.875rem;
-  color: white;
-}
-
-@media (max-width: 768px) {
-  .lifetime-calculator-page {
-    padding: 1rem 0.5rem;
-  }
-  
-  .calculator-header {
-    padding: 1.5rem 1rem;
-    margin-bottom: 2rem;
-  }
-  
-  .calculator-title {
-    font-size: 2.2rem;
-  }
-  
-  .calculator-subtitle {
-    font-size: 1.1rem;
-  }
-  
-  .input-section {
-    padding: 1.5rem;
-  }
-  
-  .input-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .metrics-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .cta-section {
-    padding: 1.5rem;
-  }
-  
-  .cta-title {
-    font-size: 1.5rem;
-  }
-  
-  .cta-list {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
-
 <script>
 (function() {
   let currentAge = 30;
@@ -495,7 +134,7 @@ title: Life Time Calculator
   let barChart = null;
   let pieChart = null;
 
-  const COLORS = ['#3498db', '#9b59b6', '#e91e63', '#f39c12', '#27ae60', '#e74c3c', '#1abc9c'];
+  const COLORS = ['#2563eb', '#334155', '#dc2626', '#d97706', '#16a34a', '#0f172a', '#64748b'];
 
   // Initialize
   document.addEventListener('DOMContentLoaded', function() {
@@ -605,8 +244,8 @@ title: Life Time Calculator
         datasets: [{
           label: 'Năm',
           data: activities.map(a => a.years),
-          backgroundColor: '#3498db',
-          borderColor: '#2980b9',
+          backgroundColor: '#2563eb',
+          borderColor: '#1d4ed8',
           borderWidth: 1
         }]
       },
@@ -618,7 +257,7 @@ title: Life Time Calculator
             display: false
           },
           tooltip: {
-            backgroundColor: '#2c3e50',
+            backgroundColor: '#0f172a',
             titleColor: '#ffffff',
             bodyColor: '#ffffff',
             borderColor: '#3498db',
@@ -692,7 +331,7 @@ title: Life Time Calculator
             }
           },
           tooltip: {
-            backgroundColor: '#2c3e50',
+            backgroundColor: '#0f172a',
             titleColor: '#ffffff',
             bodyColor: '#ffffff',
             borderColor: '#3498db',

@@ -33,6 +33,7 @@
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "check:design": "node scripts/check-design-system.js",
     "dev:cli": "node scripts/dev-cli.js",
     "dev:health": "node scripts/dev-cli.js health",
     "dev:size": "node scripts/dev-cli.js size",

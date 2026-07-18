@@ -1,21 +1,35 @@
 /**
- * Design System Variables
- * Core design tokens for colors, spacing, and typography
- * Consolidated from 47+ colors to 8-10 core variables
+ * Design System Variables — Minimalist Clean
+ * Slate monochrome chrome + one action accent
+ * Dark mode via prefers-color-scheme
  */
 
 :root {
-  /* Colors - Core Palette (8 colors) */
-  --color-primary: #2563eb;
-  --color-secondary: #667eea;
-  --color-accent: #764ba2;
-  --color-text: #2c3e50;
-  --color-text-muted: #666;
-  --color-border: #e8e8e8;
+  /* ── Slate Monochrome Palette ── */
+  --color-primary: #0f172a;      /* Slate 900 — headings, emphasis, nav chrome */
+  --color-primary-dark: #020617; /* Slate 950 — primary hover / pressed */
+  --color-secondary: #334155;    /* Slate 700 — secondary UI chrome */
+  --color-secondary-dark: #1e293b; /* Slate 800 — secondary hover */
+  --color-accent: #2563eb;       /* Blue 600 — links, focus, primary action ONLY */
+  --color-accent-hover: #1d4ed8; /* Blue 700 — accent hover */
+  --color-text: #1e293b;         /* Slate 800 — body text */
+  --color-text-muted: #64748b;   /* Slate 500 — metadata, dates, secondary info */
+  --color-border: #e2e8f0;       /* Slate 200 — borders, dividers */
   --color-bg: #ffffff;
-  --color-bg-alt: #f8f9fa;
+  --color-bg-alt: #f8fafc;       /* Slate 50 — alternate sections */
+  --color-on-primary: #ffffff;   /* Text/icons on primary surfaces */
 
-  /* Spacing Scale - 7 steps (0.25rem to 3rem) */
+  /* ── Semantic Status (distinct hues — never flatten) ── */
+  --color-success: #16a34a;      /* Green 600 */
+  --color-warning: #d97706;      /* Amber 600 */
+  --color-error: #dc2626;        /* Red 600 */
+
+  /* ── Shadows — micro, barely visible ── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  /* ── Spacing Scale ── */
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
   --space-md: 1rem;
@@ -24,7 +38,7 @@
   --space-2xl: 2.5rem;
   --space-3xl: 3rem;
 
-  /* Typography Scale - 7 steps (0.75rem to 2rem) */
+  /* ── Typography Scale ── */
   --font-xs: 0.75rem;
   --font-sm: 0.875rem;
   --font-base: 1rem;
@@ -33,24 +47,37 @@
   --font-2xl: 1.5rem;
   --font-3xl: 2rem;
 
-  /* Extended Palette (derived colors for compatibility) */
-  --color-primary-dark: #1d4ed8;
-  --color-primary-light: #3b82f6;
-  --color-secondary-dark: #5568d3;
-  --color-accent-dark: #6c3483;
-  --color-success: #27ae60;
-  --color-warning: #f39c12;
-  --color-error: #e74c3c;
+  /* ── Font Families ── */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
 
-  /* Component-specific variables */
+  /* ── Border Radius ── */
   --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
 
-  /* Layout */
+  /* ── Layout ── */
   --max-width: 1200px;
   --header-height: 60px;
+}
+
+/* ── Dark Mode ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #f1f5f9;    /* Slate 100 — inverted: light on dark */
+    --color-primary-dark: #e2e8f0; /* Slate 200 — primary hover on dark */
+    --color-secondary: #94a3b8;  /* Slate 400 */
+    --color-secondary-dark: #64748b; /* Slate 500 */
+    --color-accent: #3b82f6;     /* Blue 500 — slightly brighter for dark bg */
+    --color-accent-hover: #60a5fa; /* Blue 400 */
+    --color-text: #e2e8f0;       /* Slate 200 */
+    --color-text-muted: #94a3b8; /* Slate 400 */
+    --color-border: #334155;     /* Slate 700 */
+    --color-bg: #0f172a;         /* Slate 900 */
+    --color-bg-alt: #1e293b;     /* Slate 800 */
+    --color-on-primary: #0f172a; /* Dark text on light primary chrome */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
 }

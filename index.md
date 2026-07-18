@@ -3,18 +3,18 @@ layout: page
 title: Home
 ---
 
-<section class="portfolio-hero" style="margin-bottom: 2rem;">
+<section class="portfolio-hero">
   <p class="portfolio-hero__eyebrow">PERSONAL SITE</p>
   <h1 class="portfolio-hero__title">iOS indie · systems · agent OS</h1>
   <p class="portfolio-hero__subtitle">
     I build multi-app iOS products and the harness around them.
     Use this site to <strong>review the work</strong> or <strong>browse public cases</strong>.
   </p>
-  <p class="portfolio-hero__stats" style="display:flex;flex-wrap:wrap;gap:0.75rem;">
-    <a class="portfolio-card" style="padding:0.6rem 1rem;text-decoration:none;" href="{{ '/work/' | relative_url }}"><strong>Work</strong> — weekly review hub</a>
-    <a class="portfolio-card" style="padding:0.6rem 1rem;text-decoration:none;" href="{{ '/cases/' | relative_url }}"><strong>Cases</strong> — public stories</a>
-    <a class="portfolio-card" style="padding:0.6rem 1rem;text-decoration:none;" href="{{ '/archive.html' | relative_url }}"><strong>Writing</strong> — blog</a>
-  </p>
+  <div class="portfolio-hero__cta-row">
+    <a class="portfolio-hero__cta" href="{{ '/work/' | relative_url }}"><strong>Work</strong> — weekly review hub</a>
+    <a class="portfolio-hero__cta" href="{{ '/cases/' | relative_url }}"><strong>Cases</strong> — public stories</a>
+    <a class="portfolio-hero__cta" href="{{ '/archive.html' | relative_url }}"><strong>Writing</strong> — blog</a>
+  </div>
 </section>
 <link href="{{ '/css/portfolio-hub.css' | relative_url }}" rel="stylesheet">
 
@@ -29,7 +29,7 @@ title: Home
       <!-- Filter Status -->
       <div class="filter-status" id="filterStatus" style="display: none;" role="status" aria-live="polite" aria-atomic="true">
         <div class="filter-status-content">
-          <span class="filter-status-icon">🔍</span>
+          <span class="filter-status-icon"></span>
           <span class="filter-status-text" id="filterStatusText"></span>
           <button class="clear-filter-btn" id="clearFilterBtn" title="Clear filter">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -136,7 +136,7 @@ title: Home
 
   <!-- Main content area -->
   <div class="post-list-main">
-    <div class="posts-homepage" style="padding-top: 2rem;">
+    <div class="posts-homepage">
 
   <!-- Search Results -->
   <div class="search-results" id="searchResults" style="display: none;" role="region" aria-label="Search results" aria-live="polite">
@@ -167,7 +167,6 @@ title: Home
   <div class="featured-section">
     <div class="section-header">
       <h2 class="section-title">
-        <span class="section-icon">⭐</span>
         Featured Articles
       </h2>
       <div class="section-nav">
@@ -214,7 +213,6 @@ title: Home
     <div id="ios" class="category-section" data-category="ios">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">📱</span>
           iOS Development
         </h2>
         <div class="category-controls">
@@ -244,7 +242,6 @@ title: Home
     <div id="data" class="category-section" data-category="data">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">🔧</span>
           Data Structures & Algorithms
         </h2>
         <div class="category-controls">
@@ -274,7 +271,6 @@ title: Home
     <div id="architecture" class="category-section" data-category="architecture">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">🏗️</span>
           Architecture & Design
         </h2>
         <div class="category-controls">
@@ -304,7 +300,6 @@ title: Home
     <div id="swift" class="category-section" data-category="swift">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">💻</span>
           Swift Programming
         </h2>
         <div class="category-controls">
@@ -334,7 +329,6 @@ title: Home
     <div id="ai-workflow" class="category-section" data-category="ai-workflow">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">🛠️</span>
           AI Tools & Workflow
         </h2>
         <div class="category-controls">
@@ -364,7 +358,6 @@ title: Home
     <div id="ai-agents" class="category-section" data-category="ai-agents">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">🤖</span>
           AI Agents & Automation
         </h2>
         <div class="category-controls">
@@ -394,7 +387,6 @@ title: Home
     <div id="ai-strategy" class="category-section" data-category="ai-strategy">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">📊</span>
           AI Strategy & Business
         </h2>
         <div class="category-controls">
@@ -424,7 +416,6 @@ title: Home
     <div id="interview" class="category-section" data-category="interview">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">💼</span>
           Interview Preparation
         </h2>
         <div class="category-controls">
@@ -454,7 +445,6 @@ title: Home
     <div id="concurrency" class="category-section" data-category="concurrency">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">⚡</span>
           Concurrency & Threading
         </h2>
         <div class="category-controls">
@@ -484,7 +474,6 @@ title: Home
     <div id="notes" class="category-section" data-category="notes">
       <div class="category-header">
         <h2 class="category-title">
-          <span class="category-icon">📝</span>
           Knowledge Curation
         </h2>
         <div class="category-controls">
@@ -536,8 +525,8 @@ title: Home
 
     <div class="quick-links">
       <a href="#" class="quick-link" data-scroll="top">↑ Back to Top</a>
-      <a href="/archive.html" class="quick-link">📚 Archive</a>
-      <a href="/projects.html" class="quick-link">💼 Projects</a>
+      <a href="/archive.html" class="quick-link">Archive</a>
+      <a href="/projects.html" class="quick-link">Projects</a>
     </div>
   </div>
 </div>

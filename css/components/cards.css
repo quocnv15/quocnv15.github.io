@@ -139,7 +139,7 @@
 
 .note-type {
   display: inline-block;
-  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+  background: var(--color-primary);
   color: var(--color-bg);
   padding: var(--space-xs) var(--space-sm);
   border-radius: 20px;

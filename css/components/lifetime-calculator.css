@@ -1,0 +1,342 @@
+/**
+ * Life Time Calculator page — Minimalist Clean
+ * Extracted from _tools/life-time-calculator.md
+ */
+
+.lifetime-calculator-page {
+  min-height: 100vh;
+  background: var(--color-bg-alt);
+  padding: var(--space-xl) var(--space-md);
+  font-family: var(--font-family);
+}
+
+.calculator-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.calculator-header {
+  text-align: center;
+  margin-bottom: var(--space-3xl);
+  padding: var(--space-xl) 0;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.calculator-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 var(--space-sm) 0;
+  letter-spacing: -0.02em;
+}
+
+.calculator-subtitle {
+  font-size: var(--font-lg);
+  color: var(--color-text-muted);
+  margin: 0;
+  font-weight: 400;
+}
+
+.input-section {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-xl);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  display: block;
+  color: var(--color-text);
+  margin-bottom: var(--space-sm);
+  font-weight: 600;
+  font-size: var(--font-base);
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.range-input {
+  flex: 1;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.range-input::-webkit-slider-thumb:hover {
+  background: var(--color-accent-hover);
+  transform: scale(1.08);
+}
+
+.range-input::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, background 0.15s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.range-input::-moz-range-thumb:hover {
+  background: var(--color-accent-hover);
+  transform: scale(1.08);
+}
+
+.input-value {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  min-width: fit-content;
+  color: var(--color-accent);
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.metric-card {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  text-align: center;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  border-left: 3px solid var(--color-border);
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.metric-blue {
+  border-left-color: var(--color-accent);
+}
+
+.metric-blue .metric-value {
+  color: var(--color-accent);
+}
+
+.metric-purple {
+  border-left-color: var(--color-secondary);
+}
+
+.metric-purple .metric-value {
+  color: var(--color-secondary);
+}
+
+.metric-pink {
+  border-left-color: var(--color-error);
+}
+
+.metric-pink .metric-value {
+  color: var(--color-error);
+}
+
+.metric-orange {
+  border-left-color: var(--color-warning);
+}
+
+.metric-orange .metric-value {
+  color: var(--color-warning);
+}
+
+.metric-label {
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-sm) 0;
+  font-size: var(--font-sm);
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  margin: 0;
+}
+
+.metric-unit {
+  color: var(--color-text-muted);
+  font-size: var(--font-sm);
+  margin: var(--space-xs) 0 0 0;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.chart-card {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-title {
+  color: var(--color-text);
+  font-size: var(--font-lg);
+  font-weight: 600;
+  margin: 0 0 var(--space-md) 0;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: var(--space-sm);
+}
+
+.table-card {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  margin-bottom: var(--space-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.activities-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.activities-table thead {
+  background: var(--color-bg-alt);
+}
+
+.activities-table th {
+  padding: 0.75rem 1.25rem;
+  text-align: left;
+  color: var(--color-text);
+  font-weight: 600;
+  font-size: var(--font-sm);
+}
+
+.activities-table th.text-right {
+  text-align: right;
+}
+
+.activities-table tbody tr {
+  border-top: 1px solid var(--color-border);
+  transition: background 0.15s ease;
+}
+
+.activities-table tbody tr:hover {
+  background: var(--color-bg-alt);
+}
+
+.activities-table td {
+  padding: 0.75rem 1.25rem;
+  color: var(--color-text);
+}
+
+.activities-table td.text-right {
+  text-align: right;
+}
+
+.activities-table td:last-child {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.cta-section {
+  background: var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.cta-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--color-on-primary);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.cta-text {
+  font-size: var(--font-lg);
+  color: var(--color-on-primary);
+  margin: 0 0 var(--space-lg) 0;
+  opacity: 0.95;
+}
+
+.cta-highlight {
+  font-weight: 700;
+  font-size: var(--font-xl);
+}
+
+.cta-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-sm);
+  font-size: var(--font-sm);
+  color: var(--color-on-primary);
+}
+
+@media (max-width: 768px) {
+  .lifetime-calculator-page {
+    padding: var(--space-md) var(--space-sm);
+  }
+
+  .calculator-header {
+    padding: var(--space-lg) var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .input-section {
+    padding: var(--space-lg);
+  }
+
+  .input-grid,
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .cta-section {
+    padding: var(--space-lg);
+  }
+
+  .cta-list {
+    grid-template-columns: 1fr;
+  }
+}

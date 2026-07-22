@@ -2,124 +2,74 @@
 
 [![Powered by Exocortex AI](https://img.shields.io/badge/Powered_by-Exocortex_Agentic_OS-7b2cbf?style=for-the-badge&logo=openai&logoColor=white)](#)
 
-> **Public personal site** for reviewing work and showing public case studies.  
-> Private memory/mentors live in sibling repos (`ios-memory`, `mentor-agent`) — **not** fully mirrored here.
+**Personal portfolio & technical blog** | Jekyll + TypeScript | GitHub Pages
 
-Jekyll + TypeScript frontend · GitHub Pages.
+[Live Site](https://quocnv15.github.io) · [Documentation](./docs) · [GitHub](https://github.com/quocnv15/quocnv15.github.io)
 
-## 🚀 Live Site
+## Quick Links
 
-[https://quocnv15.github.io](https://quocnv15.github.io)
+| Section | URL | Purpose |
+|---------|-----|---------|
+| Homepage | [/](https://quocnv15.github.io/) | Featured cases + recent writing |
+| Work Mode | [/work/](https://quocnv15.github.io/work/) | Weekly operator hub & priorities |
+| Blog | [/archive.html](https://quocnv15.github.io/archive.html) | 50+ technical articles |
+| Projects | [/projects/](https://quocnv15.github.io/projects/) | iOS apps showcase |
+| Cases | [/cases/](https://quocnv15.github.io/cases/) | 23+ numbered case studies |
 
-| Mode | URL | Purpose |
-|------|-----|---------|
-| **Home** | [/](https://quocnv15.github.io/) | Featured cases + writing |
-| **Work (review)** | [/work/](https://quocnv15.github.io/work/) | Weekly operator hub |
-| **Dashboard** | [/ios-memory/dashboard.html](https://quocnv15.github.io/ios-memory/dashboard.html) | Portfolio board |
-| **Writing** | [/archive.html](https://quocnv15.github.io/archive.html) | Blog |
+## What's Inside
 
-## How I use this site weekly (2 min)
+- **50+ blog posts** on iOS, AI agents, architecture, code quality
+- **23+ case studies** categorized by type (Architecture, AI/Automation, Growth, Dev Philosophy)
+- **11+ iOS projects** with live demos and GitHub links
+- **Portfolio board** (`/ios-memory/dashboard.html`) — curated view of professional work
+- **Work mode** — daily priorities, operator systems, frameworks
+- **400+ SwiftUI components** gallery with metadata
 
-1. Open **/work/** → priorities + links.  
-2. Open **Dashboard** → public-safe portfolio board (finance redacted).  
-3. Open **/** → `#cases` if a story improved, plan next sync.  
-4. Deep private work stays in `ios-memory` (never bulk-published).
+## Key Features
 
-## Sync public content from ios-memory
+- **Performance**: 13KB production bundle (91% under 150KB target)
+- **Type Safety**: 100% strict TypeScript coverage
+- **Accessibility**: WCAG 2.1 AA compliant throughout
+- **Dark Mode**: Auto-detect + manual toggle with persistence
+- **Mobile-First**: Responsive design with touch-optimized navigation
+- **Modern DevX**: HMR, source maps, Vitest testing framework
 
-```bash
-./scripts/sync-content.sh
-# allowlist: dashboard HTML, case studies (+ Jekyll frontmatter), portfolio overview
-```
+## Tech Stack
 
-## 📱 About
+| Category | Technology |
+|----------|-----------|
+| **Static Site** | Jekyll (Ruby) + Markdown |
+| **Frontend** | TypeScript 5.9+ (strict mode) |
+| **Bundler** | esbuild (optimized builds) |
+| **Testing** | Vitest 1.6 + jsdom |
+| **Styling** | CSS3 variables (light/dark theme) |
+| **Hosting** | GitHub Pages (free, automatic) |
+| **Development** | HMR, source maps, type checking |
 
-- Multi-app **iOS indie** portfolio and systems
-- **Case studies** (public) and client **projects**
-- Blog on iOS, AI agents, architecture
-- CV / About for professional context
-
-## 🎯 What's New
-
-This site has been **completely refactored** with a modern TypeScript frontend architecture:
-
-- **🚀 Performance**: 13KB production bundle (91% under target)
-- **🎨 Modern Features**: Dark mode, mobile navigation, copy code, TOC
-- **🔧 Type Safety**: 100% strict TypeScript coverage
-- **📱 Responsive**: Mobile-first design with touch interactions
-- **♿ Accessible**: WCAG compliant with keyboard navigation
-
-## 🛠️ Tech Stack
-
-### Core Platform
-- **Static Site Generator**: Jekyll (Ruby-based)
-- **Frontend**: **TypeScript 5.9+** with strict mode
-- **Bundler**: esbuild (fast, optimized builds)
-- **Theme**: Minima (customized with modern enhancements)
-- **Hosting**: GitHub Pages
-
-### Frontend Architecture
-- **Language**: TypeScript 5.9+ (ES2019 target)
-- **Build Tool**: esbuild with hot reload
-- **Testing**: Vitest framework with jsdom
-- **Type Checking**: Strict TypeScript with comprehensive error checking
-- **Bundle Optimization**: Tree shaking, minification, source maps
-
-### Development Tools
-- **Package Manager**: npm
-- **Hot Reload**: TypeScript compilation + Jekyll livereload
-- **Code Quality**: ESLint + Prettier (ready to configure)
-- **Bundle Analysis**: Real-time size monitoring
-- **Documentation**: JSDoc comments with API docs
-
-### Languages & Platforms
-- **Mobile**: Swift, Objective-C, Flutter, React Native
-- **Web**: TypeScript, JavaScript, HTML5, CSS3
-- **Backend**: Node.js, Ruby, Python, Go
-- **Platforms**: iOS, macOS, Android, Web, Desktop
-
-## 📁 Modern Project Structure
+## Project Structure
 
 ```
-├── src/ts/                     # ✅ TypeScript source code
-│   ├── main.ts               # Application entry point
-│   ├── types/                # Global type definitions
-│   │   └── index.ts           # Centralized type exports
-│   ├── constants/            # Application constants
-│   │   └── index.ts           # Selectors, CSS classes
-│   ├── services/             # Business logic layer
-│   │   └── config.service.ts  # Configuration management
-│   ├── components/           # Reusable UI components
-│   │   └── theme-toggle.component.ts
-│   ├── hooks/                # Custom utility hooks
-│   │   └── useDeviceDetection.ts
-│   ├── modules/              # Feature modules
-│   │   ├── theme.ts         # Dark mode functionality
-│   │   ├── navigation.ts    # Mobile navigation
-│   │   ├── copy-code.ts     # Copy code functionality
-│   │   ├── toc.ts           # Table of contents
-│   │   └── utils/           # Utility functions
-│   │       └── dom.ts       # Type-safe DOM utilities
-│   ├── interfaces/           # Legacy interfaces
-│   └── test/                # Test files
-│       ├── setup.ts        # Test configuration
-│       └── services/
-│           └── config.service.test.ts
-├── assets/js/                 # ✅ Optimized output
-│   ├── main.js             # Production bundle (13KB)
-│   └── main.js.map         # Source maps
-├── docs/                      # ✅ Comprehensive documentation
-│   ├── architecture/       # Architecture overview
-│   ├── development/        # Development guides
-│   └── typescript-migration/ # Migration history
-├── _config.yml               # Jekyll configuration
-├── _posts/                   # Blog posts
-├── _layouts/                 # Custom HTML layouts
-├── _includes/                # Reusable components
-├── css/                      # Custom CSS overrides
-├── images/                   # Images and assets
-└── package.json              # Node.js dependencies
+src/ts/              # TypeScript frontend (31 files, 19K LOC)
+  ├── main.ts        # App entry point & plugin initialization
+  ├── core/          # State management, infrastructure
+  ├── features/      # Theme, navigation, copy-code, TOC
+  ├── services/      # Business logic
+  └── test/          # Vitest unit & integration tests
+
+scripts/             # Build & development tools (11 files)
+  ├── dev-cli.js     # CLI for build/test/lint
+  ├── dev-server.js  # HMR WebSocket server (667 LOC)
+  └── sync-content.sh # Sync with ios-memory repo
+
+_posts/              # Blog posts (50+ articles)
+_projects/           # iOS projects showcase (11 projects)
+portfolio/           # Work + Cases system (59 files)
+css/                 # Design system & component styles
+_config.yml          # Jekyll configuration
+docs/                # Documentation (this project)
 ```
+
+See [`docs/codebase-summary.md`](./docs/codebase-summary.md) for full breakdown.
 
 ## 🚀 Quick Start
 

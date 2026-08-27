@@ -5,7 +5,7 @@
  * Chuẩn UI/UX Mobbin & Apple Photos — Tối ưu hóa tải song song lên Google Drive
  * Tương thích 100% Mobile Safari (iOS) & Chrome (Android)
  * Không cần đăng nhập — Nén ảnh client-side & Upload Google Drive API
- * Google Drive Target: Lucy & Andrew Wedding 2026
+ * Google Drive Target: Lucy & Ariel Wedding 2026
  * =========================================================================
  */
 
@@ -457,7 +457,7 @@ function initUploadDropzone() {
 
         triggerConfetti();
         showLuckyTicketModal(senderName);
-        showToast(`🎉 Tải thành công ${totalFiles} ảnh lên Google Drive của Lucy & Andrew!`);
+        showToast(`🎉 Tải thành công ${totalFiles} ảnh lên Google Drive của Lucy & Ariel!`);
 
         setTimeout(() => {
           state.selectedFiles = [];
@@ -585,7 +585,7 @@ function initSongForm() {
 
 function loadMockSongs() {
   state.songs = [
-    { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn", sender: "Hội bạn thân", note: "Hát tặng Lucy & Andrew", time: "10 phút trước" },
+    { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn", sender: "Hội bạn thân", note: "Hát tặng Lucy & Ariel", time: "10 phút trước" },
     { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Minh Quân", note: "Nhạc ngọt ngào", time: "25 phút trước" }
   ];
   renderSongsFeed();

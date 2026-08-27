@@ -4,7 +4,7 @@
  * =========================================================================
  * Tương thích 100% Mobile Safari (iOS) & Chrome (Android)
  * Không cần đăng nhập — Hỗ trợ nén ảnh client-side & Upload Google Drive API
- * Google Drive Target Folder ID: 1IRC1ACdsOulqbFvyWRqKVKiDSi0B_7tu
+ * Google Drive Target Folder ID (Thư mục TEST): 1DepYTCjsYJL-rUqdfV9_WknzQTgzHsyz
  * Cô dâu & Chú rể: Lucy & Andrew
  * =========================================================================
  */

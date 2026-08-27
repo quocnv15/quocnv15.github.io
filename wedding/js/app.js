@@ -5,6 +5,7 @@
  * Tương thích 100% Mobile Safari (iOS) & Chrome (Android)
  * Không cần đăng nhập — Hỗ trợ nén ảnh client-side & Upload Google Drive API
  * Google Drive Target Folder ID: 1IRC1ACdsOulqbFvyWRqKVKiDSi0B_7tu
+ * Cô dâu & Chú rể: Lucy & Andrew
  * =========================================================================
  */
 
@@ -308,7 +309,6 @@ function initVoiceRecorder() {
           const mins = String(Math.floor(state.recordSeconds / 60)).padStart(2, '0');
           const secs = String(state.recordSeconds % 60).padStart(2, '0');
           timerText.innerText = `${mins}:${secs}`;
-          // Giới hạn tối đa 60 giây
           if (state.recordSeconds >= 60) {
             btnToggle.click();
           }
@@ -373,7 +373,7 @@ function initVoiceRecorder() {
 
       triggerConfetti();
       showLuckyTicketModal(sender);
-      showToast("🎉 Đã gửi lời chúc giọng nói lên Google Drive của Thắm!");
+      showToast("🎉 Đã gửi lời chúc giọng nói lên Google Drive của Lucy & Andrew!");
       btnReset.click();
     } catch (err) {
       console.error(err);
@@ -447,7 +447,7 @@ function initWishForm() {
     wishInput.value = "";
     triggerConfetti();
     showLuckyTicketModal(sender, luckyNum);
-    showToast("💌 Lời chúc của bạn đã được gửi tới Cô dâu & Chú rể!");
+    showToast("💌 Lời chúc của bạn đã được gửi tới Lucy & Andrew!");
   });
 }
 
@@ -547,7 +547,7 @@ function initPhotoFrameTool() {
 
   downloadBtn.addEventListener("click", () => {
     const link = document.createElement("a");
-    link.download = `Wedding_Tham_Lucy_${state.currentTheme}_${state.currentDate}.jpg`;
+    link.download = `Wedding_Lucy_Andrew_${state.currentTheme}_${state.currentDate}.jpg`;
     link.href = canvas.toDataURL("image/jpeg", 0.92);
     link.click();
     showToast("💾 Đã tải ảnh kỷ niệm có khung về máy!");
@@ -603,9 +603,9 @@ function drawWeddingFrame(img, canvas, theme = "rose_gold") {
     ctx.strokeRect(margin + 10, margin + 10, photoW - 20, photoH - 20);
 
     ctx.fillStyle = "#F3E5AB";
-    ctx.font = "bold 44px 'Cormorant Garamond', Georgia, serif";
+    ctx.font = "bold 46px 'Cormorant Garamond', Georgia, serif";
     ctx.textAlign = "center";
-    ctx.fillText("💍 THẮM & CHÚ RỂ 💍", targetWidth / 2, targetHeight - 120);
+    ctx.fillText("💍 LUCY & ANDREW 💍", targetWidth / 2, targetHeight - 120);
 
     ctx.fillStyle = "#FFAAA6";
     ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
@@ -617,9 +617,9 @@ function drawWeddingFrame(img, canvas, theme = "rose_gold") {
     ctx.strokeRect(margin + 10, margin + 10, photoW - 20, photoH - 20);
 
     ctx.fillStyle = "#2D5A3A";
-    ctx.font = "bold 44px 'Cormorant Garamond', Georgia, serif";
+    ctx.font = "bold 46px 'Cormorant Garamond', Georgia, serif";
     ctx.textAlign = "center";
-    ctx.fillText("🌿 Happy Wedding Thắm & Chú Rể 🌿", targetWidth / 2, targetHeight - 120);
+    ctx.fillText("🌿 Happy Wedding Lucy & Andrew 🌿", targetWidth / 2, targetHeight - 120);
 
     ctx.fillStyle = "#6B8E23";
     ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
@@ -637,7 +637,7 @@ function drawWeddingFrame(img, canvas, theme = "rose_gold") {
 
     ctx.fillStyle = "#F3E5AB";
     ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
-    ctx.fillText("Thắm (Lucy) & Chú Rể • 11.09 — 12.09.2026", targetWidth / 2, targetHeight - 70);
+    ctx.fillText("Lucy & Andrew • 11.09 — 12.09.2026", targetWidth / 2, targetHeight - 70);
 
   } else {
     // Rose Gold
@@ -646,9 +646,9 @@ function drawWeddingFrame(img, canvas, theme = "rose_gold") {
     ctx.strokeRect(margin + 8, margin + 8, photoW - 16, photoH - 16);
 
     ctx.fillStyle = "#8B263E";
-    ctx.font = "bold 44px 'Cormorant Garamond', Georgia, serif";
+    ctx.font = "bold 46px 'Cormorant Garamond', Georgia, serif";
     ctx.textAlign = "center";
-    ctx.fillText("🌸 Happy Wedding Thắm & Chú Rể 🌸", targetWidth / 2, targetHeight - 120);
+    ctx.fillText("🌸 Happy Wedding Lucy & Andrew 🌸", targetWidth / 2, targetHeight - 120);
 
     ctx.fillStyle = "#735D55";
     ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
@@ -757,13 +757,13 @@ function triggerConfetti() {
  */
 function loadMockData() {
   state.wishes = [
-    { senderName: "Hội Bạn Đại Học", message: "Chúc bạn Thắm và chú rể trăm năm hòa hợp, sớm đón thiên thần nhỏ nha! 🎉💐", time: "10 phút trước" },
+    { senderName: "Hội Bạn Đại Học", message: "Chúc bạn Lucy và Andrew trăm năm hòa hợp, sớm đón thiên thần nhỏ nha! 🎉💐", time: "10 phút trước" },
     { senderName: "Anh Tuấn & Chị Lan", message: "Chúc hai em luôn hạnh phúc và yêu thương nhau như ngày đầu tiên! ❤️", time: "25 phút trước" },
     { senderName: "Nhóm Bạn Thân Cấp 3", message: "Mãi mãi bên nhau bạn nhé! Nay cô dâu xinh đẹp tuyệt trần! 👰✨", time: "1 giờ trước" }
   ];
 
   state.songs = [
-    { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn", sender: "Hội bạn thân", note: "Hát tặng cô dâu chú rể", time: "15 phút trước" },
+    { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn", sender: "Hội bạn thân", note: "Hát tặng Lucy & Andrew", time: "15 phút trước" },
     { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Minh Quân", note: "Nhạc ngọt ngào", time: "30 phút trước" }
   ];
 

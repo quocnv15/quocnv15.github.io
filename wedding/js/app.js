@@ -158,19 +158,10 @@ function initUploadDropzone() {
           base64: compressedBase64,
           previewUrl: compressedBase64
         });
-      } else if (file.type.startsWith("video/")) {
-        const base64 = await fileToBase64(file);
-        state.selectedFiles.push({
-          file: file,
-          name: file.name,
-          mimeType: file.type || "video/mp4",
-          base64: base64,
-          previewUrl: ""
-        });
       }
     }
 
-    compressHint.innerText = `✅ Đã sẵn sàng ${state.selectedFiles.length} file để gửi`;
+    compressHint.innerText = `✅ Đã sẵn sàng ${state.selectedFiles.length} ảnh để gửi`;
     renderMediaPreviews();
   }
 
@@ -179,19 +170,10 @@ function initUploadDropzone() {
     state.selectedFiles.forEach((item, index) => {
       const div = document.createElement("div");
       div.className = "preview-item";
-      if (item.mimeType.startsWith("image/")) {
-        div.innerHTML = `
-          <img src="${item.previewUrl}" alt="Preview" />
-          <button class="remove-btn" onclick="removeMedia(${index})">✕</button>
-        `;
-      } else {
-        div.innerHTML = `
-          <div style="background: #2C1810; color: #fff; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; text-align: center; padding: 4px;">
-            🎥 Clip<br><span style="font-size: 0.65rem; opacity: 0.8;">${item.name.substring(0, 10)}...</span>
-          </div>
-          <button class="remove-btn" onclick="removeMedia(${index})">✕</button>
-        `;
-      }
+      div.innerHTML = `
+        <img src="${item.previewUrl}" alt="Preview" />
+        <button class="remove-btn" onclick="removeMedia(${index})">✕</button>
+      `;
       previewGrid.appendChild(div);
     });
 
@@ -207,12 +189,12 @@ function initUploadDropzone() {
     const senderName = document.getElementById("mediaSenderName").value.trim() || "Khách mời";
 
     if (state.selectedFiles.length === 0) {
-      showToast("Vui lòng chọn ít nhất 1 ảnh hoặc video! 📷");
+      showToast("Vui lòng chọn ít nhất 1 ảnh từ Album! 🖼️");
       return;
     }
 
     uploadBtn.disabled = true;
-    uploadBtn.innerHTML = `⏳ Đang tải lên Drive (${state.selectedFiles.length} file)...`;
+    uploadBtn.innerHTML = `⏳ Đang tải lên Drive (${state.selectedFiles.length} ảnh)...`;
 
     try {
       if (GAS_ENDPOINT_URL) {
@@ -247,7 +229,7 @@ function initUploadDropzone() {
       showToast("❌ Có lỗi xảy ra, vui lòng thử lại!");
     } finally {
       uploadBtn.disabled = false;
-      uploadBtn.innerHTML = `📤 Gửi Lên Google Drive`;
+      uploadBtn.innerHTML = `📤 Gửi Ảnh Lên Google Drive`;
     }
   });
 }

@@ -68,11 +68,11 @@
     <!-- Main Content Panes -->
     <main class="main-content">
 
-      <!-- ================= TAB 1: UPLOAD ẢNH / VIDEO ================= -->
+      <!-- ================= TAB 1: UPLOAD ẢNH ================= -->
       <section class="tab-pane active" id="tab-upload">
         <div class="glass-card">
-          <h2 class="card-title">📸 Gửi Ảnh & Clip Kỷ Niệm</h2>
-          <p class="card-desc">Khoảnh khắc bạn chụp sẽ được tự động lưu trọn vẹn vào Google Drive của Lucy & Andrew ❤️</p>
+          <h2 class="card-title">📸 Gửi Ảnh Kỷ Niệm</h2>
+          <p class="card-desc">Những bức ảnh đẹp bạn chụp sẽ được tự động lưu trọn vẹn vào Google Drive của Lucy & Andrew ❤️</p>
 
           <div class="form-group">
             <label class="form-label" for="mediaSenderName">Tên của bạn hoặc Nhóm bạn:</label>
@@ -81,10 +81,10 @@
 
           <!-- Dropzone -->
           <div class="dropzone" id="mediaDropzone">
-            <div class="dropzone-icon">📷</div>
-            <div class="dropzone-text">Bấm để chụp ảnh hoặc chọn từ Album</div>
-            <div class="dropzone-hint">Hỗ trợ chọn nhiều ảnh & video cùng lúc (Tự động nén siêu nét & gửi cực nhanh)</div>
-            <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple style="display: none;">
+            <div class="dropzone-icon">🖼️</div>
+            <div class="dropzone-text">Bấm để chọn ảnh từ Album</div>
+            <div class="dropzone-hint">Hỗ trợ chọn nhiều ảnh cùng lúc (Tự động tối ưu nét & gửi nhanh)</div>
+            <input type="file" id="mediaFileInput" accept="image/*" multiple style="display: none;">
           </div>
 
           <div id="compressHint" style="display: none; font-size: 0.78rem; color: #8B263E; margin-top: 10px; text-align: center; font-weight: 600;"></div>
@@ -93,7 +93,7 @@
           <div class="preview-grid" id="mediaPreviewGrid"></div>
 
           <button class="btn-primary" id="btnSubmitMedia" type="button" disabled>
-            <span>📤 Gửi Lên Google Drive</span>
+            <span>📤 Gửi Ảnh Lên Google Drive</span>
           </button>
         </div>
       </section>

@@ -4,7 +4,7 @@
  * =========================================================================
  * Tương thích 100% Mobile Safari (iOS) & Chrome (Android)
  * Không cần đăng nhập — Hỗ trợ nén ảnh client-side & Upload Google Drive API
- * Drive Folder ID: 1IRC1ACdsOulqbFvyWRqKVKiDSi0B_7tu
+ * Google Drive Target Folder ID: 1IRC1ACdsOulqbFvyWRqKVKiDSi0B_7tu
  * =========================================================================
  */
 
@@ -204,7 +204,6 @@ function initUploadDropzone() {
 
   uploadBtn.addEventListener("click", async () => {
     const senderName = document.getElementById("mediaSenderName").value.trim() || "Khách mời";
-    const table = document.getElementById("mediaTable").value.trim() || "Bàn tiệc";
 
     if (state.selectedFiles.length === 0) {
       showToast("Vui lòng chọn ít nhất 1 ảnh hoặc video! 📷");
@@ -225,7 +224,6 @@ function initUploadDropzone() {
               action: "uploadMedia",
               eventDate: state.currentDate,
               senderName: senderName,
-              table: table,
               fileName: item.name,
               mimeType: item.mimeType,
               fileData: item.base64
@@ -237,7 +235,7 @@ function initUploadDropzone() {
       }
 
       triggerConfetti();
-      showLuckyTicketModal(senderName, table);
+      showLuckyTicketModal(senderName);
       showToast("🎉 Tải ảnh lên Google Drive thành công! Cảm ơn bạn!");
       state.selectedFiles = [];
       renderMediaPreviews();
@@ -345,7 +343,6 @@ function initVoiceRecorder() {
 
   btnSubmit.addEventListener("click", async () => {
     const sender = document.getElementById("voiceSender").value.trim() || "Khách mời";
-    const table = document.getElementById("voiceTable").value.trim() || "Bàn tiệc";
 
     if (!state.voiceBase64) {
       showToast("Vui lòng ghi âm trước khi gửi nhé! 🎙️");
@@ -365,7 +362,6 @@ function initVoiceRecorder() {
             action: "uploadMedia",
             eventDate: state.currentDate,
             senderName: sender,
-            table: table,
             fileName: `Voice_LoiChuc_${Date.now()}.webm`,
             mimeType: state.voiceBlob.type || "audio/webm",
             fileData: state.voiceBase64
@@ -376,7 +372,7 @@ function initVoiceRecorder() {
       }
 
       triggerConfetti();
-      showLuckyTicketModal(sender, table);
+      showLuckyTicketModal(sender);
       showToast("🎉 Đã gửi lời chúc giọng nói lên Google Drive của Thắm!");
       btnReset.click();
     } catch (err) {
@@ -409,7 +405,6 @@ function initWishForm() {
   wishForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const sender = document.getElementById("wishSender").value.trim() || "Ẩn danh";
-    const table = document.getElementById("wishTable").value.trim() || "Bàn tiệc";
     const message = wishInput.value.trim();
 
     if (!message) {
@@ -421,7 +416,6 @@ function initWishForm() {
 
     const newWish = {
       senderName: sender,
-      table: table,
       message: message,
       luckyNumber: luckyNum,
       eventDate: state.currentDate,
@@ -441,7 +435,6 @@ function initWishForm() {
             action: "sendWish",
             eventDate: state.currentDate,
             senderName: sender,
-            table: table,
             message: message,
             luckyNumber: luckyNum
           })
@@ -453,7 +446,7 @@ function initWishForm() {
 
     wishInput.value = "";
     triggerConfetti();
-    showLuckyTicketModal(sender, table, luckyNum);
+    showLuckyTicketModal(sender, luckyNum);
     showToast("💌 Lời chúc của bạn đã được gửi tới Cô dâu & Chú rể!");
   });
 }
@@ -685,7 +678,7 @@ function initLuckyModal() {
   });
 }
 
-function showLuckyTicketModal(sender, table, luckyNumber) {
+function showLuckyTicketModal(sender, luckyNumber) {
   const modal = document.getElementById("luckyModal");
   const numDisplay = document.getElementById("luckyNumberText");
   const infoDisplay = document.getElementById("luckyGuestInfo");
@@ -693,7 +686,7 @@ function showLuckyTicketModal(sender, table, luckyNumber) {
 
   const num = luckyNumber || generateLuckyNumber();
   numDisplay.innerText = num;
-  infoDisplay.innerText = `Khách mời: ${sender} • ${table}`;
+  infoDisplay.innerText = `Khách mời: ${sender}`;
   modal.classList.add("show");
 }
 
@@ -764,14 +757,14 @@ function triggerConfetti() {
  */
 function loadMockData() {
   state.wishes = [
-    { senderName: "Hội Bạn Đại Học", table: "Bàn 03", message: "Chúc bạn Thắm và chú rể trăm năm hòa hợp, sớm đón thiên thần nhỏ nha! 🎉💐", time: "10 phút trước" },
-    { senderName: "Anh Tuấn & Chị Lan", table: "Bàn Họ Nhà Gái", message: "Chúc hai em luôn hạnh phúc và yêu thương nhau như ngày đầu tiên! ❤️", time: "25 phút trước" },
-    { senderName: "Nhóm Bạn Thân Cấp 3", table: "Bàn 07", message: "Mãi mãi bên nhau bạn nhé! Nay cô dâu xinh đẹp tuyệt trần! 👰✨", time: "1 giờ trước" }
+    { senderName: "Hội Bạn Đại Học", message: "Chúc bạn Thắm và chú rể trăm năm hòa hợp, sớm đón thiên thần nhỏ nha! 🎉💐", time: "10 phút trước" },
+    { senderName: "Anh Tuấn & Chị Lan", message: "Chúc hai em luôn hạnh phúc và yêu thương nhau như ngày đầu tiên! ❤️", time: "25 phút trước" },
+    { senderName: "Nhóm Bạn Thân Cấp 3", message: "Mãi mãi bên nhau bạn nhé! Nay cô dâu xinh đẹp tuyệt trần! 👰✨", time: "1 giờ trước" }
   ];
 
   state.songs = [
     { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn", sender: "Hội bạn thân", note: "Hát tặng cô dâu chú rể", time: "15 phút trước" },
-    { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Bàn 05", note: "Nhạc ngọt ngào", time: "30 phút trước" }
+    { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Minh Quân", note: "Nhạc ngọt ngào", time: "30 phút trước" }
   ];
 
   renderWishesFeed();
@@ -787,11 +780,10 @@ function renderWishesFeed() {
     div.className = "feed-card";
     div.innerHTML = `
       <div class="feed-header">
-        <span class="feed-sender">${item.senderName}</span>
-        <span class="feed-table">${item.table}</span>
+        <span class="feed-sender">💌 ${item.senderName}</span>
+        <span class="feed-time">${item.time}</span>
       </div>
       <div class="feed-message">${item.message}</div>
-      <div class="feed-time">${item.time}</div>
     `;
     container.appendChild(div);
   });
@@ -807,10 +799,9 @@ function renderSongsFeed() {
     div.innerHTML = `
       <div class="feed-header">
         <span class="feed-sender">🎵 ${item.title}</span>
-        <span class="feed-table">${item.artist || 'Yêu cầu'}</span>
+        <span class="feed-time">${item.time}</span>
       </div>
-      <div class="feed-message"><small>Người gửi:</small> <strong>${item.sender}</strong> ${item.note ? `• <em>"${item.note}"</em>` : ''}</div>
-      <div class="feed-time">${item.time}</div>
+      <div class="feed-message"><small>Người gửi:</small> <strong>${item.sender}</strong> ${item.artist ? `(${item.artist})` : ''} ${item.note ? `• <em>"${item.note}"</em>` : ''}</div>
     `;
     container.appendChild(div);
   });

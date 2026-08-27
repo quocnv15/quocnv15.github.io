@@ -198,12 +198,12 @@
 
     .wish-sender-title {
       font-family: var(--font-serif);
-      font-size: 2.2rem;
+      font-size: 2.3rem;
       color: var(--accent-gold-light);
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
 
-    .wish-table-badge {
+    .wish-tag-badge {
       display: inline-block;
       padding: 6px 18px;
       background: rgba(226, 149, 120, 0.25);
@@ -215,7 +215,7 @@
     }
 
     .wish-text-body {
-      font-size: 1.8rem;
+      font-size: 1.85rem;
       line-height: 1.5;
       font-weight: 500;
       color: #FFFFFF;
@@ -366,15 +366,10 @@
     }
 
     .winner-name {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       color: var(--accent-gold-light);
       font-weight: 700;
       margin-bottom: 4px;
-    }
-
-    .winner-table {
-      font-size: 1.1rem;
-      color: #FFAAA6;
     }
 
     /* MODE 3: SONG REQUEST LIST */
@@ -437,7 +432,6 @@
       </div>
 
       <div class="qr-box">
-        <!-- Live Generated QR code pointing to online app url -->
         <img id="stageQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
       </div>
 
@@ -459,7 +453,7 @@
       <div class="banner-top">
         <div class="banner-badge">
           <div class="live-dot"></div>
-          <span id="stageBannerTitle">TRỰC TIẾP TỪ BÀN TIỆC RẠP CƯỚI</span>
+          <span id="stageBannerTitle">TRỰC TIẾP TỪ TIỆC CƯỚI</span>
         </div>
         <div style="display: flex; gap: 16px; align-items: center;">
           <div style="font-size: 0.95rem; color: #FFAAA6;" id="liveClock"></div>
@@ -472,7 +466,7 @@
         <div class="featured-wish-container">
           <div class="featured-card" id="featuredCard">
             <div class="wish-sender-title" id="featuredSender">Hội Bạn Thân Đại Học</div>
-            <div class="wish-table-badge" id="featuredTable">Bàn 03 — Bạn Cô Dâu</div>
+            <div class="wish-tag-badge">🌸 Lời chúc phúc</div>
             <div class="wish-text-body" id="featuredMessage">
               "Chúc bạn Thắm và chú rể trăm năm hòa hợp, đầu bạc răng long, sớm đón thiên thần nhỏ nha! Nay cô dâu xinh đẹp rạng ngời nhất! 🎉💐"
             </div>
@@ -500,7 +494,6 @@
             <div class="winner-title">🎉 CHÚC MỪNG KHÁCH MỜI MAY MẮN 🎉</div>
             <div class="winner-number" id="winnerLuckyNum">LUCKY-888</div>
             <div class="winner-name" id="winnerName">Nguyễn Văn A</div>
-            <div class="winner-table" id="winnerTable">Bàn 05 — Bạn Cô Dâu</div>
             <button class="mode-btn" style="margin: 20px auto 0 auto; width: fit-content;" onclick="closeWinnerModal()">Tiếp tục</button>
           </div>
         </div>
@@ -564,7 +557,7 @@
       if (mode === "wishes") {
         btnWishes.classList.add("active");
         paneWishes.classList.add("active");
-        bannerTitle.innerText = "TRỰC TIẾP TỪ BÀN TIỆC RẠP CƯỚI";
+        bannerTitle.innerText = "TRỰC TIẾP TỪ TIỆC CƯỚI";
       } else if (mode === "lucky") {
         btnLucky.classList.add("active");
         paneLucky.classList.add("active");
@@ -583,17 +576,17 @@
 
     // Mock Pool Data
     const liveWishes = [
-      { sender: "Hội Bạn Thân Đại Học", table: "Bàn 03 — Bạn Cô Dâu", msg: "Chúc bạn Thắm và chú rể trăm năm hòa hợp, đầu bạc răng long, sớm đón thiên thần nhỏ nha! 🎉💐", lucky: "LUCKY-789" },
-      { sender: "Bác Hùng & Gia Đình", table: "Bàn Họ Nhà Gái 01", msg: "Chúc hai cháu vạn sự như ý, xây dựng tổ ấm hạnh phúc vững bền! ❤️", lucky: "LUCKY-352" },
-      { sender: "Nhóm Đồng Nghiệp", table: "Bàn 06", msg: "Mừng ngày trọng đại của Thắm! Chúc 2 vợ chồng luôn ngọt ngào như ngày đầu tiên! 🥂✨", lucky: "LUCKY-618" },
-      { sender: "Bàn Thanh Niên 09", table: "Bàn 09", msg: "Cạn chén mừng hạnh phúc đôi bạn trẻ! Quẩy hết mình hôm nay nha! 🥳🍻", lucky: "LUCKY-999" }
+      { sender: "Hội Bạn Thân Đại Học", msg: "Chúc bạn Thắm và chú rể trăm năm hòa hợp, đầu bạc răng long, sớm đón thiên thần nhỏ nha! 🎉💐", lucky: "LUCKY-789" },
+      { sender: "Bác Hùng & Gia Đình", msg: "Chúc hai cháu vạn sự như ý, xây dựng tổ ấm hạnh phúc vững bền! ❤️", lucky: "LUCKY-352" },
+      { sender: "Nhóm Đồng Nghiệp", msg: "Mừng ngày trọng đại của Thắm! Chúc 2 vợ chồng luôn ngọt ngào như ngày đầu tiên! 🥂✨", lucky: "LUCKY-618" },
+      { sender: "Nhóm Bạn Thân Cấp 3", msg: "Cạn chén mừng hạnh phúc đôi bạn trẻ! Quẩy hết mình hôm nay nha! 🥳🍻", lucky: "LUCKY-999" }
     ];
 
     const liveSongs = [
-      { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn, Hiền Hồ", sender: "Hội bạn thân bàn 03", note: "Mở đầu tiệc cho ngọt ngào nha" },
-      { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Bàn 05", note: "Tặng chú rể hát tặng cô dâu" },
-      { title: "Ngày Đầu Tiên", artist: "Đức Phúc", sender: "Bàn Họ Nhà Gái", note: "Chúc đôi bạn trẻ trăm năm hạnh phúc" },
-      { title: "Qua Đêm Nay", artist: "Hà Anh Tuấn, Phương Linh", sender: "Bàn 08", note: "Song ca ngọt lịm" }
+      { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn, Hiền Hồ", sender: "Hội bạn thân", note: "Mở đầu tiệc cho ngọt ngào nha" },
+      { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Minh Quân", note: "Tặng chú rể hát tặng cô dâu" },
+      { title: "Ngày Đầu Tiên", artist: "Đức Phúc", sender: "Gia đình nhà gái", note: "Chúc đôi bạn trẻ trăm năm hạnh phúc" },
+      { title: "Qua Đêm Nay", artist: "Hà Anh Tuấn, Phương Linh", sender: "Thu Hằng & Minh Tuấn", note: "Song ca ngọt lịm" }
     ];
 
     // Cycle Wishes
@@ -609,7 +602,6 @@
       card.style.animation = "cardFlip 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
 
       document.getElementById("featuredSender").innerText = item.sender;
-      document.getElementById("featuredTable").innerText = item.table;
       document.getElementById("featuredMessage").innerText = `"${item.msg}"`;
     }
     setInterval(cycleWish, 7500);
@@ -620,7 +612,7 @@
       const div = document.createElement("div");
       div.className = "ticker-item";
       div.innerHTML = `
-        <div class="ticker-sender">${w.sender} (${w.table})</div>
+        <div class="ticker-sender">💌 ${w.sender}</div>
         <div class="ticker-msg">${w.msg}</div>
       `;
       ticker.appendChild(div);
@@ -716,7 +708,6 @@
       function animateSpin(now) {
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        // easeOutCubic
         const ease = 1 - Math.pow(1 - progress, 3);
         currentAngle = startAngle + spinAngle * ease;
         drawWheel();
@@ -737,7 +728,6 @@
       const winner = liveWishes[Math.floor(Math.random() * liveWishes.length)];
       document.getElementById("winnerLuckyNum").innerText = winner.lucky;
       document.getElementById("winnerName").innerText = winner.sender;
-      document.getElementById("winnerTable").innerText = winner.table;
       document.getElementById("winnerModal").classList.add("show");
       triggerStageConfetti();
     }

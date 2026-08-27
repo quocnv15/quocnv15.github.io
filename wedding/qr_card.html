@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🖨️ In Thẻ QR Bàn Tiệc Đám Cưới — Thắm & Chú Rể</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      background: #EFEFEF;
+      color: #2C1810;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .no-print-bar {
+      background: #FFFFFF;
+      border: 1px solid rgba(226, 149, 120, 0.4);
+      border-radius: 16px;
+      padding: 16px 24px;
+      max-width: 800px;
+      width: 100%;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .print-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .print-sheet {
+      width: 210mm; /* A4 standard */
+      min-height: 297mm;
+      background: #FFFFFF;
+      padding: 15mm;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15mm;
+      box-sizing: border-box;
+    }
+
+    .standee-card {
+      border: 2px solid #D4AF37;
+      border-radius: 20px;
+      padding: 20px 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #FFFDFB 0%, #FFF5F2 100%);
+      box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.1);
+      position: relative;
+      height: 125mm;
+      box-sizing: border-box;
+    }
+
+    .standee-card::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      right: 6px;
+      bottom: 6px;
+      border: 1px dashed rgba(226, 149, 120, 0.4);
+      border-radius: 14px;
+      pointer-events: none;
+    }
+
+    .card-top-tag {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #8B263E;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .card-couple-names {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 700;
+      color: #8B263E;
+      line-height: 1.1;
+    }
+
+    .card-couple-names span {
+      color: #D4AF37;
+      font-style: italic;
+    }
+
+    .card-qr-wrapper {
+      background: #FFFFFF;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(212, 175, 55, 0.5);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      margin: 10px 0;
+    }
+
+    .card-qr-wrapper img {
+      width: 140px;
+      height: 140px;
+      display: block;
+    }
+
+    .card-features {
+      font-size: 11.5px;
+      line-height: 1.45;
+      color: #2C1810;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .card-features li {
+      list-style: none;
+      margin-bottom: 2px;
+    }
+
+    .card-footer-dates {
+      font-size: 11px;
+      color: #735D55;
+      border-top: 1px solid rgba(226, 149, 120, 0.3);
+      padding-top: 6px;
+      width: 90%;
+    }
+
+    @media print {
+      body {
+        background: #FFFFFF;
+        padding: 0;
+      }
+      .no-print-bar {
+        display: none !important;
+      }
+      .print-sheet {
+        box-shadow: none;
+        padding: 10mm;
+        margin: 0;
+        width: 100%;
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Controls Bar (Ẩn khi in) -->
+  <div class="no-print-bar">
+    <div>
+      <h2 style="font-family: var(--font-serif); color: var(--primary-burgundy); font-size: 1.4rem;">
+        🌸 Trình Xuất File In Thẻ QR Bàn Tiệc (A6/A5 Standee)
+      </h2>
+      <p style="font-size: 0.82rem; color: #735D55; margin-top: 2px;">
+        Khổ A4 chia làm 4 thẻ A6 (10x15cm) đặt vừa vặn trên từng bàn tiệc của rạp cưới.
+      </p>
+    </div>
+
+    <div class="print-controls">
+      <button class="btn-primary" style="margin: 0; padding: 10px 24px;" onclick="window.print()">
+        <span>🖨️ In Ngay (Ctrl + P)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- A4 Print Sheet -->
+  <div class="print-sheet">
+    
+    <!-- Card 1 -->
+    <div class="standee-card">
+      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
+      <div class="card-couple-names">Thắm <span>&</span> Chú Rể</div>
+      <div class="card-qr-wrapper">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
+      </div>
+      <ul class="card-features">
+        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
+        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
+        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
+      </ul>
+      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="standee-card">
+      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
+      <div class="card-couple-names">Thắm <span>&</span> Chú Rể</div>
+      <div class="card-qr-wrapper">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
+      </div>
+      <ul class="card-features">
+        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
+        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
+        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
+      </ul>
+      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="standee-card">
+      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
+      <div class="card-couple-names">Thắm <span>&</span> Chú Rể</div>
+      <div class="card-qr-wrapper">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
+      </div>
+      <ul class="card-features">
+        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
+        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
+        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
+      </ul>
+      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="standee-card">
+      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
+      <div class="card-couple-names">Thắm <span>&</span> Chú Rể</div>
+      <div class="card-qr-wrapper">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
+      </div>
+      <ul class="card-features">
+        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
+        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
+        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
+      </ul>
+      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
+    </div>
+
+  </div>
+
+</body>
+</html>

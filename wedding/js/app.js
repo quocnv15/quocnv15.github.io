@@ -11,7 +11,7 @@
 
 // CẤU HÌNH GOOGLE APPS SCRIPT WEBHOOK URL
 // (Sau khi deploy theo file setup_guide.md, dán URL vào đây. Nếu để trống, app sẽ chạy chế độ Mock Preview)
-const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbwVk2hPLU6b08tea0w9_RWC7otu-5hOir7TvgaWUe_WS21rvE4a7KNWdOhDH-zdqDYW/exec";
+const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxOGg1lU-DbDoId6CgwnrOiY7u1NxV0zobCd3bwhgAFO4CFGUgNK8Z23lj2pGoZJ80W/exec";
 
 // STATE MANAGEMENT
 const state = {

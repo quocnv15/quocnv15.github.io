@@ -514,6 +514,9 @@
   </div>
 
   <script>
+    // CẤU HÌNH WEBHOOK BACKEND ĐỒNG BỘ THỜI GIAN THỰC
+    const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbw920JEnBZVPlq0x9T_gLkZ7lcNerIB2m62O3Tm9ebVAw82dlU2YNjKjw6YrYtsyGFX/exec";
+
     // Live Clock
     function updateClock() {
       const now = new Date();
@@ -574,25 +577,69 @@
     btnLucky.addEventListener("click", () => switchMode("lucky"));
     btnSongs.addEventListener("click", () => switchMode("songs"));
 
-    // Mock Pool Data
-    const liveWishes = [
+    // Initial Live Pool Data
+    let liveWishes = [
       { sender: "Hội Bạn Thân Đại Học", msg: "Chúc bạn Lucy và Andrew trăm năm hòa hợp, đầu bạc răng long, sớm đón thiên thần nhỏ nha! 🎉💐", lucky: "LUCKY-789" },
       { sender: "Bác Hùng & Gia Đình", msg: "Chúc hai cháu vạn sự như ý, xây dựng tổ ấm hạnh phúc vững bền! ❤️", lucky: "LUCKY-352" },
       { sender: "Nhóm Đồng Nghiệp", msg: "Mừng ngày trọng đại của Lucy & Andrew! Chúc 2 vợ chồng luôn ngọt ngào như ngày đầu tiên! 🥂✨", lucky: "LUCKY-618" },
       { sender: "Nhóm Bạn Thân Cấp 3", msg: "Cạn chén mừng hạnh phúc đôi bạn trẻ! Quẩy hết mình hôm nay nha! 🥳🍻", lucky: "LUCKY-999" }
     ];
 
-    const liveSongs = [
+    let liveSongs = [
       { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn, Hiền Hồ", sender: "Hội bạn thân", note: "Mở đầu tiệc cho ngọt ngào nha" },
       { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Minh Quân", note: "Tặng chú rể hát tặng cô dâu" },
       { title: "Ngày Đầu Tiên", artist: "Đức Phúc", sender: "Gia đình nhà gái", note: "Chúc đôi bạn trẻ trăm năm hạnh phúc" },
       { title: "Qua Đêm Nay", artist: "Hà Anh Tuấn, Phương Linh", sender: "Thu Hằng & Minh Tuấn", note: "Song ca ngọt lịm" }
     ];
 
+    // FETCH REAL DATA FROM GOOGLE APPS SCRIPT
+    async function syncRealDataFromDrive() {
+      if (!GAS_ENDPOINT_URL) return;
+      try {
+        // 1. Fetch Wishes
+        const resWishes = await fetch(`${GAS_ENDPOINT_URL}?action=getWishes`);
+        const dataWishes = await resWishes.json();
+        if (dataWishes && dataWishes.success && dataWishes.data && dataWishes.data.length > 0) {
+          liveWishes = dataWishes.data.map(w => ({
+            sender: w.senderName,
+            msg: w.message,
+            lucky: w.luckyNumber
+          }));
+          renderTicker();
+        }
+
+        // 2. Fetch Songs
+        const resSongs = await fetch(`${GAS_ENDPOINT_URL}?action=getSongs`);
+        const dataSongs = await resSongs.json();
+        if (dataSongs && dataSongs.success && dataSongs.data && dataSongs.data.length > 0) {
+          liveSongs = dataSongs.data.map(s => ({
+            title: s.title,
+            artist: s.artist || "Nhạc Trẻ",
+            sender: s.sender,
+            note: s.note
+          }));
+          renderSongs();
+        }
+
+        // 3. Fetch Lucky Pool for Wheel
+        const resLucky = await fetch(`${GAS_ENDPOINT_URL}?action=getLuckyPool`);
+        const dataLucky = await resLucky.json();
+        if (dataLucky && dataLucky.success && dataLucky.data && dataLucky.data.length > 0) {
+          updateWheelSegments(dataLucky.data);
+        }
+      } catch (err) {
+        console.log("Drive sync poll:", err);
+      }
+    }
+
+    // Poll every 12 seconds for fresh messages
+    setInterval(syncRealDataFromDrive, 12000);
+    syncRealDataFromDrive();
+
     // Cycle Wishes
     let currentWishIdx = 0;
     function cycleWish() {
-      if (!paneWishes.classList.contains("active")) return;
+      if (!paneWishes.classList.contains("active") || liveWishes.length === 0) return;
       const card = document.getElementById("featuredCard");
       currentWishIdx = (currentWishIdx + 1) % liveWishes.length;
       const item = liveWishes[currentWishIdx];
@@ -607,34 +654,42 @@
     setInterval(cycleWish, 7500);
 
     // Populate Ticker
-    const ticker = document.getElementById("wishesTicker");
-    liveWishes.forEach(w => {
-      const div = document.createElement("div");
-      div.className = "ticker-item";
-      div.innerHTML = `
-        <div class="ticker-sender">💌 ${w.sender}</div>
-        <div class="ticker-msg">${w.msg}</div>
-      `;
-      ticker.appendChild(div);
-    });
+    function renderTicker() {
+      const ticker = document.getElementById("wishesTicker");
+      ticker.innerHTML = "";
+      liveWishes.slice(0, 10).forEach(w => {
+        const div = document.createElement("div");
+        div.className = "ticker-item";
+        div.innerHTML = `
+          <div class="ticker-sender">💌 ${w.sender}</div>
+          <div class="ticker-msg">${w.msg}</div>
+        `;
+        ticker.appendChild(div);
+      });
+    }
+    renderTicker();
 
     // Populate Songs
-    const songsGrid = document.getElementById("stageSongsGrid");
-    liveSongs.forEach(s => {
-      const div = document.createElement("div");
-      div.className = "song-card-live";
-      div.innerHTML = `
-        <div class="song-card-title">🎵 ${s.title}</div>
-        <div class="song-card-sender">🎤 ${s.artist} • Người tặng: <strong>${s.sender}</strong></div>
-        <div class="song-card-note">"${s.note}"</div>
-      `;
-      songsGrid.appendChild(div);
-    });
+    function renderSongs() {
+      const songsGrid = document.getElementById("stageSongsGrid");
+      songsGrid.innerHTML = "";
+      liveSongs.forEach(s => {
+        const div = document.createElement("div");
+        div.className = "song-card-live";
+        div.innerHTML = `
+          <div class="song-card-title">🎵 ${s.title}</div>
+          <div class="song-card-sender">🎤 ${s.artist} • Người tặng: <strong>${s.sender}</strong></div>
+          <div class="song-card-note">"${s.note}"</div>
+        `;
+        songsGrid.appendChild(div);
+      });
+    }
+    renderSongs();
 
     // ================= LUCKY DRAW WHEEL CANVAS =================
     const wheelCanvas = document.getElementById("wheelCanvas");
     const ctx = wheelCanvas.getContext("2d");
-    const segments = [
+    let segments = [
       { text: "LUCKY-789", color: "#8B263E" },
       { text: "LUCKY-352", color: "#D4AF37" },
       { text: "LUCKY-618", color: "#C1121F" },
@@ -644,6 +699,18 @@
       { text: "LUCKY-888", color: "#8B263E" },
       { text: "LUCKY-520", color: "#D4AF37" }
     ];
+
+    const wheelColors = ["#8B263E", "#D4AF37", "#C1121F", "#2B0A16", "#E29578", "#4A7C59"];
+
+    function updateWheelSegments(realLuckyPool) {
+      if (!realLuckyPool || realLuckyPool.length === 0) return;
+      segments = realLuckyPool.slice(0, 12).map((item, idx) => ({
+        text: item.lucky,
+        sender: item.sender,
+        color: wheelColors[idx % wheelColors.length]
+      }));
+      drawWheel();
+    }
 
     let currentAngle = 0;
     let isSpinning = false;

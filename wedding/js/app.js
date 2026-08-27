@@ -11,7 +11,7 @@
 
 // CẤU HÌNH GOOGLE APPS SCRIPT WEBHOOK URL
 // (Sau khi deploy theo file setup_guide.md, dán URL vào đây. Nếu để trống, app sẽ chạy chế độ Mock Preview)
-const GAS_ENDPOINT_URL = ""; 
+const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbw920JEnBZVPlq0x9T_gLkZ7lcNerIB2m62O3Tm9ebVAw82dlU2YNjKjw6YrYtsyGFX/exec";
 
 // STATE MANAGEMENT
 const state = {
@@ -198,7 +198,7 @@ function initUploadDropzone() {
     uploadBtn.disabled = state.selectedFiles.length === 0;
   }
 
-  window.removeMedia = function(index) {
+  window.removeMedia = function (index) {
     state.selectedFiles.splice(index, 1);
     renderMediaPreviews();
   };
@@ -285,7 +285,7 @@ function initVoiceRecorder() {
           const mimeType = state.mediaRecorder.mimeType || "audio/webm";
           state.voiceBlob = new Blob(audioChunks, { type: mimeType });
           state.voiceBase64 = await fileToBase64(state.voiceBlob);
-          
+
           const audioUrl = URL.createObjectURL(state.voiceBlob);
           audioPreview.src = audioUrl;
           audioPreviewContainer.style.display = "block";
@@ -578,7 +578,7 @@ function drawWeddingFrame(img, canvas, theme = "rose_gold") {
   const margin = 55;
   const photoW = targetWidth - margin * 2;
   const photoH = targetHeight - 260;
-  
+
   const imgRatio = img.width / img.height;
   const targetRatio = photoW / photoH;
   let sx, sy, sWidth, sHeight;

@@ -2,30 +2,21 @@
  * =========================================================================
  * WEDDING QR GUESTBOOK & MEDIA HUB — CLIENT-SIDE JAVASCRIPT LOGIC
  * =========================================================================
+ * Chuẩn UI/UX Mobbin & Apple Photos — Tối ưu hóa tải song song lên Google Drive
  * Tương thích 100% Mobile Safari (iOS) & Chrome (Android)
- * Không cần đăng nhập — Hỗ trợ nén ảnh client-side & Upload Google Drive API
- * Google Drive Target Folder ID (Thư mục TEST): 1DepYTCjsYJL-rUqdfV9_WknzQTgzHsyz
- * Cô dâu & Chú rể: Lucy & Andrew
+ * Không cần đăng nhập — Nén ảnh client-side & Upload Google Drive API
+ * Google Drive Target: Lucy & Andrew Wedding 2026
  * =========================================================================
  */
 
 // CẤU HÌNH GOOGLE APPS SCRIPT WEBHOOK URL
-// (Sau khi deploy theo file setup_guide.md, dán URL vào đây. Nếu để trống, app sẽ chạy chế độ Mock Preview)
-const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbxOGg1lU-DbDoId6CgwnrOiY7u1NxV0zobCd3bwhgAFO4CFGUgNK8Z23lj2pGoZJ80W/exec";
+const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbwoHOMQde92r4LciK_DVYuY0sWw8LEOCFi7NGA5_kh6luTUIgqEdhEyuW4cLm6xIKst/exec";
 
 // STATE MANAGEMENT
 const state = {
   currentDate: "12-09", // '11-09' (Tiệc Nhà Gái) hoặc '12-09' (Lễ Cưới Chính)
-  activeTab: "upload",
-  selectedFiles: [], // Danh sách ảnh/video
-  voiceBlob: null, // Audio blob ghi âm
-  voiceBase64: null,
-  isRecording: false,
-  mediaRecorder: null,
-  voiceTimerInterval: null,
-  recordSeconds: 0,
-  currentTheme: "rose_gold",
-  wishes: [],
+  selectedFiles: [],    // Danh sách ảnh & video đã chọn
+  isUploading: false,
   songs: []
 };
 
@@ -33,14 +24,13 @@ const state = {
 document.addEventListener("DOMContentLoaded", () => {
   initPetals();
   initDateSwitcher();
-  initTabs();
+  initSenderQuickTags();
   initUploadDropzone();
-  initVoiceRecorder();
-  initWishForm();
+  initImageLightbox();
+  initSongAccordion();
   initSongForm();
-  initPhotoFrameTool();
   initLuckyModal();
-  loadMockData();
+  loadMockSongs();
 });
 
 /**
@@ -49,15 +39,15 @@ document.addEventListener("DOMContentLoaded", () => {
 function initPetals() {
   const container = document.getElementById("petalsContainer");
   if (!container) return;
-  const count = 16;
+  const count = 14;
   for (let i = 0; i < count; i++) {
     const petal = document.createElement("div");
     petal.className = "petal";
     petal.style.left = `${Math.random() * 100}vw`;
-    petal.style.animationDuration = `${8 + Math.random() * 10}s`;
+    petal.style.animationDuration = `${9 + Math.random() * 8}s`;
     petal.style.animationDelay = `${Math.random() * 5}s`;
-    petal.style.width = `${12 + Math.random() * 10}px`;
-    petal.style.height = `${16 + Math.random() * 12}px`;
+    petal.style.width = `${12 + Math.random() * 8}px`;
+    petal.style.height = `${16 + Math.random() * 10}px`;
     container.appendChild(petal);
   }
 }
@@ -77,7 +67,7 @@ function initDateSwitcher() {
     btn11.classList.add("active");
     btn12.classList.remove("active");
     if (bannerTag) bannerTag.innerHTML = "🌸 Đang chọn: <strong>11/09 — Tiệc Nhà Gái</strong>";
-    showToast("Đã chọn sự kiện: 11/09 (Tiệc Nhà Gái) 🌸");
+    showToast("Đã chuyển sang: 11/09 (Tiệc Nhà Gái) 🌸");
   });
 
   btn12.addEventListener("click", () => {
@@ -85,134 +75,297 @@ function initDateSwitcher() {
     btn12.classList.add("active");
     btn11.classList.remove("active");
     if (bannerTag) bannerTag.innerHTML = "💍 Đang chọn: <strong>12/09 — Lễ Cưới Chính</strong>";
-    showToast("Đã chọn sự kiện: 12/09 (Lễ Cưới Chính) 💍");
+    showToast("Đã chuyển sang: 12/09 (Lễ Cưới Chính) 💍");
   });
 }
 
 /**
- * 📑 Điều hướng Tab
+ * 🏷️ Quick Sender Tags (Chạm 1 lần để điền nhanh nhóm/mối quan hệ)
  */
-function initTabs() {
-  const tabPills = document.querySelectorAll(".tab-pill");
-  const tabPanes = document.querySelectorAll(".tab-pane");
+function initSenderQuickTags() {
+  const senderInput = document.getElementById("mediaSenderName");
+  const tags = document.querySelectorAll(".sender-tag-chip");
 
-  tabPills.forEach(pill => {
-    pill.addEventListener("click", () => {
-      const targetTab = pill.getAttribute("data-tab");
-      state.activeTab = targetTab;
+  if (!senderInput || !tags.length) return;
 
-      tabPills.forEach(p => p.classList.remove("active"));
-      tabPanes.forEach(pane => pane.classList.remove("active"));
-
-      pill.classList.add("active");
-      const targetPane = document.getElementById(`tab-${targetTab}`);
-      if (targetPane) targetPane.classList.add("active");
+  tags.forEach(tag => {
+    tag.addEventListener("click", () => {
+      tags.forEach(t => t.classList.remove("active"));
+      tag.classList.add("active");
+      senderInput.value = tag.innerText.replace(/^[^\s]+\s/, "");
+      senderInput.focus();
     });
   });
 }
 
 /**
- * 📸 Upload Media (Ảnh & Video) + Nén ảnh tại Client
+ * ⚡ Tiện ích thực thi tác vụ bất đồng bộ song song có kiểm soát số luồng (Worker Pool)
+ */
+async function runParallelPool(items, concurrency, taskFn, onProgress) {
+  let currentIndex = 0;
+  let completedCount = 0;
+  const total = items.length;
+  const results = new Array(total);
+
+  if (total === 0) return results;
+
+  const workerCount = Math.min(concurrency, total);
+  const workers = Array.from({ length: workerCount }, async () => {
+    while (currentIndex < total) {
+      const idx = currentIndex++;
+      const item = items[idx];
+      try {
+        results[idx] = await taskFn(item, idx);
+      } catch (err) {
+        results[idx] = { error: err };
+      }
+      completedCount++;
+      if (typeof onProgress === "function") {
+        onProgress(completedCount, total, item, idx, results[idx]);
+      }
+    }
+  });
+
+  await Promise.all(workers);
+  return results;
+}
+
+/**
+ * 📸 Upload Media (Ảnh & Video) — Chuẩn Mobbin Action Buttons & Parallel Drive Upload
  */
 function initUploadDropzone() {
-  const dropzone = document.getElementById("mediaDropzone");
-  const fileInput = document.getElementById("mediaFileInput");
+  const cameraInput = document.getElementById("cameraFileInput");
+  const mediaInput = document.getElementById("mediaFileInput");
+  const videoInput = document.getElementById("videoFileInput");
+
+  const btnCamera = document.getElementById("btnActionCamera");
+  const btnLibrary = document.getElementById("btnActionLibrary");
+  const btnVideo = document.getElementById("btnActionVideo");
+  const btnAddMore = document.getElementById("btnAddMoreMedia");
+  const btnClearAll = document.getElementById("btnClearAllMedia");
+
   const previewGrid = document.getElementById("mediaPreviewGrid");
   const uploadBtn = document.getElementById("btnSubmitMedia");
+  const floatingSubmitBtn = document.getElementById("btnFloatingSubmit");
+  const floatingBar = document.getElementById("floatingBottomBar");
+  const floatingCountText = document.getElementById("floatingCountText");
+
+  const selectedHeader = document.getElementById("selectedMediaHeader");
+  const mediaCountText = document.getElementById("mediaCountText");
+  const addMoreWrapper = document.getElementById("addMoreWrapper");
   const compressHint = document.getElementById("compressHint");
 
-  if (!dropzone || !fileInput) return;
+  const progressWrapper = document.getElementById("uploadProgressWrapper");
+  const progressText = document.getElementById("uploadProgressText");
+  const progressPercent = document.getElementById("uploadProgressPercent");
+  const progressBarFill = document.getElementById("uploadProgressBarFill");
 
-  dropzone.addEventListener("click", () => fileInput.click());
+  if (!mediaInput || !previewGrid || !uploadBtn) return;
 
-  dropzone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropzone.classList.add("dragover");
-  });
+  // 1. Action Button Triggers
+  if (btnCamera && cameraInput) {
+    btnCamera.addEventListener("click", () => {
+      if (!state.isUploading) cameraInput.click();
+    });
+    cameraInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files.length) handleFiles(e.target.files);
+    });
+  }
 
-  dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+  if (btnLibrary && mediaInput) {
+    btnLibrary.addEventListener("click", () => {
+      if (!state.isUploading) mediaInput.click();
+    });
+    mediaInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files.length) handleFiles(e.target.files);
+    });
+  }
 
-  dropzone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropzone.classList.remove("dragover");
-    if (e.dataTransfer.files) handleFiles(e.dataTransfer.files);
-  });
+  if (btnVideo && videoInput) {
+    btnVideo.addEventListener("click", () => {
+      if (!state.isUploading) videoInput.click();
+    });
+    videoInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files.length) handleFiles(e.target.files);
+    });
+  }
 
-  fileInput.addEventListener("change", (e) => {
-    if (e.target.files) handleFiles(e.target.files);
-  });
+  if (btnAddMore && mediaInput) {
+    btnAddMore.addEventListener("click", () => {
+      if (!state.isUploading) mediaInput.click();
+    });
+  }
 
+  if (btnClearAll) {
+    btnClearAll.addEventListener("click", () => {
+      if (state.isUploading) return;
+      state.selectedFiles = [];
+      renderMediaPreviews();
+      showToast("Đã xóa danh sách ảnh đã chọn");
+    });
+  }
+
+  // 2. Xử lý nén & chuẩn bị file song song để render preview siêu tốc
   async function handleFiles(files) {
-    if (!files.length) return;
-    compressHint.style.display = "block";
-    compressHint.innerText = "⚡ Đang xử lý & tối ưu hóa file để gửi nhanh...";
+    const fileList = Array.from(files);
+    if (!fileList.length) return;
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
+    compressHint.style.display = "block";
+    compressHint.innerText = `⚡ Đang xử lý & tối ưu ${fileList.length} file...`;
+
+    const COMPRESS_CONCURRENCY = 3; // Nén tối đa 3 ảnh đồng thời để bảo toàn RAM trên mobile
+    let processedCount = 0;
+
+    await runParallelPool(fileList, COMPRESS_CONCURRENCY, async (file) => {
       if (file.type.startsWith("image/")) {
         const compressedBase64 = await compressImage(file, 1600, 0.82);
-        state.selectedFiles.push({
+        return {
+          id: `media_${Date.now()}_${Math.random().toString(36).substr(2, 7)}`,
           file: file,
           name: file.name,
           mimeType: "image/jpeg",
           base64: compressedBase64,
-          previewUrl: compressedBase64
-        });
+          previewUrl: compressedBase64,
+          status: "pending" // 'pending' | 'uploading' | 'success' | 'error'
+        };
       } else if (file.type.startsWith("video/")) {
         const base64 = await fileToBase64(file);
-        state.selectedFiles.push({
+        return {
+          id: `media_${Date.now()}_${Math.random().toString(36).substr(2, 7)}`,
           file: file,
           name: file.name,
           mimeType: file.type || "video/mp4",
           base64: base64,
-          previewUrl: ""
-        });
+          previewUrl: "",
+          status: "pending"
+        };
       } else {
         const base64 = await fileToBase64(file);
-        state.selectedFiles.push({
+        return {
+          id: `media_${Date.now()}_${Math.random().toString(36).substr(2, 7)}`,
           file: file,
           name: file.name,
           mimeType: file.type || "application/octet-stream",
           base64: base64,
-          previewUrl: ""
-        });
+          previewUrl: "",
+          status: "pending"
+        };
       }
-    }
+    }, (completed, total, file, idx, result) => {
+      processedCount++;
+      compressHint.innerText = `⚡ Đang nén tối ưu: ${processedCount}/${total} file...`;
+      if (result && !result.error) {
+        state.selectedFiles.push(result);
+        renderMediaPreviews();
+      }
+    });
 
-    compressHint.innerText = `✅ Đã sẵn sàng ${state.selectedFiles.length} file để gửi`;
+    compressHint.innerText = `✅ Đã sẵn sàng ${state.selectedFiles.length} file để gửi lên Drive`;
     renderMediaPreviews();
   }
 
+  // 3. Render lưới ảnh preview chuẩn Apple Photos Grid
   function renderMediaPreviews() {
     previewGrid.innerHTML = "";
+    const count = state.selectedFiles.length;
+
+    if (count === 0) {
+      if (selectedHeader) selectedHeader.style.display = "none";
+      if (addMoreWrapper) addMoreWrapper.style.display = "none";
+      if (compressHint) compressHint.style.display = "none";
+      if (floatingBar) floatingBar.style.display = "none";
+      uploadBtn.disabled = true;
+      uploadBtn.innerHTML = `<span>📤 Gửi Lên Google Drive</span>`;
+      return;
+    }
+
+    if (selectedHeader) selectedHeader.style.display = "flex";
+    if (mediaCountText) mediaCountText.innerText = `${count} file đã chọn`;
+    if (addMoreWrapper) addMoreWrapper.style.display = "block";
+    if (floatingBar && !state.isUploading) {
+      floatingBar.style.display = "block";
+      if (floatingCountText) floatingCountText.innerText = `${count} ảnh`;
+    }
+
     state.selectedFiles.forEach((item, index) => {
       const div = document.createElement("div");
       div.className = "preview-item";
+      div.id = `preview-item-${index}`;
+
+      let mediaHtml = "";
       if (item.mimeType.startsWith("image/")) {
-        div.innerHTML = `
-          <img src="${item.previewUrl}" alt="Preview" />
-          <button class="remove-btn" onclick="removeMedia(${index})">✕</button>
-        `;
+        mediaHtml = `<img src="${item.previewUrl}" alt="Preview" onclick="openLightbox(${index})" style="cursor: zoom-in;" />`;
       } else {
-        div.innerHTML = `
+        mediaHtml = `
           <div style="background: #2C1810; color: #fff; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; text-align: center; padding: 4px;">
-            📁 File<br><span style="font-size: 0.65rem; opacity: 0.8;">${item.name.substring(0, 10)}...</span>
+            🎬 Video<br><span style="font-size: 0.65rem; opacity: 0.8;">${item.name.substring(0, 10)}...</span>
           </div>
-          <button class="remove-btn" onclick="removeMedia(${index})">✕</button>
         `;
       }
+
+      const removeBtnHtml = !state.isUploading
+        ? `<button class="remove-btn" onclick="removeMedia(${index})" title="Xóa ảnh này">✕</button>`
+        : "";
+
+      const overlayHtml = getStatusOverlayHtml(item.status);
+
+      div.innerHTML = `${mediaHtml}${removeBtnHtml}${overlayHtml}`;
       previewGrid.appendChild(div);
     });
 
-    uploadBtn.disabled = state.selectedFiles.length === 0;
+    uploadBtn.disabled = state.isUploading || count === 0;
+    uploadBtn.innerHTML = `<span>📤 Gửi ${count} Ảnh/Video Lên Drive</span>`;
+  }
+
+  function getStatusOverlayHtml(status) {
+    if (status === "uploading") {
+      return `<div class="preview-overlay status-uploading"><div class="preview-spinner"></div><span>Đang tải...</span></div>`;
+    } else if (status === "success") {
+      return `<div class="preview-overlay status-success"><span class="status-badge-icon">✅</span><span>Đã xong</span></div>`;
+    } else if (status === "error") {
+      return `<div class="preview-overlay status-error"><span class="status-badge-icon">⚠️</span><span>Lỗi</span></div>`;
+    }
+    return "";
+  }
+
+  // Cập nhật trạng thái từng thumbnail theo thời gian thực
+  function updateItemStatusUI(index, status) {
+    const itemEl = document.getElementById(`preview-item-${index}`);
+    if (!itemEl) return;
+
+    const oldOverlay = itemEl.querySelector(".preview-overlay");
+    if (oldOverlay) oldOverlay.remove();
+
+    const newOverlayHtml = getStatusOverlayHtml(status);
+    if (newOverlayHtml) {
+      itemEl.insertAdjacentHTML("beforeend", newOverlayHtml);
+    }
   }
 
   window.removeMedia = function (index) {
+    if (state.isUploading) return;
     state.selectedFiles.splice(index, 1);
     renderMediaPreviews();
+    if (state.selectedFiles.length === 0) {
+      if (progressWrapper) progressWrapper.style.display = "none";
+    }
   };
 
-  uploadBtn.addEventListener("click", async () => {
+  window.openLightbox = function (index) {
+    const item = state.selectedFiles[index];
+    if (!item || !item.previewUrl) return;
+    const modal = document.getElementById("imageLightboxModal");
+    const img = document.getElementById("lightboxImage");
+    const cap = document.getElementById("lightboxCaption");
+    if (modal && img) {
+      img.src = item.previewUrl;
+      if (cap) cap.innerText = item.name || "Ảnh kỷ niệm";
+      modal.classList.add("show");
+    }
+  };
+
+  // 4. Bắt đầu quá trình Tải song song lên Google Drive
+  async function triggerStartUpload() {
     const senderName = document.getElementById("mediaSenderName").value.trim() || "Khách mời";
 
     if (state.selectedFiles.length === 0) {
@@ -220,248 +373,164 @@ function initUploadDropzone() {
       return;
     }
 
+    state.isUploading = true;
     uploadBtn.disabled = true;
-    uploadBtn.innerHTML = `⏳ Đang tải lên Drive (${state.selectedFiles.length} ảnh)...`;
+    uploadBtn.innerHTML = `<span>⏳ Đang tải lên Drive...</span>`;
+    if (floatingBar) floatingBar.style.display = "none";
+
+    renderMediaPreviews();
+
+    if (progressWrapper) {
+      progressWrapper.style.display = "block";
+      progressBarFill.style.width = "0%";
+      progressPercent.innerText = "0%";
+      progressText.innerText = `⚡ Đang tải lên Drive... (0/${state.selectedFiles.length})`;
+    }
+
+    const UPLOAD_CONCURRENCY = 3; // 🚀 Tải 3 kết nối song song
+    const totalFiles = state.selectedFiles.length;
 
     try {
-      if (GAS_ENDPOINT_URL) {
-        for (const item of state.selectedFiles) {
-          await fetch(GAS_ENDPOINT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify({
-              action: "uploadMedia",
-              eventDate: state.currentDate,
-              senderName: senderName,
-              fileName: item.name,
-              mimeType: item.mimeType,
-              fileData: item.base64
-            })
-          });
-        }
-      } else {
-        await new Promise(r => setTimeout(r, 1200));
-      }
-
-      triggerConfetti();
-      showLuckyTicketModal(senderName);
-      showToast("🎉 Tải ảnh lên Google Drive thành công! Cảm ơn bạn!");
-      state.selectedFiles = [];
-      renderMediaPreviews();
-      document.getElementById("mediaFileInput").value = "";
-      compressHint.style.display = "none";
-    } catch (err) {
-      console.error(err);
-      showToast("❌ Có lỗi xảy ra, vui lòng thử lại!");
-    } finally {
-      uploadBtn.disabled = false;
-      uploadBtn.innerHTML = `📤 Gửi Ảnh Lên Google Drive`;
-    }
-  });
-}
-
-/**
- * 🎙️ Voice Guestbook (Ghi âm lời chúc bằng giọng nói)
- */
-function initVoiceRecorder() {
-  const btnToggle = document.getElementById("btnRecordToggle");
-  const pulseRing = document.getElementById("pulseRing");
-  const statusText = document.getElementById("voiceStatus");
-  const timerText = document.getElementById("voiceTimer");
-  const audioPreviewContainer = document.getElementById("audioPreviewContainer");
-  const audioPreview = document.getElementById("audioPreview");
-  const btnReset = document.getElementById("btnResetVoice");
-  const btnSubmit = document.getElementById("btnSubmitVoice");
-
-  if (!btnToggle) return;
-
-  let audioChunks = [];
-
-  btnToggle.addEventListener("click", async () => {
-    if (!state.isRecording) {
-      // Bắt đầu ghi âm
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        state.mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-
-        state.mediaRecorder.ondataavailable = (e) => {
-          if (e.data.size > 0) audioChunks.push(e.data);
-        };
-
-        state.mediaRecorder.onstop = async () => {
-          const mimeType = state.mediaRecorder.mimeType || "audio/webm";
-          state.voiceBlob = new Blob(audioChunks, { type: mimeType });
-          state.voiceBase64 = await fileToBase64(state.voiceBlob);
-
-          const audioUrl = URL.createObjectURL(state.voiceBlob);
-          audioPreview.src = audioUrl;
-          audioPreviewContainer.style.display = "block";
-          btnSubmit.disabled = false;
-          statusText.innerText = "✅ Đã ghi âm xong! Bạn có thể nghe lại bên dưới:";
-        };
-
-        state.mediaRecorder.start();
-        state.isRecording = true;
-        btnToggle.classList.add("recording");
-        pulseRing.classList.add("active");
-        statusText.innerText = "🔴 Đang ghi âm... Hãy nói lời chúc của bạn!";
-        timerText.style.display = "block";
-        audioPreviewContainer.style.display = "none";
-        btnSubmit.disabled = true;
-
-        state.recordSeconds = 0;
-        timerText.innerText = "00:00";
-        state.voiceTimerInterval = setInterval(() => {
-          state.recordSeconds++;
-          const mins = String(Math.floor(state.recordSeconds / 60)).padStart(2, '0');
-          const secs = String(state.recordSeconds % 60).padStart(2, '0');
-          timerText.innerText = `${mins}:${secs}`;
-          if (state.recordSeconds >= 60) {
-            btnToggle.click();
+      await runParallelPool(
+        state.selectedFiles,
+        UPLOAD_CONCURRENCY,
+        async (item, index) => {
+          if (item.status === "success") {
+            return { success: true };
           }
-        }, 1000);
 
-      } catch (err) {
-        console.error("Mic error:", err);
-        showToast("⚠️ Vui lòng cấp quyền Micro trong trình duyệt để ghi âm!");
-      }
-    } else {
-      // Dừng ghi âm
-      state.isRecording = false;
-      btnToggle.classList.remove("recording");
-      pulseRing.classList.remove("active");
-      clearInterval(state.voiceTimerInterval);
-      if (state.mediaRecorder && state.mediaRecorder.state !== "inactive") {
-        state.mediaRecorder.stop();
-        state.mediaRecorder.stream.getTracks().forEach(t => t.stop());
-      }
-    }
-  });
+          item.status = "uploading";
+          updateItemStatusUI(index, "uploading");
 
-  btnReset.addEventListener("click", () => {
-    state.voiceBlob = null;
-    state.voiceBase64 = null;
-    audioPreview.src = "";
-    audioPreviewContainer.style.display = "none";
-    timerText.style.display = "none";
-    statusText.innerText = "Bấm vào biểu tượng Micro để bắt đầu ghi âm lại";
-    btnSubmit.disabled = true;
-  });
+          let isSuccess = false;
+          for (let attempt = 0; attempt < 2; attempt++) {
+            try {
+              if (GAS_ENDPOINT_URL) {
+                await fetch(GAS_ENDPOINT_URL, {
+                  method: "POST",
+                  mode: "no-cors",
+                  headers: { "Content-Type": "text/plain" },
+                  body: JSON.stringify({
+                    action: "uploadMedia",
+                    eventDate: state.currentDate,
+                    senderName: senderName,
+                    fileName: item.name,
+                    mimeType: item.mimeType,
+                    fileData: item.base64
+                  })
+                });
+              } else {
+                await new Promise(r => setTimeout(r, 600 + Math.random() * 700));
+              }
+              isSuccess = true;
+              break;
+            } catch (err) {
+              console.warn(`[Retry ${attempt + 1}/2] Lỗi tải file ${item.name}:`, err);
+              if (attempt === 0) await new Promise(r => setTimeout(r, 500));
+            }
+          }
 
-  btnSubmit.addEventListener("click", async () => {
-    const sender = document.getElementById("voiceSender").value.trim() || "Khách mời";
+          if (isSuccess) {
+            item.status = "success";
+            updateItemStatusUI(index, "success");
+            return { success: true };
+          } else {
+            item.status = "error";
+            updateItemStatusUI(index, "error");
+            return { success: false };
+          }
+        },
+        (completed, total) => {
+          const pct = Math.round((completed / total) * 100);
+          if (progressBarFill) progressBarFill.style.width = `${pct}%`;
+          if (progressPercent) progressPercent.innerText = `${pct}%`;
+          if (progressText) progressText.innerText = `⚡ Đang tải lên Drive... (${completed}/${total})`;
+        }
+      );
 
-    if (!state.voiceBase64) {
-      showToast("Vui lòng ghi âm trước khi gửi nhé! 🎙️");
-      return;
-    }
+      const failedCount = state.selectedFiles.filter(f => f.status === "error").length;
 
-    btnSubmit.disabled = true;
-    btnSubmit.innerHTML = "⏳ Đang gửi ghi âm lên Drive...";
+      if (failedCount === 0) {
+        if (progressText) progressText.innerText = `🎉 Đã tải hoàn tất ${totalFiles}/${totalFiles} file!`;
+        if (progressBarFill) progressBarFill.style.width = "100%";
+        if (progressPercent) progressPercent.innerText = "100%";
 
-    try {
-      if (GAS_ENDPOINT_URL) {
-        await fetch(GAS_ENDPOINT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify({
-            action: "uploadMedia",
-            eventDate: state.currentDate,
-            senderName: sender,
-            fileName: `Voice_LoiChuc_${Date.now()}.webm`,
-            mimeType: state.voiceBlob.type || "audio/webm",
-            fileData: state.voiceBase64
-          })
-        });
+        triggerConfetti();
+        showLuckyTicketModal(senderName);
+        showToast(`🎉 Tải thành công ${totalFiles} ảnh lên Google Drive của Lucy & Andrew!`);
+
+        setTimeout(() => {
+          state.selectedFiles = [];
+          state.isUploading = false;
+          renderMediaPreviews();
+          if (mediaInput) mediaInput.value = "";
+          if (cameraInput) cameraInput.value = "";
+          if (videoInput) videoInput.value = "";
+          if (compressHint) compressHint.style.display = "none";
+          if (progressWrapper) progressWrapper.style.display = "none";
+        }, 1500);
       } else {
-        await new Promise(r => setTimeout(r, 1200));
+        state.isUploading = false;
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = `<span>🔄 Thử Lại (${failedCount} file chưa xong)</span>`;
+        if (floatingBar) floatingBar.style.display = "block";
+        renderMediaPreviews();
+        showToast(`⚠️ Có ${failedCount} file tải chưa thành công. Bấm 'Thử Lại' để gửi tiếp nhé!`);
       }
-
-      triggerConfetti();
-      showLuckyTicketModal(sender);
-      showToast("🎉 Đã gửi lời chúc giọng nói lên Google Drive của Lucy & Andrew!");
-      btnReset.click();
     } catch (err) {
-      console.error(err);
+      console.error("Lỗi upload:", err);
+      state.isUploading = false;
+      uploadBtn.disabled = false;
+      uploadBtn.innerHTML = `<span>📤 Gửi Lên Google Drive</span>`;
+      if (floatingBar) floatingBar.style.display = "block";
+      renderMediaPreviews();
       showToast("❌ Có lỗi xảy ra, vui lòng thử lại!");
-    } finally {
-      btnSubmit.disabled = false;
-      btnSubmit.innerHTML = "💌 Gửi Đoạn Ghi Âm Lên Drive";
     }
-  });
+  }
+
+  uploadBtn.addEventListener("click", triggerStartUpload);
+  if (floatingSubmitBtn) floatingSubmitBtn.addEventListener("click", triggerStartUpload);
 }
 
 /**
- * 💌 Sổ Lưu Bút & Gửi Lời Chúc
+ * 🖼️ Image Lightbox (Phóng to ảnh khi chạm vào thumbnail)
  */
-function initWishForm() {
-  const wishForm = document.getElementById("wishForm");
-  const wishInput = document.getElementById("wishMessage");
-  const chips = document.querySelectorAll(".wish-chip");
+function initImageLightbox() {
+  const modal = document.getElementById("imageLightboxModal");
+  const overlay = document.getElementById("lightboxOverlay");
+  const closeBtn = document.getElementById("btnCloseLightbox");
 
-  chips.forEach(chip => {
-    chip.addEventListener("click", () => {
-      wishInput.value = chip.innerText.replace(/^[^\s]+\s/, "");
-      wishInput.focus();
-    });
-  });
+  if (!modal) return;
 
-  if (!wishForm) return;
+  const closeModal = () => modal.classList.remove("show");
 
-  wishForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const sender = document.getElementById("wishSender").value.trim() || "Ẩn danh";
-    const message = wishInput.value.trim();
+  if (overlay) overlay.addEventListener("click", closeModal);
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
 
-    if (!message) {
-      showToast("Vui lòng nhập lời chúc nhé! ❤️");
-      return;
-    }
-
-    const luckyNum = generateLuckyNumber();
-
-    const newWish = {
-      senderName: sender,
-      message: message,
-      luckyNumber: luckyNum,
-      eventDate: state.currentDate,
-      time: "Vừa xong"
-    };
-
-    state.wishes.unshift(newWish);
-    renderWishesFeed();
-
-    if (GAS_ENDPOINT_URL) {
-      try {
-        fetch(GAS_ENDPOINT_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain" },
-          body: JSON.stringify({
-            action: "sendWish",
-            eventDate: state.currentDate,
-            senderName: sender,
-            message: message,
-            luckyNumber: luckyNum
-          })
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    wishInput.value = "";
-    triggerConfetti();
-    showLuckyTicketModal(sender, luckyNum);
-    showToast("💌 Lời chúc của bạn đã được gửi tới Lucy & Andrew!");
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("show")) closeModal();
   });
 }
 
 /**
- * 🎵 Yêu cầu bài hát (Request Song)
+ * 🎵 Song Accordion Toggle (Mở rộng/Thu gọn form tặng bài hát)
+ */
+function initSongAccordion() {
+  const header = document.getElementById("songToggleHeader");
+  const collapse = document.getElementById("songFormCollapse");
+  const arrow = document.getElementById("songAccordionArrow");
+
+  if (!header || !collapse) return;
+
+  header.addEventListener("click", () => {
+    const isHidden = collapse.style.display === "none";
+    collapse.style.display = isHidden ? "block" : "none";
+    if (arrow) arrow.classList.toggle("rotated", isHidden);
+  });
+}
+
+/**
+ * 🎶 Yêu cầu bài hát (Request Song Form)
  */
 function initSongForm() {
   const songForm = document.getElementById("songForm");
@@ -510,163 +579,38 @@ function initSongForm() {
     }
 
     songForm.reset();
-    showToast(`🎶 Đã gửi yêu cầu bài hát "${title}" tới ban nhạc!`);
+    showToast(`🎶 Đã gửi bài hát "${title}" tới ban nhạc!`);
+  });
+}
+
+function loadMockSongs() {
+  state.songs = [
+    { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn", sender: "Hội bạn thân", note: "Hát tặng Lucy & Andrew", time: "10 phút trước" },
+    { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Minh Quân", note: "Nhạc ngọt ngào", time: "25 phút trước" }
+  ];
+  renderSongsFeed();
+}
+
+function renderSongsFeed() {
+  const container = document.getElementById("songsFeed");
+  if (!container) return;
+  container.innerHTML = "";
+  state.songs.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "feed-card";
+    div.innerHTML = `
+      <div class="feed-header">
+        <span class="feed-sender">🎵 ${item.title}</span>
+        <span class="feed-time">${item.time}</span>
+      </div>
+      <div class="feed-message"><small>Người gửi:</small> <strong>${item.sender}</strong> ${item.artist ? `(${item.artist})` : ''} ${item.note ? `• <em>"${item.note}"</em>` : ''}</div>
+    `;
+    container.appendChild(div);
   });
 }
 
 /**
- * 🖼️ Khung ảnh kỷ niệm đám cưới đa phong cách (Multi-Theme Frame)
- */
-let cachedUploadedImage = null;
-
-function initPhotoFrameTool() {
-  const frameInput = document.getElementById("framePhotoInput");
-  const canvas = document.getElementById("frameCanvas");
-  const downloadBtn = document.getElementById("btnDownloadFrame");
-  const themeBtns = document.querySelectorAll(".theme-btn");
-
-  if (!frameInput || !canvas) return;
-
-  themeBtns.forEach(btn => {
-    btn.addEventListener("click", () => {
-      themeBtns.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      state.currentTheme = btn.getAttribute("data-theme");
-      if (cachedUploadedImage) {
-        drawWeddingFrame(cachedUploadedImage, canvas, state.currentTheme);
-      }
-    });
-  });
-
-  frameInput.addEventListener("change", (e) => {
-    if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        cachedUploadedImage = img;
-        drawWeddingFrame(img, canvas, state.currentTheme);
-        downloadBtn.style.display = "flex";
-      };
-      img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-
-  downloadBtn.addEventListener("click", () => {
-    const link = document.createElement("a");
-    link.download = `Wedding_Lucy_Andrew_${state.currentTheme}_${state.currentDate}.jpg`;
-    link.href = canvas.toDataURL("image/jpeg", 0.92);
-    link.click();
-    showToast("💾 Đã tải ảnh kỷ niệm có khung về máy!");
-  });
-}
-
-function drawWeddingFrame(img, canvas, theme = "rose_gold") {
-  const ctx = canvas.getContext("2d");
-  const targetWidth = 1080;
-  const targetHeight = 1350; // Tỉ lệ 4:5 chuẩn Instagram/Facebook Story
-  canvas.width = targetWidth;
-  canvas.height = targetHeight;
-
-  // Background Styles according to theme
-  if (theme === "burgundy") {
-    ctx.fillStyle = "#2B0A16";
-  } else if (theme === "botanical") {
-    ctx.fillStyle = "#F4F7F4";
-  } else if (theme === "luxury_gold") {
-    ctx.fillStyle = "#1E1A16";
-  } else {
-    // rose_gold default
-    ctx.fillStyle = "#FFF9F6";
-  }
-  ctx.fillRect(0, 0, targetWidth, targetHeight);
-
-  // Photo Area
-  const margin = 55;
-  const photoW = targetWidth - margin * 2;
-  const photoH = targetHeight - 260;
-
-  const imgRatio = img.width / img.height;
-  const targetRatio = photoW / photoH;
-  let sx, sy, sWidth, sHeight;
-  if (imgRatio > targetRatio) {
-    sHeight = img.height;
-    sWidth = img.height * targetRatio;
-    sx = (img.width - sWidth) / 2;
-    sy = 0;
-  } else {
-    sWidth = img.width;
-    sHeight = img.width / targetRatio;
-    sx = 0;
-    sy = (img.height - sHeight) / 2;
-  }
-
-  ctx.drawImage(img, sx, sy, sWidth, sHeight, margin, margin, photoW, photoH);
-
-  // Border & Badges
-  if (theme === "burgundy") {
-    ctx.strokeStyle = "#D4AF37";
-    ctx.lineWidth = 6;
-    ctx.strokeRect(margin + 10, margin + 10, photoW - 20, photoH - 20);
-
-    ctx.fillStyle = "#F3E5AB";
-    ctx.font = "bold 46px 'Cormorant Garamond', Georgia, serif";
-    ctx.textAlign = "center";
-    ctx.fillText("💍 LUCY & ANDREW 💍", targetWidth / 2, targetHeight - 120);
-
-    ctx.fillStyle = "#FFAAA6";
-    ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
-    ctx.fillText("11.09.2026 — 12.09.2026 • Trăm Năm Hòa Hợp", targetWidth / 2, targetHeight - 70);
-
-  } else if (theme === "botanical") {
-    ctx.strokeStyle = "#4A7C59";
-    ctx.lineWidth = 4;
-    ctx.strokeRect(margin + 10, margin + 10, photoW - 20, photoH - 20);
-
-    ctx.fillStyle = "#2D5A3A";
-    ctx.font = "bold 46px 'Cormorant Garamond', Georgia, serif";
-    ctx.textAlign = "center";
-    ctx.fillText("🌿 Happy Wedding Lucy & Andrew 🌿", targetWidth / 2, targetHeight - 120);
-
-    ctx.fillStyle = "#6B8E23";
-    ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
-    ctx.fillText("11.09.2026 — 12.09.2026 • Sweet Love", targetWidth / 2, targetHeight - 70);
-
-  } else if (theme === "luxury_gold") {
-    ctx.strokeStyle = "#D4AF37";
-    ctx.lineWidth = 5;
-    ctx.strokeRect(margin + 10, margin + 10, photoW - 20, photoH - 20);
-
-    ctx.fillStyle = "#D4AF37";
-    ctx.font = "bold 46px 'Cormorant Garamond', Georgia, serif";
-    ctx.textAlign = "center";
-    ctx.fillText("✨ THE WEDDING CELEBRATION ✨", targetWidth / 2, targetHeight - 120);
-
-    ctx.fillStyle = "#F3E5AB";
-    ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
-    ctx.fillText("Lucy & Andrew • 11.09 — 12.09.2026", targetWidth / 2, targetHeight - 70);
-
-  } else {
-    // Rose Gold
-    ctx.strokeStyle = "#D4AF37";
-    ctx.lineWidth = 4;
-    ctx.strokeRect(margin + 8, margin + 8, photoW - 16, photoH - 16);
-
-    ctx.fillStyle = "#8B263E";
-    ctx.font = "bold 46px 'Cormorant Garamond', Georgia, serif";
-    ctx.textAlign = "center";
-    ctx.fillText("🌸 Happy Wedding Lucy & Andrew 🌸", targetWidth / 2, targetHeight - 120);
-
-    ctx.fillStyle = "#735D55";
-    ctx.font = "26px 'Plus Jakarta Sans', sans-serif";
-    ctx.fillText("11.09.2026 — 12.09.2026 | Trăm Năm Hạnh Phúc", targetWidth / 2, targetHeight - 70);
-  }
-}
-
-/**
- * 🎟️ Lucky Ticket Number & Modal
+ * 🎟️ Lucky Ticket Modal (Hiển thị vé số may mắn & Copy mã)
  */
 function generateLuckyNumber() {
   const rand = Math.floor(100 + Math.random() * 900);
@@ -676,15 +620,26 @@ function generateLuckyNumber() {
 function initLuckyModal() {
   const modal = document.getElementById("luckyModal");
   const closeBtn = document.getElementById("btnCloseLuckyModal");
+  const copyBtn = document.getElementById("btnCopyLuckyCode");
+  const numDisplay = document.getElementById("luckyNumberText");
+
   if (!modal || !closeBtn) return;
 
-  closeBtn.addEventListener("click", () => {
-    modal.classList.remove("show");
-  });
-
+  closeBtn.addEventListener("click", () => modal.classList.remove("show"));
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.classList.remove("show");
   });
+
+  if (copyBtn && numDisplay) {
+    copyBtn.addEventListener("click", () => {
+      const code = numDisplay.innerText.trim();
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("📋 Đã sao chép mã vé số may mắn!");
+      }).catch(() => {
+        showToast("Mã của bạn: " + code);
+      });
+    });
+  }
 }
 
 function showLuckyTicketModal(sender, luckyNumber) {
@@ -712,16 +667,16 @@ function triggerConfetti() {
   const particles = [];
   const colors = ["#E29578", "#8B263E", "#D4AF37", "#FFD1CD", "#FF3366", "#FFFFFF"];
 
-  for (let i = 0; i < 75; i++) {
+  for (let i = 0; i < 80; i++) {
     particles.push({
       x: canvas.width / 2,
       y: canvas.height / 2,
-      vx: (Math.random() - 0.5) * 16,
-      vy: (Math.random() - 0.5) * 16 - 4,
+      vx: (Math.random() - 0.5) * 18,
+      vy: (Math.random() - 0.5) * 18 - 5,
       size: Math.random() * 8 + 4,
       color: colors[Math.floor(Math.random() * colors.length)],
       rotation: Math.random() * 360,
-      rSpeed: (Math.random() - 0.5) * 10,
+      rSpeed: (Math.random() - 0.5) * 12,
       alpha: 1
     });
   }
@@ -734,7 +689,7 @@ function triggerConfetti() {
     particles.forEach(p => {
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.35; // gravity
+      p.vy += 0.35;
       p.rotation += p.rSpeed;
       p.alpha -= 0.015;
 
@@ -762,64 +717,9 @@ function triggerConfetti() {
 }
 
 /**
- * 📦 Dữ liệu mẫu (Mock Data)
- */
-function loadMockData() {
-  state.wishes = [
-    { senderName: "Hội Bạn Đại Học", message: "Chúc bạn Lucy và Andrew trăm năm hòa hợp, sớm đón thiên thần nhỏ nha! 🎉💐", time: "10 phút trước" },
-    { senderName: "Anh Tuấn & Chị Lan", message: "Chúc hai em luôn hạnh phúc và yêu thương nhau như ngày đầu tiên! ❤️", time: "25 phút trước" },
-    { senderName: "Nhóm Bạn Thân Cấp 3", message: "Mãi mãi bên nhau bạn nhé! Nay cô dâu xinh đẹp tuyệt trần! 👰✨", time: "1 giờ trước" }
-  ];
-
-  state.songs = [
-    { title: "Cưới Nhau Đi (Yes I Do)", artist: "Bùi Anh Tuấn", sender: "Hội bạn thân", note: "Hát tặng Lucy & Andrew", time: "15 phút trước" },
-    { title: "Ánh Nắng Của Anh", artist: "Đức Phúc", sender: "Minh Quân", note: "Nhạc ngọt ngào", time: "30 phút trước" }
-  ];
-
-  renderWishesFeed();
-  renderSongsFeed();
-}
-
-function renderWishesFeed() {
-  const container = document.getElementById("wishesFeed");
-  if (!container) return;
-  container.innerHTML = "";
-  state.wishes.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "feed-card";
-    div.innerHTML = `
-      <div class="feed-header">
-        <span class="feed-sender">💌 ${item.senderName}</span>
-        <span class="feed-time">${item.time}</span>
-      </div>
-      <div class="feed-message">${item.message}</div>
-    `;
-    container.appendChild(div);
-  });
-}
-
-function renderSongsFeed() {
-  const container = document.getElementById("songsFeed");
-  if (!container) return;
-  container.innerHTML = "";
-  state.songs.forEach(item => {
-    const div = document.createElement("div");
-    div.className = "feed-card";
-    div.innerHTML = `
-      <div class="feed-header">
-        <span class="feed-sender">🎵 ${item.title}</span>
-        <span class="feed-time">${item.time}</span>
-      </div>
-      <div class="feed-message"><small>Người gửi:</small> <strong>${item.sender}</strong> ${item.artist ? `(${item.artist})` : ''} ${item.note ? `• <em>"${item.note}"</em>` : ''}</div>
-    `;
-    container.appendChild(div);
-  });
-}
-
-/**
  * ⚡ Tiện ích nén ảnh phía Client (Canvas Downscale)
  */
-function compressImage(file, maxDimension = 1600, quality = 0.8) {
+function compressImage(file, maxDimension = 1600, quality = 0.82) {
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -849,8 +749,12 @@ function compressImage(file, maxDimension = 1600, quality = 0.8) {
         const dataUrl = canvas.toDataURL("image/jpeg", quality);
         resolve(dataUrl);
       };
+      img.onerror = () => {
+        fileToBase64(file).then(resolve).catch(() => resolve(e.target.result));
+      };
       img.src = e.target.result;
     };
+    reader.onerror = () => resolve("");
     reader.readAsDataURL(file);
   });
 }

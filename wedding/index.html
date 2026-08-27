@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>🌸 Happy Wedding Lucy & Andrew | Gửi Ảnh & Tặng Bài Hát</title>
-  <link rel="stylesheet" href="css/style.css?v=20260827_2240">
+  <title>🌸 Happy Wedding Lucy & Andrew | Gửi Ảnh & Video Kỷ Niệm</title>
+  <link rel="stylesheet" href="css/style.css?v=20260827_2310">
   <meta name="theme-color" content="#FFF9F6">
 </head>
 <body>
@@ -41,86 +41,150 @@
       </div>
     </div>
 
-    <!-- Navigation Tabs (Chỉ giữ 2 chức năng chính: Gửi Ảnh & Tặng Bài Hát) -->
-    <nav class="nav-tabs" style="grid-template-columns: repeat(2, 1fr);">
-      <button class="tab-pill active" data-tab="upload" type="button">
-        <span class="tab-icon">📸</span>
-        <span>Gửi Ảnh</span>
-      </button>
-      <button class="tab-pill" data-tab="song" type="button">
-        <span class="tab-icon">🎵</span>
-        <span>Tặng Bài Hát</span>
-      </button>
-    </nav>
-
-    <!-- Main Content Panes -->
+    <!-- Main Content: Focused 100% on Photo & Video Drive Upload -->
     <main class="main-content">
 
-      <!-- ================= TAB 1: UPLOAD ẢNH & VIDEO ================= -->
-      <section class="tab-pane active" id="tab-upload">
-        <div class="glass-card">
-          <h2 class="card-title">📸 Gửi Ảnh & Video Kỷ Niệm</h2>
-          <p class="card-desc">Những khoảnh khắc đẹp bạn chụp sẽ được tự động lưu trọn vẹn vào Google Drive của Lucy & Andrew ❤️</p>
-
-          <div class="form-group">
-            <label class="form-label" for="mediaSenderName">Tên của bạn hoặc Nhóm bạn:</label>
-            <input type="text" class="form-input" id="mediaSenderName" placeholder="VD: Lan Anh, Hội Bạn Cấp 3, Bạn Đại Học...">
+      <section class="glass-card main-upload-card">
+        
+        <!-- Header & Cloud Sync Info -->
+        <div class="card-hero-header">
+          <div class="hero-icon-badge">☁️</div>
+          <div>
+            <h2 class="card-title" style="margin-bottom: 2px;">Gửi Ảnh & Video Kỷ Niệm</h2>
+            <p class="card-desc" style="margin-bottom: 0;">Ảnh và video bạn chụp sẽ được lưu trực tiếp vào Google Drive của Lucy & Andrew ❤️</p>
           </div>
+        </div>
 
-          <!-- Dropzone: Kích hoạt Menu chọn Photo, Take Photo, Choose File trên điện thoại -->
-          <div class="dropzone" id="mediaDropzone">
-            <div class="dropzone-icon">📷</div>
-            <div class="dropzone-text">Bấm để chụp ảnh hoặc chọn từ Thư viện</div>
-            <div class="dropzone-hint">Hỗ trợ chụp trực tiếp, chọn ảnh từ Album hoặc Tệp (Tự động nén nét & gửi nhanh)</div>
-            <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple style="display: none;">
+        <!-- Sender Identity & Quick Tags -->
+        <div class="form-group" style="margin-top: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <label class="form-label" for="mediaSenderName" style="margin-bottom: 0;">👤 Tên của bạn hoặc Nhóm bạn:</label>
+            <span style="font-size: 0.72rem; color: var(--primary-rose); font-weight: 600;">(Chạm để chọn nhanh)</span>
           </div>
+          
+          <input type="text" class="form-input" id="mediaSenderName" placeholder="VD: Lan Anh, Hội Bạn Cấp 3, Bạn Đại Học...">
 
-          <div id="compressHint" style="display: none; font-size: 0.78rem; color: #8B263E; margin-top: 10px; text-align: center; font-weight: 600;"></div>
+          <!-- Quick Sender Tags (Mobbin Fast Intake Pattern) -->
+          <div class="quick-sender-tags" id="senderQuickTags">
+            <button type="button" class="sender-tag-chip">🌸 Bạn Cô Dâu</button>
+            <button type="button" class="sender-tag-chip">🤵 Bạn Chú Rể</button>
+            <button type="button" class="sender-tag-chip">🎓 Bạn Đại Học</button>
+            <button type="button" class="sender-tag-chip">🏫 Bạn Cấp 3</button>
+            <button type="button" class="sender-tag-chip">💼 Đồng Nghiệp</button>
+            <button type="button" class="sender-tag-chip">🏡 Gia Đình</button>
+          </div>
+        </div>
 
-          <!-- Previews -->
-          <div class="preview-grid" id="mediaPreviewGrid"></div>
+        <!-- Dual Action Buttons (Mobbin Media Upload Pattern) -->
+        <div class="upload-action-grid">
+          <!-- 1. Open Camera Directly -->
+          <button type="button" class="action-card-btn action-camera" id="btnActionCamera">
+            <div class="action-icon">📸</div>
+            <div class="action-text">
+              <span class="action-title">Chụp Ảnh Ngay</span>
+              <span class="action-sub">Mở Camera chụp liền</span>
+            </div>
+          </button>
 
-          <button class="btn-primary" id="btnSubmitMedia" type="button" disabled>
-            <span>📤 Gửi Lên Google Drive</span>
+          <!-- 2. Pick Multiple from Photo Library -->
+          <button type="button" class="action-card-btn action-library" id="btnActionLibrary">
+            <div class="action-icon">🖼️</div>
+            <div class="action-text">
+              <span class="action-title">Thư Viện Ảnh</span>
+              <span class="action-sub">Chọn nhiều ảnh cùng lúc</span>
+            </div>
           </button>
         </div>
+
+        <!-- Video Upload Sub-Action -->
+        <div class="video-action-bar">
+          <button type="button" class="video-action-btn" id="btnActionVideo">
+            <span>🎥 Hoặc chọn Video quay kỷ niệm từ máy</span>
+          </button>
+        </div>
+
+        <!-- Hidden Inputs for File Selection -->
+        <input type="file" id="cameraFileInput" accept="image/*" capture="environment" style="display: none;">
+        <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple style="display: none;">
+        <input type="file" id="videoFileInput" accept="video/*" style="display: none;">
+
+        <!-- Compression / Processing Notice -->
+        <div id="compressHint" style="display: none; font-size: 0.8rem; color: var(--primary-burgundy); margin-top: 12px; text-align: center; font-weight: 600; padding: 6px 12px; background: rgba(226, 149, 120, 0.15); border-radius: var(--radius-pill);"></div>
+
+        <!-- Media Selection Overview & Actions -->
+        <div class="selected-media-header" id="selectedMediaHeader" style="display: none;">
+          <div class="media-count-badge" id="mediaCountBadge">
+            <span>📸</span> <strong id="mediaCountText">0 ảnh đã chọn</strong>
+          </div>
+          <button type="button" class="btn-clear-all" id="btnClearAllMedia">Xóa tất cả</button>
+        </div>
+
+        <!-- iOS Style Media Preview Grid -->
+        <div class="preview-grid" id="mediaPreviewGrid"></div>
+
+        <!-- Add More Button in Grid -->
+        <div id="addMoreWrapper" style="display: none; margin-top: 10px; text-align: center;">
+          <button type="button" class="btn-add-more" id="btnAddMoreMedia">
+            <span>➕ Thêm ảnh / video khác</span>
+          </button>
+        </div>
+
+        <!-- Real-time Parallel Upload Progress -->
+        <div class="upload-progress-wrapper" id="uploadProgressWrapper" style="display: none;">
+          <div class="upload-progress-header">
+            <span id="uploadProgressText">⚡ Đang tải lên Drive... (0/0)</span>
+            <span class="upload-progress-percent" id="uploadProgressPercent">0%</span>
+          </div>
+          <div class="upload-progress-bar-bg">
+            <div class="upload-progress-bar-fill" id="uploadProgressBarFill"></div>
+          </div>
+          <div class="upload-progress-sub" id="uploadProgressSub">
+            <span>🚀 Đang tải song song 3 luồng siêu tốc • Tự động nén chuẩn HD</span>
+          </div>
+        </div>
+
+        <!-- Main Send Button -->
+        <button class="btn-primary btn-submit-main" id="btnSubmitMedia" type="button" disabled>
+          <span>📤 Gửi Lên Google Drive</span>
+        </button>
+
       </section>
 
-      <!-- ================= TAB 2: TẶNG BÀI HÁT ================= -->
-      <section class="tab-pane" id="tab-song">
-        <div class="glass-card">
-          <h2 class="card-title">🎵 Hộp Yêu Cầu Bài Hát</h2>
-          <p class="card-desc">Muốn ban nhạc/MC bật bài hát ý nghĩa tặng Lucy & Andrew? Gửi yêu cầu tại đây nhé!</p>
+      <!-- Secondary Quick Feature: Tặng Bài Hát (Accordion Toggle) -->
+      <section class="glass-card secondary-song-card" style="margin-top: 14px;">
+        <div class="song-toggle-header" id="songToggleHeader">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 1.2rem;">🎵</span>
+            <strong style="font-size: 0.95rem; color: var(--primary-burgundy);">Tặng Bài Hát Cho Cô Dâu & Chú Rể</strong>
+          </div>
+          <span class="accordion-arrow" id="songAccordionArrow">▼</span>
+        </div>
 
+        <div class="song-form-collapse" id="songFormCollapse" style="display: none; margin-top: 14px; border-top: 1px dashed var(--card-border); padding-top: 14px;">
           <form id="songForm">
             <div class="form-group">
               <label class="form-label" for="songTitle">Tên bài hát:</label>
               <input type="text" class="form-input" id="songTitle" placeholder="VD: Cưới Nhau Đi, Ánh Nắng Của Anh..." required>
             </div>
-
             <div class="form-group">
               <label class="form-label" for="songArtist">Ca sĩ / Thể loại (tùy chọn):</label>
               <input type="text" class="form-input" id="songArtist" placeholder="VD: Bùi Anh Tuấn, Nhạc Acoustic...">
             </div>
-
             <div class="form-group">
               <label class="form-label" for="songSender">Người yêu cầu:</label>
-              <input type="text" class="form-input" id="songSender" placeholder="VD: Nhóm bạn thân, Bạn Đại Học...">
+              <input type="text" class="form-input" id="songSender" placeholder="VD: Lan Anh, Nhóm bạn thân...">
             </div>
-
             <div class="form-group">
               <label class="form-label" for="songNote">Lời nhắn kèm bài hát:</label>
-              <input type="text" class="form-input" id="songNote" placeholder="VD: Tặng chú rể hát cho cô dâu nghe!">
+              <input type="text" class="form-input" id="songNote" placeholder="VD: Hát mừng đôi bạn trẻ trăm năm hạnh phúc!">
             </div>
-
-            <button class="btn-primary" type="submit">
+            <button class="btn-primary" type="submit" style="margin-top: 8px;">
               <span>🎶 Gửi Yêu Cầu Cho Ban Nhạc</span>
             </button>
           </form>
 
-          <!-- Feed -->
-          <div style="margin-top: 24px; border-top: 1px dashed var(--card-border); padding-top: 18px;">
-            <h3 style="font-size: 1rem; color: var(--primary-burgundy); font-weight: 700; margin-bottom: 10px;">🎧 Danh sách chờ phát</h3>
+          <div style="margin-top: 18px; border-top: 1px dashed var(--card-border); padding-top: 12px;">
+            <h4 style="font-size: 0.85rem; color: var(--primary-burgundy); font-weight: 700; margin-bottom: 8px;">🎧 Bài hát vừa được yêu cầu</h4>
             <div class="feed-list" id="songsFeed"></div>
           </div>
         </div>
@@ -128,7 +192,30 @@
 
     </main>
 
-    <!-- Lucky Ticket Modal (Hiển thị sau khi gửi ảnh/bài hát) -->
+    <!-- Sticky Floating Action Bar (Mobbin Bottom Sheet Pattern) -->
+    <div class="floating-bottom-bar" id="floatingBottomBar" style="display: none;">
+      <div class="floating-bar-content">
+        <div class="floating-bar-info">
+          <span class="floating-count" id="floatingCountText">0 ảnh</span>
+          <span class="floating-sub">Sẵn sàng tải lên</span>
+        </div>
+        <button type="button" class="floating-submit-btn" id="btnFloatingSubmit">
+          <span>📤 Gửi Lên Drive ⚡</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Image Lightbox Modal (Tap thumbnail to view full image) -->
+    <div class="lightbox-modal" id="imageLightboxModal">
+      <div class="lightbox-overlay" id="lightboxOverlay"></div>
+      <div class="lightbox-content">
+        <button type="button" class="lightbox-close" id="btnCloseLightbox">✕</button>
+        <img src="" id="lightboxImage" alt="Zoomed Preview" />
+        <div class="lightbox-caption" id="lightboxCaption">Ảnh kỷ niệm</div>
+      </div>
+    </div>
+
+    <!-- Lucky Ticket Modal (Hiển thị sau khi gửi ảnh/bài hát thành công) -->
     <div class="lucky-modal-overlay" id="luckyModal">
       <div class="lucky-card">
         <div class="lucky-header">
@@ -138,9 +225,15 @@
         </div>
         <div class="lucky-number-display" id="luckyNumberText">LUCKY-888</div>
         <div class="lucky-guest-info" id="luckyGuestInfo">Khách mời: Nguyễn Văn A</div>
-        <button class="btn-primary" id="btnCloseLuckyModal" type="button">
-          <span>✨ Tuyệt Vời, Cảm Ơn!</span>
-        </button>
+        
+        <div class="lucky-actions">
+          <button class="btn-copy-ticket" id="btnCopyLuckyCode" type="button">
+            <span>📋 Sao chép mã số</span>
+          </button>
+          <button class="btn-primary" id="btnCloseLuckyModal" type="button" style="margin-top: 8px;">
+            <span>✨ Tuyệt Vời, Cảm Ơn!</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -160,6 +253,6 @@
   <!-- Toast Container -->
   <div class="toast" id="toast"></div>
 
-  <script src="js/app.js?v=20260827_2240"></script>
+  <script src="js/app.js?v=20260827_2310"></script>
 </body>
 </html>

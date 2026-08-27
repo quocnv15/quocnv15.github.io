@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>🌸 Happy Wedding Lucy & Andrew | Sổ Lưu Bút & Up Ảnh Kỷ Niệm</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>🌸 Happy Wedding Lucy & Andrew | Gửi Ảnh & Tặng Bài Hát</title>
+  <link rel="stylesheet" href="css/style.css?v=20260827_2240">
   <meta name="theme-color" content="#FFF9F6">
 </head>
 <body>
@@ -41,50 +41,38 @@
       </div>
     </div>
 
-    <!-- Navigation Tabs -->
-    <nav class="nav-tabs">
+    <!-- Navigation Tabs (Chỉ giữ 2 chức năng chính: Gửi Ảnh & Tặng Bài Hát) -->
+    <nav class="nav-tabs" style="grid-template-columns: repeat(2, 1fr);">
       <button class="tab-pill active" data-tab="upload" type="button">
         <span class="tab-icon">📸</span>
-        <span>Up Ảnh</span>
-      </button>
-      <button class="tab-pill" data-tab="voice" type="button">
-        <span class="tab-icon">🎙️</span>
-        <span>Ghi Âm</span>
-      </button>
-      <button class="tab-pill" data-tab="wish" type="button">
-        <span class="tab-icon">💌</span>
-        <span>Lưu Bút</span>
+        <span>Gửi Ảnh</span>
       </button>
       <button class="tab-pill" data-tab="song" type="button">
         <span class="tab-icon">🎵</span>
         <span>Tặng Bài Hát</span>
-      </button>
-      <button class="tab-pill" data-tab="frame" type="button">
-        <span class="tab-icon">🖼️</span>
-        <span>Khung Ảnh</span>
       </button>
     </nav>
 
     <!-- Main Content Panes -->
     <main class="main-content">
 
-      <!-- ================= TAB 1: UPLOAD ẢNH ================= -->
+      <!-- ================= TAB 1: UPLOAD ẢNH & VIDEO ================= -->
       <section class="tab-pane active" id="tab-upload">
         <div class="glass-card">
-          <h2 class="card-title">📸 Gửi Ảnh Kỷ Niệm</h2>
-          <p class="card-desc">Những bức ảnh đẹp bạn chụp sẽ được tự động lưu trọn vẹn vào Google Drive của Lucy & Andrew ❤️</p>
+          <h2 class="card-title">📸 Gửi Ảnh & Video Kỷ Niệm</h2>
+          <p class="card-desc">Những khoảnh khắc đẹp bạn chụp sẽ được tự động lưu trọn vẹn vào Google Drive của Lucy & Andrew ❤️</p>
 
           <div class="form-group">
             <label class="form-label" for="mediaSenderName">Tên của bạn hoặc Nhóm bạn:</label>
             <input type="text" class="form-input" id="mediaSenderName" placeholder="VD: Lan Anh, Hội Bạn Cấp 3, Bạn Đại Học...">
           </div>
 
-          <!-- Dropzone -->
+          <!-- Dropzone: Kích hoạt Menu chọn Photo, Take Photo, Choose File trên điện thoại -->
           <div class="dropzone" id="mediaDropzone">
-            <div class="dropzone-icon">🖼️</div>
-            <div class="dropzone-text">Bấm để chọn ảnh từ Album</div>
-            <div class="dropzone-hint">Hỗ trợ chọn nhiều ảnh cùng lúc (Tự động tối ưu nét & gửi nhanh)</div>
-            <input type="file" id="mediaFileInput" accept="image/*" multiple style="display: none;">
+            <div class="dropzone-icon">📷</div>
+            <div class="dropzone-text">Bấm để chụp ảnh hoặc chọn từ Thư viện</div>
+            <div class="dropzone-hint">Hỗ trợ chụp trực tiếp, chọn ảnh từ Album hoặc Tệp (Tự động nén nét & gửi nhanh)</div>
+            <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple style="display: none;">
           </div>
 
           <div id="compressHint" style="display: none; font-size: 0.78rem; color: #8B263E; margin-top: 10px; text-align: center; font-weight: 600;"></div>
@@ -93,87 +81,12 @@
           <div class="preview-grid" id="mediaPreviewGrid"></div>
 
           <button class="btn-primary" id="btnSubmitMedia" type="button" disabled>
-            <span>📤 Gửi Ảnh Lên Google Drive</span>
+            <span>📤 Gửi Lên Google Drive</span>
           </button>
         </div>
       </section>
 
-      <!-- ================= TAB 2: VOICE GUESTBOOK (GHI ÂM LỜI CHÚC) ================= -->
-      <section class="tab-pane" id="tab-voice">
-        <div class="glass-card">
-          <h2 class="card-title">🎙️ Gửi Lời Chúc Giọng Nói</h2>
-          <p class="card-desc">Không cần gõ phím! Hãy bấm nút micro để nói những lời chúc ngọt ngào hoặc hài hước nhất gửi tới Lucy & Andrew.</p>
-
-          <div class="form-group">
-            <label class="form-label" for="voiceSender">Tên người gửi:</label>
-            <input type="text" class="form-input" id="voiceSender" placeholder="VD: Bác Hùng, Cô Lan, Nhóm bạn...">
-          </div>
-
-          <!-- Voice Recording Visualizer Box -->
-          <div class="voice-box">
-            <div class="record-btn-wrapper">
-              <button class="record-btn" id="btnRecordToggle" type="button">
-                <span class="record-icon">🎤</span>
-              </button>
-              <div class="record-pulse-ring" id="pulseRing"></div>
-            </div>
-
-            <div class="voice-status" id="voiceStatus">Bấm vào biểu tượng Micro để bắt đầu ghi âm</div>
-            <div class="voice-timer" id="voiceTimer" style="display: none;">00:00</div>
-
-            <!-- Audio Playback Preview -->
-            <div id="audioPreviewContainer" style="display: none; width: 100%; margin-top: 16px;">
-              <audio id="audioPreview" controls style="width: 100%; border-radius: 8px;"></audio>
-              <button class="btn-text-delete" id="btnResetVoice" type="button">🔄 Ghi âm lại</button>
-            </div>
-          </div>
-
-          <button class="btn-primary" id="btnSubmitVoice" type="button" disabled style="margin-top: 16px;">
-            <span>💌 Gửi Đoạn Ghi Âm Lên Drive</span>
-          </button>
-        </div>
-      </section>
-
-      <!-- ================= TAB 3: SỔ LƯU BÚT SỐ & VÉ MAY MẮN ================= -->
-      <section class="tab-pane" id="tab-wish">
-        <div class="glass-card">
-          <h2 class="card-title">💌 Gửi Lời Chúc Phúc</h2>
-          <p class="card-desc">Gửi những lời chúc ấm áp nhất tới Lucy & Andrew và nhận ngay <strong>Mã Số May Mắn</strong> tham gia bốc thăm quà tặng!</p>
-
-          <!-- Quick Wish Chips -->
-          <div class="quick-wishes">
-            <span class="wish-chip">🎉 Trăm năm hạnh phúc!</span>
-            <span class="wish-chip">👶 Sớm sinh quý tử nha!</span>
-            <span class="wish-chip">👰 Nay cô dâu xinh xuất sắc!</span>
-            <span class="wish-chip">❤️ Mãi mãi yêu thương nhau!</span>
-            <span class="wish-chip">🥂 Uống cạn chén mừng ngày vui!</span>
-          </div>
-
-          <form id="wishForm">
-            <div class="form-group">
-              <label class="form-label" for="wishSender">Tên của bạn:</label>
-              <input type="text" class="form-input" id="wishSender" placeholder="VD: Minh Tuấn & Thu Hằng, Bạn Thân..." required>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label" for="wishMessage">Lời chúc của bạn:</label>
-              <textarea class="form-textarea" id="wishMessage" placeholder="Hãy viết vài dòng gửi gắm tới cô dâu chú rể..." required></textarea>
-            </div>
-
-            <button class="btn-primary" type="submit">
-              <span>💖 Gửi Lời Chúc & Nhận Số May Mắn</span>
-            </button>
-          </form>
-
-          <!-- Feed -->
-          <div style="margin-top: 24px; border-top: 1px dashed var(--card-border); padding-top: 18px;">
-            <h3 style="font-size: 1rem; color: var(--primary-burgundy); font-weight: 700; margin-bottom: 10px;">🌟 Lời chúc gần đây</h3>
-            <div class="feed-list" id="wishesFeed"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= TAB 4: TẶNG BÀI HÁT ================= -->
+      <!-- ================= TAB 2: TẶNG BÀI HÁT ================= -->
       <section class="tab-pane" id="tab-song">
         <div class="glass-card">
           <h2 class="card-title">🎵 Hộp Yêu Cầu Bài Hát</h2>
@@ -213,40 +126,9 @@
         </div>
       </section>
 
-      <!-- ================= TAB 5: KHUNG ẢNH KỶ NIỆM (MULTI-THEME) ================= -->
-      <section class="tab-pane" id="tab-frame">
-        <div class="glass-card">
-          <h2 class="card-title">🖼️ Tự Ghép Khung Ảnh Cưới</h2>
-          <p class="card-desc">Chọn phong cách khung cưới yêu thích, tải ảnh của bạn lên để hệ thống tự ghép viền sang trọng, sẵn sàng khoe Story Facebook/Zalo!</p>
-
-          <!-- Theme Selectors -->
-          <div class="frame-themes">
-            <button class="theme-btn active" data-theme="rose_gold" type="button">🌸 Rose Gold</button>
-            <button class="theme-btn" data-theme="burgundy" type="button">💍 Burgundy Royal</button>
-            <button class="theme-btn" data-theme="botanical" type="button">🌿 Botanical</button>
-            <button class="theme-btn" data-theme="luxury_gold" type="button">✨ Luxury Pearl</button>
-          </div>
-
-          <div class="dropzone" onclick="document.getElementById('framePhotoInput').click()">
-            <div class="dropzone-icon">✨</div>
-            <div class="dropzone-text">Chọn 1 tấm ảnh của bạn</div>
-            <div class="dropzone-hint">Tự động lồng viền hoa & tên Lucy & Andrew theo phong cách đã chọn</div>
-            <input type="file" id="framePhotoInput" accept="image/*" style="display: none;">
-          </div>
-
-          <div style="margin-top: 16px; text-align: center;">
-            <canvas id="frameCanvas" style="max-width: 100%; border-radius: var(--radius-md); box-shadow: 0 4px 16px rgba(0,0,0,0.1);"></canvas>
-          </div>
-
-          <button class="btn-primary" id="btnDownloadFrame" type="button" style="display: none; margin-top: 16px;">
-            <span>💾 Tải Ảnh Đã Ghép Khung Về Máy</span>
-          </button>
-        </div>
-      </section>
-
     </main>
 
-    <!-- Lucky Ticket Modal (Hiển thị sau khi gửi lời chúc / ảnh) -->
+    <!-- Lucky Ticket Modal (Hiển thị sau khi gửi ảnh/bài hát) -->
     <div class="lucky-modal-overlay" id="luckyModal">
       <div class="lucky-card">
         <div class="lucky-header">
@@ -278,6 +160,6 @@
   <!-- Toast Container -->
   <div class="toast" id="toast"></div>
 
-  <script src="js/app.js"></script>
+  <script src="js/app.js?v=20260827_2240"></script>
 </body>
 </html>

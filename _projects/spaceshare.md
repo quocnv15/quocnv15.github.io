@@ -4,6 +4,8 @@ title: SpaceShare - Coworking Space Platform
 date: 2019-01-01
 status: Completed
 priority: 3
+published: false
+hidden: true
 category: Coworking
 image: /images/projects/spaceshare/spaceshare app.jpg
 description: A comprehensive booking platform for coworking and office spaces developed by MOR Software, featuring automated check-in systems, camera integration, and multi-device support.

@@ -3,6 +3,8 @@ layout: project
 title: Hotel Booking Management System
 date: 2019-06-01
 status: Completed
+published: false
+hidden: true
 category: Travel
 description: A comprehensive hotel booking management platform for managing reservations, user information, and hotel operations.
 technologies:

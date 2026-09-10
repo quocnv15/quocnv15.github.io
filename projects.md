@@ -23,10 +23,7 @@ hide_title: true
     <div class="filter-container">
       <button class="filter-btn active" data-category="all">All Projects</button>
       <button class="filter-btn" data-category="Healthcare">Healthcare</button>
-      <button class="filter-btn" data-category="Fintech">Fintech</button>
-      <button class="filter-btn" data-category="Coworking">Coworking</button>
       <button class="filter-btn" data-category="Business">Business</button>
-      <button class="filter-btn" data-category="Travel">Travel</button>
       <button class="filter-btn" data-category="Sports">Sports</button>
       <button class="filter-btn" data-category="Lifestyle">Lifestyle</button>
       <button class="filter-btn" data-category="3D Design">3D Design</button>
@@ -44,27 +41,31 @@ hide_title: true
     </div>
   </div>
 
+  {% assign priority_projects = "" | split: "" %}
+  {% assign regular_projects = "" | split: "" %}
+  
+  {% for project in site.projects %}
+    {% if project.hidden or project.published == false %}
+      {% continue %}
+    {% endif %}
+    {% if project.priority %}
+      {% assign priority_projects = priority_projects | push: project %}
+    {% else %}
+      {% assign regular_projects = regular_projects | push: project %}
+    {% endif %}
+  {% endfor %}
+  
+  {% assign sorted_priority = priority_projects | sort: 'priority' %}
+  {% assign sorted_regular = regular_projects | sort: 'date' | reverse %}
+  {% assign projects = sorted_priority | concat: sorted_regular %}
+
   <!-- Results Info -->
   <div class="results-info">
-    <span id="resultCount">11</span> projects found
+    <span id="resultCount">{{ projects.size }}</span> projects found
   </div>
 
   <!-- Projects Grid -->
   <div class="projects-grid" id="projectsGrid">
-    {% assign priority_projects = "" | split: "" %}
-    {% assign regular_projects = "" | split: "" %}
-    
-    {% for project in site.projects %}
-      {% if project.priority %}
-        {% assign priority_projects = priority_projects | push: project %}
-      {% else %}
-        {% assign regular_projects = regular_projects | push: project %}
-      {% endif %}
-    {% endfor %}
-    
-    {% assign sorted_priority = priority_projects | sort: 'priority' %}
-    {% assign sorted_regular = regular_projects | sort: 'date' | reverse %}
-    {% assign projects = sorted_priority | concat: sorted_regular %}
     
     {% for project in projects %}
       <div class="project-card" 

@@ -4,6 +4,8 @@ title: Toyota Wallet - Toyota Finance Digital Payment Platform
 date: 2019-05-01
 status: Completed
 priority: 4
+published: false
+hidden: true
 category: Fintech
 image: /images/projects/toyota-wallet/toyota-wallet-main.jpg
 description: Toyota Finance's official digital wallet application providing secure payment solutions, QR code functionality, and integrated financial services for Toyota customers.

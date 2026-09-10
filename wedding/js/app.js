@@ -12,6 +12,21 @@
 // CẤU HÌNH GOOGLE APPS SCRIPT WEBHOOK URL
 const GAS_ENDPOINT_URL = "https://script.google.com/macros/s/AKfycbwoHOMQde92r4LciK_DVYuY0sWw8LEOCFi7NGA5_kh6luTUIgqEdhEyuW4cLm6xIKst/exec";
 
+// Ảnh là kỷ niệm cần lưu lâu dài, nhưng ảnh gốc từ điện thoại quá nặng cho cả hai phía:
+// thẻ <img> preview phải giải mã bitmap ở độ phân giải đầy đủ (ảnh 12MP ≈ 48MB RAM/ảnh,
+// chọn 10 ảnh là đủ để Safari iOS kill tab), và base64 tăng 33% khiến request lên GAS dễ rớt.
+// 2048px @ 0.88 vẫn in đẹp khổ 13x18cm và xem TV 4K thoải mái.
+// maxDimension là hạn mức BỘ NHỚ, không phải hạn mức chất lượng: preview giải mã bitmap
+// theo số điểm ảnh (2048x1536x4B ≈ 12MB/ảnh), nên tăng nó là tăng nguy cơ kill tab.
+// jpegQuality chỉ ảnh hưởng dung lượng file, KHÔNG ảnh hưởng bitmap — nâng nó là cách
+// tăng chất lượng an toàn nhất khi đã có 17 ảnh chạy ổn ở 2048px.
+const IMAGE_UPLOAD_CONFIG = {
+  maxOriginalBytes: 1.5 * 1024 * 1024,
+  maxDimension: 2048,
+  jpegQuality: 0.94,
+  maxCompressedBytes: 4 * 1024 * 1024
+};
+
 // STATE MANAGEMENT
 const state = {
   currentDate: "12-09", // '11-09' (Tiệc Nhà Gái) hoặc '12-09' (Lễ Cưới Chính)
@@ -22,35 +37,14 @@ const state = {
 
 // INITIALIZATION
 document.addEventListener("DOMContentLoaded", () => {
-  initPetals();
   initDateSwitcher();
   initSenderQuickTags();
   initUploadDropzone();
   initImageLightbox();
   initSongAccordion();
   initSongForm();
-  initLuckyModal();
   loadMockSongs();
 });
-
-/**
- * 🌸 Hiệu ứng cánh hoa rơi lãng mạn
- */
-function initPetals() {
-  const container = document.getElementById("petalsContainer");
-  if (!container) return;
-  const count = 14;
-  for (let i = 0; i < count; i++) {
-    const petal = document.createElement("div");
-    petal.className = "petal";
-    petal.style.left = `${Math.random() * 100}vw`;
-    petal.style.animationDuration = `${9 + Math.random() * 8}s`;
-    petal.style.animationDelay = `${Math.random() * 5}s`;
-    petal.style.width = `${12 + Math.random() * 8}px`;
-    petal.style.height = `${16 + Math.random() * 10}px`;
-    container.appendChild(petal);
-  }
-}
 
 /**
  * 📅 Chuyển đổi ngày sự kiện (11/09 Tiệc Nhà Gái <-> 12/09 Lễ Cưới Chính)
@@ -66,16 +60,20 @@ function initDateSwitcher() {
     state.currentDate = "11-09";
     btn11.classList.add("active");
     btn12.classList.remove("active");
-    if (bannerTag) bannerTag.innerHTML = "🌸 Đang chọn: <strong>11/09 — Tiệc Nhà Gái</strong>";
-    showToast("Đã chuyển sang: 11/09 (Tiệc Nhà Gái) 🌸");
+    btn11.setAttribute("aria-selected", "true");
+    btn12.setAttribute("aria-selected", "false");
+    if (bannerTag) bannerTag.innerHTML = "Đang chọn: <strong>11.09 — Tiệc Nhà Gái</strong>";
+    showToast("Đã chuyển sang 11.09 — Tiệc Nhà Gái");
   });
 
   btn12.addEventListener("click", () => {
     state.currentDate = "12-09";
     btn12.classList.add("active");
     btn11.classList.remove("active");
-    if (bannerTag) bannerTag.innerHTML = "💍 Đang chọn: <strong>12/09 — Lễ Cưới Chính</strong>";
-    showToast("Đã chuyển sang: 12/09 (Lễ Cưới Chính) 💍");
+    btn12.setAttribute("aria-selected", "true");
+    btn11.setAttribute("aria-selected", "false");
+    if (bannerTag) bannerTag.innerHTML = "Đang chọn: <strong>12.09 — Lễ Thành Hôn</strong>";
+    showToast("Đã chuyển sang 12.09 — Lễ Thành Hôn");
   });
 }
 
@@ -92,7 +90,9 @@ function initSenderQuickTags() {
     tag.addEventListener("click", () => {
       tags.forEach(t => t.classList.remove("active"));
       tag.classList.add("active");
-      senderInput.value = tag.innerText.replace(/^[^\s]+\s/, "");
+      // The chip carries its value in data-name so the label can be styled
+      // or reworded without the value silently changing.
+      senderInput.value = tag.dataset.name || tag.innerText.trim();
       senderInput.focus();
     });
   });
@@ -134,13 +134,12 @@ async function runParallelPool(items, concurrency, taskFn, onProgress) {
  * 📸 Upload Media (Ảnh & Video) — Chuẩn Mobbin Action Buttons & Parallel Drive Upload
  */
 function initUploadDropzone() {
-  const cameraInput = document.getElementById("cameraFileInput");
+  // One input handles the whole job: accept="image/*,video/*" multiple makes
+  // iOS and Android show their own sheet with "Take Photo" alongside the
+  // library, so separate camera and video buttons only duplicated this.
   const mediaInput = document.getElementById("mediaFileInput");
-  const videoInput = document.getElementById("videoFileInput");
 
-  const btnCamera = document.getElementById("btnActionCamera");
   const btnLibrary = document.getElementById("btnActionLibrary");
-  const btnVideo = document.getElementById("btnActionVideo");
   const btnAddMore = document.getElementById("btnAddMoreMedia");
   const btnClearAll = document.getElementById("btnClearAllMedia");
 
@@ -163,29 +162,11 @@ function initUploadDropzone() {
   if (!mediaInput || !previewGrid || !uploadBtn) return;
 
   // 1. Action Button Triggers
-  if (btnCamera && cameraInput) {
-    btnCamera.addEventListener("click", () => {
-      if (!state.isUploading) cameraInput.click();
-    });
-    cameraInput.addEventListener("change", (e) => {
-      if (e.target.files && e.target.files.length) handleFiles(e.target.files);
-    });
-  }
-
   if (btnLibrary && mediaInput) {
     btnLibrary.addEventListener("click", () => {
       if (!state.isUploading) mediaInput.click();
     });
     mediaInput.addEventListener("change", (e) => {
-      if (e.target.files && e.target.files.length) handleFiles(e.target.files);
-    });
-  }
-
-  if (btnVideo && videoInput) {
-    btnVideo.addEventListener("click", () => {
-      if (!state.isUploading) videoInput.click();
-    });
-    videoInput.addEventListener("change", (e) => {
       if (e.target.files && e.target.files.length) handleFiles(e.target.files);
     });
   }
@@ -211,21 +192,21 @@ function initUploadDropzone() {
     if (!fileList.length) return;
 
     compressHint.style.display = "block";
-    compressHint.innerText = `⚡ Đang xử lý & tối ưu ${fileList.length} file...`;
+    compressHint.innerText = `Đang xử lý và tối ưu ${fileList.length} file…`;
 
     const COMPRESS_CONCURRENCY = 3; // Nén tối đa 3 ảnh đồng thời để bảo toàn RAM trên mobile
     let processedCount = 0;
 
     await runParallelPool(fileList, COMPRESS_CONCURRENCY, async (file) => {
       if (file.type.startsWith("image/")) {
-        const compressedBase64 = await compressImage(file, 1600, 0.82);
+        const preparedImage = await prepareImageForUpload(file);
         return {
           id: `media_${Date.now()}_${Math.random().toString(36).substr(2, 7)}`,
           file: file,
           name: file.name,
-          mimeType: "image/jpeg",
-          base64: compressedBase64,
-          previewUrl: compressedBase64,
+          mimeType: preparedImage.mimeType,
+          base64: preparedImage.base64,
+          previewUrl: preparedImage.base64,
           status: "pending" // 'pending' | 'uploading' | 'success' | 'error'
         };
       } else if (file.type.startsWith("video/")) {
@@ -253,14 +234,14 @@ function initUploadDropzone() {
       }
     }, (completed, total, file, idx, result) => {
       processedCount++;
-      compressHint.innerText = `⚡ Đang nén tối ưu: ${processedCount}/${total} file...`;
+      compressHint.innerText = `Đang nén tối ưu ${processedCount}/${total} file…`;
       if (result && !result.error) {
         state.selectedFiles.push(result);
         renderMediaPreviews();
       }
     });
 
-    compressHint.innerText = `✅ Đã sẵn sàng ${state.selectedFiles.length} file để gửi lên Drive`;
+    compressHint.innerText = `Đã sẵn sàng ${state.selectedFiles.length} file chất lượng cao để gửi lên Drive`;
     renderMediaPreviews();
   }
 
@@ -275,7 +256,7 @@ function initUploadDropzone() {
       if (compressHint) compressHint.style.display = "none";
       if (floatingBar) floatingBar.style.display = "none";
       uploadBtn.disabled = true;
-      uploadBtn.innerHTML = `<span>📤 Gửi Lên Google Drive</span>`;
+      uploadBtn.innerHTML = `<span>Gửi lên Google Drive</span>`;
       return;
     }
 
@@ -297,14 +278,14 @@ function initUploadDropzone() {
         mediaHtml = `<img src="${item.previewUrl}" alt="Preview" onclick="openLightbox(${index})" style="cursor: zoom-in;" />`;
       } else {
         mediaHtml = `
-          <div style="background: #2C1810; color: #fff; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; text-align: center; padding: 4px;">
-            🎬 Video<br><span style="font-size: 0.65rem; opacity: 0.8;">${item.name.substring(0, 10)}...</span>
+          <div class="preview-video-tile">
+            Video<span>${item.name.substring(0, 12)}…</span>
           </div>
         `;
       }
 
       const removeBtnHtml = !state.isUploading
-        ? `<button class="remove-btn" onclick="removeMedia(${index})" title="Xóa ảnh này">✕</button>`
+        ? `<button class="remove-btn" onclick="removeMedia(${index})" aria-label="Xóa file này"><span aria-hidden="true">&times;</span></button>`
         : "";
 
       const overlayHtml = getStatusOverlayHtml(item.status);
@@ -314,16 +295,16 @@ function initUploadDropzone() {
     });
 
     uploadBtn.disabled = state.isUploading || count === 0;
-    uploadBtn.innerHTML = `<span>📤 Gửi ${count} Ảnh/Video Lên Drive</span>`;
+    uploadBtn.innerHTML = `<span>Gửi ${count} ảnh/video lên Drive</span>`;
   }
 
   function getStatusOverlayHtml(status) {
     if (status === "uploading") {
       return `<div class="preview-overlay status-uploading"><div class="preview-spinner"></div><span>Đang tải...</span></div>`;
     } else if (status === "success") {
-      return `<div class="preview-overlay status-success"><span class="status-badge-icon">✅</span><span>Đã xong</span></div>`;
+      return `<div class="preview-overlay status-success"><span class="status-badge-icon"><svg class="icon-line" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span>Đã xong</span></div>`;
     } else if (status === "error") {
-      return `<div class="preview-overlay status-error"><span class="status-badge-icon">⚠️</span><span>Lỗi</span></div>`;
+      return `<div class="preview-overlay status-error"><span class="status-badge-icon"><svg class="icon-line" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 8v4M12 16h.01"/><circle cx="12" cy="12" r="9"/></svg></span><span>Lỗi</span></div>`;
     }
     return "";
   }
@@ -369,13 +350,13 @@ function initUploadDropzone() {
     const senderName = document.getElementById("mediaSenderName").value.trim() || "Khách mời";
 
     if (state.selectedFiles.length === 0) {
-      showToast("Vui lòng chọn ít nhất 1 ảnh từ Album! 🖼️");
+      showToast("Vui lòng chọn ít nhất 1 ảnh từ album");
       return;
     }
 
     state.isUploading = true;
     uploadBtn.disabled = true;
-    uploadBtn.innerHTML = `<span>⏳ Đang tải lên Drive...</span>`;
+    uploadBtn.innerHTML = `<span>Đang tải lên Drive…</span>`;
     if (floatingBar) floatingBar.style.display = "none";
 
     renderMediaPreviews();
@@ -384,7 +365,7 @@ function initUploadDropzone() {
       progressWrapper.style.display = "block";
       progressBarFill.style.width = "0%";
       progressPercent.innerText = "0%";
-      progressText.innerText = `⚡ Đang tải lên Drive... (0/${state.selectedFiles.length})`;
+      progressText.innerText = `Đang tải lên Drive… (0/${state.selectedFiles.length})`;
     }
 
     const UPLOAD_CONCURRENCY = 3; // 🚀 Tải 3 kết nối song song
@@ -444,38 +425,35 @@ function initUploadDropzone() {
           const pct = Math.round((completed / total) * 100);
           if (progressBarFill) progressBarFill.style.width = `${pct}%`;
           if (progressPercent) progressPercent.innerText = `${pct}%`;
-          if (progressText) progressText.innerText = `⚡ Đang tải lên Drive... (${completed}/${total})`;
+          if (progressText) progressText.innerText = `Đang tải lên Drive… (${completed}/${total})`;
         }
       );
 
       const failedCount = state.selectedFiles.filter(f => f.status === "error").length;
 
       if (failedCount === 0) {
-        if (progressText) progressText.innerText = `🎉 Đã tải hoàn tất ${totalFiles}/${totalFiles} file!`;
+        if (progressText) progressText.innerText = `Đã tải hoàn tất ${totalFiles}/${totalFiles} file`;
         if (progressBarFill) progressBarFill.style.width = "100%";
         if (progressPercent) progressPercent.innerText = "100%";
 
         triggerConfetti();
-        showLuckyTicketModal(senderName);
-        showToast(`🎉 Tải thành công ${totalFiles} ảnh lên Google Drive của Lucy & Ariel!`);
+        showToast(`Đã tải thành công ${totalFiles} ảnh lên Google Drive của Lucy & Ariel`);
 
         setTimeout(() => {
           state.selectedFiles = [];
           state.isUploading = false;
           renderMediaPreviews();
           if (mediaInput) mediaInput.value = "";
-          if (cameraInput) cameraInput.value = "";
-          if (videoInput) videoInput.value = "";
           if (compressHint) compressHint.style.display = "none";
           if (progressWrapper) progressWrapper.style.display = "none";
         }, 1500);
       } else {
         state.isUploading = false;
         uploadBtn.disabled = false;
-        uploadBtn.innerHTML = `<span>🔄 Thử Lại (${failedCount} file chưa xong)</span>`;
+        uploadBtn.innerHTML = `<span>Thử lại (${failedCount} file chưa xong)</span>`;
         if (floatingBar) floatingBar.style.display = "block";
         renderMediaPreviews();
-        showToast(`⚠️ Có ${failedCount} file tải chưa thành công. Bấm 'Thử Lại' để gửi tiếp nhé!`);
+        showToast(`Có ${failedCount} file chưa tải xong. Bấm "Thử lại" để gửi tiếp.`);
       }
     } catch (err) {
       console.error("Lỗi upload:", err);
@@ -484,7 +462,7 @@ function initUploadDropzone() {
       uploadBtn.innerHTML = `<span>📤 Gửi Lên Google Drive</span>`;
       if (floatingBar) floatingBar.style.display = "block";
       renderMediaPreviews();
-      showToast("❌ Có lỗi xảy ra, vui lòng thử lại!");
+      showToast("Có lỗi xảy ra, vui lòng thử lại");
     }
   }
 
@@ -522,10 +500,21 @@ function initSongAccordion() {
 
   if (!header || !collapse) return;
 
-  header.addEventListener("click", () => {
+  const toggle = () => {
     const isHidden = collapse.style.display === "none";
     collapse.style.display = isHidden ? "block" : "none";
+    header.setAttribute("aria-expanded", String(isHidden));
     if (arrow) arrow.classList.toggle("rotated", isHidden);
+  };
+
+  header.addEventListener("click", toggle);
+
+  // The header is a div with role="button", so it needs its own key handling.
+  header.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggle();
+    }
   });
 }
 
@@ -544,7 +533,7 @@ function initSongForm() {
     const note = document.getElementById("songNote").value.trim();
 
     if (!title) {
-      showToast("Vui lòng nhập tên bài hát! 🎶");
+      showToast("Vui lòng nhập tên bài hát");
       return;
     }
 
@@ -579,7 +568,7 @@ function initSongForm() {
     }
 
     songForm.reset();
-    showToast(`🎶 Đã gửi bài hát "${title}" tới ban nhạc!`);
+    showToast(`Đã gửi bài hát "${title}" tới ban nhạc`);
   });
 }
 
@@ -600,58 +589,13 @@ function renderSongsFeed() {
     div.className = "feed-card";
     div.innerHTML = `
       <div class="feed-header">
-        <span class="feed-sender">🎵 ${item.title}</span>
+        <span class="feed-sender">${item.title}</span>
         <span class="feed-time">${item.time}</span>
       </div>
       <div class="feed-message"><small>Người gửi:</small> <strong>${item.sender}</strong> ${item.artist ? `(${item.artist})` : ''} ${item.note ? `• <em>"${item.note}"</em>` : ''}</div>
     `;
     container.appendChild(div);
   });
-}
-
-/**
- * 🎟️ Lucky Ticket Modal (Hiển thị vé số may mắn & Copy mã)
- */
-function generateLuckyNumber() {
-  const rand = Math.floor(100 + Math.random() * 900);
-  return `LUCKY-${rand}`;
-}
-
-function initLuckyModal() {
-  const modal = document.getElementById("luckyModal");
-  const closeBtn = document.getElementById("btnCloseLuckyModal");
-  const copyBtn = document.getElementById("btnCopyLuckyCode");
-  const numDisplay = document.getElementById("luckyNumberText");
-
-  if (!modal || !closeBtn) return;
-
-  closeBtn.addEventListener("click", () => modal.classList.remove("show"));
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) modal.classList.remove("show");
-  });
-
-  if (copyBtn && numDisplay) {
-    copyBtn.addEventListener("click", () => {
-      const code = numDisplay.innerText.trim();
-      navigator.clipboard.writeText(code).then(() => {
-        showToast("📋 Đã sao chép mã vé số may mắn!");
-      }).catch(() => {
-        showToast("Mã của bạn: " + code);
-      });
-    });
-  }
-}
-
-function showLuckyTicketModal(sender, luckyNumber) {
-  const modal = document.getElementById("luckyModal");
-  const numDisplay = document.getElementById("luckyNumberText");
-  const infoDisplay = document.getElementById("luckyGuestInfo");
-  if (!modal || !numDisplay) return;
-
-  const num = luckyNumber || generateLuckyNumber();
-  numDisplay.innerText = num;
-  infoDisplay.innerText = `Khách mời: ${sender}`;
-  modal.classList.add("show");
 }
 
 /**
@@ -665,9 +609,10 @@ function triggerConfetti() {
   canvas.height = window.innerHeight;
 
   const particles = [];
-  const colors = ["#E29578", "#8B263E", "#D4AF37", "#FFD1CD", "#FF3366", "#FFFFFF"];
+  // Champagne, bronze and ivory only — drawn from the couple's portrait.
+  const colors = ["#BA9261", "#996F39", "#DAC6AE", "#F4EFE6", "#8C764D"];
 
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < 44; i++) {
     particles.push({
       x: canvas.width / 2,
       y: canvas.height / 2,
@@ -717,10 +662,35 @@ function triggerConfetti() {
 }
 
 /**
- * ⚡ Tiện ích nén ảnh phía Client (Canvas Downscale)
+ * Chuẩn bị ảnh theo hướng chất lượng cao.
+ * File gốc nhỏ được giữ nguyên; chỉ ảnh lớn mới được hạ kích thước/encode JPEG.
  */
-function compressImage(file, maxDimension = 1600, quality = 0.82) {
-  return new Promise((resolve) => {
+async function prepareImageForUpload(file) {
+  if (file.size <= IMAGE_UPLOAD_CONFIG.maxOriginalBytes || !canSafelyReencode(file)) {
+    return { base64: await fileToBase64(file), mimeType: file.type || "image/jpeg" };
+  }
+
+  try {
+    const base64 = await compressImage(
+      file,
+      IMAGE_UPLOAD_CONFIG.maxDimension,
+      IMAGE_UPLOAD_CONFIG.jpegQuality,
+      IMAGE_UPLOAD_CONFIG.maxCompressedBytes
+    );
+
+    return { base64, mimeType: "image/jpeg" };
+  } catch (error) {
+    console.warn("Không thể nén ảnh; giữ nguyên file gốc:", error);
+    return { base64: await fileToBase64(file), mimeType: file.type || "image/jpeg" };
+  }
+}
+
+function canSafelyReencode(file) {
+  return ["image/jpeg", "image/png", "image/webp"].includes(file.type);
+}
+
+function compressImage(file, maxDimension, quality, maxBytes) {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
@@ -744,19 +714,34 @@ function compressImage(file, maxDimension = 1600, quality = 0.82) {
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext("2d");
+        // Mặc định của canvas là "low" — thu ảnh 4032px xuống 2048px bằng bộ lọc đó
+        // gây mờ và răng cưa rõ rệt. "high" dùng bộ lọc tốt hơn, không tốn thêm bộ nhớ.
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
         ctx.drawImage(img, 0, 0, width, height);
 
-        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        // Sàn chất lượng 0.82: dưới mức này ảnh bắt đầu lộ khối JPEG trên da người.
+        const MIN_QUALITY = 0.82;
+        let encodedQuality = quality;
+        let dataUrl = canvas.toDataURL("image/jpeg", encodedQuality);
+        while (dataUrlByteLength(dataUrl) > maxBytes && encodedQuality > MIN_QUALITY) {
+          encodedQuality = Math.max(MIN_QUALITY, encodedQuality - 0.04);
+          dataUrl = canvas.toDataURL("image/jpeg", encodedQuality);
+        }
+
         resolve(dataUrl);
       };
-      img.onerror = () => {
-        fileToBase64(file).then(resolve).catch(() => resolve(e.target.result));
-      };
+      img.onerror = () => reject(new Error("Trình duyệt không thể đọc ảnh để nén"));
       img.src = e.target.result;
     };
-    reader.onerror = () => resolve("");
+    reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+}
+
+function dataUrlByteLength(dataUrl) {
+  const base64 = dataUrl.split(",")[1] || "";
+  return Math.floor((base64.length * 3) / 4);
 }
 
 function fileToBase64(file) {

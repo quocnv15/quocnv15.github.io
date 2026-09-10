@@ -2,189 +2,197 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>🌸 Happy Wedding Lucy & Ariel | Gửi Ảnh & Video Kỷ Niệm</title>
-  <link rel="stylesheet" href="css/style.css?v=20260827_2310">
-  <meta name="theme-color" content="#FFF9F6">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lucy &amp; Ariel — Gửi ảnh &amp; video kỷ niệm</title>
+  <meta name="description" content="Gửi ảnh, video kỷ niệm và yêu cầu bài hát cho tiệc cưới của Lucy &amp; Ariel — 11.09.2026 &amp; 12.09.2026.">
+  <meta name="theme-color" content="#242217">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="image" href="assets/lucy-ariel-bg.webp" type="image/webp" fetchpriority="high">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260911_0600">
 </head>
 <body>
 
-  <!-- Romantic Falling Petals -->
-  <div class="petals-container" id="petalsContainer"></div>
+  <!-- Fixed photo backdrop. Focal point x=51% keeps the couple centred when
+       the cover crop trims the width on narrow viewports. -->
+  <div class="backdrop" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 600px)" srcset="assets/lucy-ariel-bg.webp" type="image/webp">
+      <source media="(min-width: 601px)" srcset="assets/lucy-ariel-bg@2x.webp" type="image/webp">
+      <img class="backdrop-photo" src="assets/lucy-ariel-bg.webp" alt="" fetchpriority="high" decoding="async">
+    </picture>
+    <div class="backdrop-scrim"></div>
+  </div>
 
-  <!-- Confetti Canvas -->
-  <canvas id="confettiCanvas" style="position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index:998;"></canvas>
+  <canvas id="confettiCanvas" aria-hidden="true"
+          style="position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 998;"></canvas>
 
-  <!-- Main Mobile App Shell -->
   <div class="app-container">
 
-    <!-- Wedding Header -->
+    <!-- Hero: names over the open photo -->
     <header class="wedding-header">
-      <div class="wedding-badge">✨ Tiệc Cưới Hạnh Phúc ✨</div>
-      <h1 class="wedding-title">Lucy <span>&</span> Ariel</h1>
-      <div class="wedding-date-tag" id="currentDateTag">
-        💍 Đang chọn: <strong>12/09 — Lễ Cưới Chính</strong>
-      </div>
+      <p class="wedding-badge">Save our memories</p>
+      <h1 class="wedding-title">Lucy <span>&amp;</span> Ariel</h1>
+      <p class="wedding-dates">11.09.2026 &nbsp;·&nbsp; 12.09.2026</p>
+      <div class="hero-rule" aria-hidden="true"></div>
     </header>
 
-    <!-- Event Date Switcher (11/9 vs 12/9) -->
-    <div class="date-selector-wrapper">
-      <div class="date-selector">
-        <button class="date-btn" id="btnDate11" type="button">
-          <span>🌸 11/09/2026</span>
-          <span class="date-sub">Tiệc Nhà Gái</span>
-        </button>
-        <button class="date-btn active" id="btnDate12" type="button">
-          <span>💍 12/09/2026</span>
-          <span class="date-sub">Lễ Cưới Chính</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Main Content: Focused 100% on Photo & Video Drive Upload -->
+    <!-- Parchment sheet -->
     <main class="main-content">
 
-      <section class="glass-card main-upload-card">
-        
-        <!-- Header & Cloud Sync Info -->
+      <section class="sheet-section">
+        <span class="section-label">Bạn dự tiệc ngày nào?</span>
+        <div class="date-selector-wrapper">
+          <div class="date-selector" role="tablist" aria-label="Chọn ngày tiệc">
+            <button class="date-btn" id="btnDate11" type="button" role="tab" aria-selected="false">
+              <span>11.09</span>
+              <span class="date-sub">Tiệc Nhà Gái</span>
+            </button>
+            <button class="date-btn active" id="btnDate12" type="button" role="tab" aria-selected="true">
+              <span>12.09</span>
+              <span class="date-sub">Lễ Thành Hôn</span>
+            </button>
+          </div>
+        </div>
+        <p class="wedding-date-tag" id="currentDateTag">
+          Đang chọn: <strong>12.09 — Lễ Thành Hôn</strong>
+        </p>
+      </section>
+
+      <!-- Primary task: send photos & video to the couple's Drive -->
+      <section class="sheet-section main-upload-card">
+
         <div class="card-hero-header">
-          <div class="hero-icon-badge">☁️</div>
+          <div class="hero-icon-badge" aria-hidden="true">
+            <svg class="icon-line" viewBox="0 0 24 24">
+              <path d="M12 16V4M12 4l-4 4M12 4l4 4"/>
+              <path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+            </svg>
+          </div>
           <div>
-            <h2 class="card-title" style="margin-bottom: 2px;">Gửi Ảnh & Video Kỷ Niệm</h2>
-            <p class="card-desc" style="margin-bottom: 0;">Ảnh và video bạn chụp sẽ được lưu trực tiếp vào Google Drive của Lucy & Ariel ❤️</p>
+            <h2 class="card-title">Gửi ảnh &amp; video kỷ niệm</h2>
+            <p class="card-desc">Ảnh và video bạn chụp được lưu trực tiếp vào Google Drive của Lucy &amp; Ariel.</p>
           </div>
         </div>
 
-        <!-- Sender Identity & Quick Tags -->
-        <div class="form-group" style="margin-top: 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <label class="form-label" for="mediaSenderName" style="margin-bottom: 0;">👤 Tên của bạn hoặc Nhóm bạn:</label>
-            <span style="font-size: 0.72rem; color: var(--primary-rose); font-weight: 600;">(Chạm để chọn nhanh)</span>
-          </div>
-          
-          <input type="text" class="form-input" id="mediaSenderName" placeholder="VD: Lan Anh, Hội Bạn Cấp 3, Bạn Đại Học...">
+        <div class="form-group" style="margin-top: 24px;">
+          <label class="form-label" for="mediaSenderName">Tên của bạn hoặc nhóm bạn</label>
+          <input type="text" class="form-input" id="mediaSenderName"
+                 autocomplete="name"
+                 placeholder="Ví dụ: Lan Anh, Hội bạn cấp 3…">
 
-          <!-- Quick Sender Tags (Mobbin Fast Intake Pattern) -->
           <div class="quick-sender-tags" id="senderQuickTags">
-            <button type="button" class="sender-tag-chip">🌸 Bạn Cô Dâu</button>
-            <button type="button" class="sender-tag-chip">🤵 Bạn Chú Rể</button>
-            <button type="button" class="sender-tag-chip">🎓 Bạn Đại Học</button>
-            <button type="button" class="sender-tag-chip">🏫 Bạn Cấp 3</button>
-            <button type="button" class="sender-tag-chip">💼 Đồng Nghiệp</button>
-            <button type="button" class="sender-tag-chip">🏡 Gia Đình</button>
+            <button type="button" class="sender-tag-chip" data-name="Bạn Cô Dâu">Bạn Cô Dâu</button>
+            <button type="button" class="sender-tag-chip" data-name="Bạn Chú Rể">Bạn Chú Rể</button>
+            <button type="button" class="sender-tag-chip" data-name="Bạn Đại Học">Bạn Đại Học</button>
+            <button type="button" class="sender-tag-chip" data-name="Bạn Cấp 3">Bạn Cấp 3</button>
+            <button type="button" class="sender-tag-chip" data-name="Đồng Nghiệp">Đồng Nghiệp</button>
+            <button type="button" class="sender-tag-chip" data-name="Gia Đình">Gia Đình</button>
           </div>
         </div>
 
-        <!-- Dual Action Buttons (Mobbin Media Upload Pattern) -->
-        <div class="upload-action-grid">
-          <!-- 1. Open Camera Directly -->
-          <button type="button" class="action-card-btn action-camera" id="btnActionCamera">
-            <div class="action-icon">📸</div>
-            <div class="action-text">
-              <span class="action-title">Chụp Ảnh Ngay</span>
-              <span class="action-sub">Mở Camera chụp liền</span>
-            </div>
-          </button>
+        <!-- One action. The input accepts photos and video and is `multiple`,
+             so iOS and Android present their own sheet with "Take Photo"
+             next to the library — no separate camera or video button needed. -->
+        <button type="button" class="action-card-btn" id="btnActionLibrary">
+          <span class="action-icon" aria-hidden="true">
+            <svg class="icon-line" viewBox="0 0 24 24">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </span>
+          <span class="action-text">
+            <span class="action-title">Chọn ảnh &amp; video</span>
+            <span class="action-sub">Chụp mới hoặc chọn nhiều file từ máy</span>
+          </span>
+        </button>
 
-          <!-- 2. Pick Multiple from Photo Library -->
-          <button type="button" class="action-card-btn action-library" id="btnActionLibrary">
-            <div class="action-icon">🖼️</div>
-            <div class="action-text">
-              <span class="action-title">Thư Viện Ảnh</span>
-              <span class="action-sub">Chọn nhiều ảnh cùng lúc</span>
-            </div>
-          </button>
-        </div>
+        <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple class="sr-only">
 
-        <!-- Video Upload Sub-Action -->
-        <div class="video-action-bar">
-          <button type="button" class="video-action-btn" id="btnActionVideo">
-            <span>🎥 Hoặc chọn Video quay kỷ niệm từ máy</span>
-          </button>
-        </div>
+        <div id="compressHint" style="display: none;"></div>
 
-        <!-- Hidden Inputs for File Selection -->
-        <input type="file" id="cameraFileInput" accept="image/*" capture="environment" style="display: none;">
-        <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple style="display: none;">
-        <input type="file" id="videoFileInput" accept="video/*" style="display: none;">
-
-        <!-- Compression / Processing Notice -->
-        <div id="compressHint" style="display: none; font-size: 0.8rem; color: var(--primary-burgundy); margin-top: 12px; text-align: center; font-weight: 600; padding: 6px 12px; background: rgba(226, 149, 120, 0.15); border-radius: var(--radius-pill);"></div>
-
-        <!-- Media Selection Overview & Actions -->
         <div class="selected-media-header" id="selectedMediaHeader" style="display: none;">
-          <div class="media-count-badge" id="mediaCountBadge">
-            <span>📸</span> <strong id="mediaCountText">0 ảnh đã chọn</strong>
-          </div>
+          <p class="media-count-badge" id="mediaCountBadge">
+            <strong id="mediaCountText">0 file đã chọn</strong>
+          </p>
           <button type="button" class="btn-clear-all" id="btnClearAllMedia">Xóa tất cả</button>
         </div>
 
-        <!-- iOS Style Media Preview Grid -->
         <div class="preview-grid" id="mediaPreviewGrid"></div>
 
-        <!-- Add More Button in Grid -->
-        <div id="addMoreWrapper" style="display: none; margin-top: 10px; text-align: center;">
+        <div id="addMoreWrapper" style="display: none;">
           <button type="button" class="btn-add-more" id="btnAddMoreMedia">
-            <span>➕ Thêm ảnh / video khác</span>
+            Thêm ảnh / video khác
           </button>
         </div>
 
-        <!-- Real-time Parallel Upload Progress -->
-        <div class="upload-progress-wrapper" id="uploadProgressWrapper" style="display: none;">
+        <div class="upload-progress-wrapper" id="uploadProgressWrapper" style="display: none;"
+             role="progressbar" aria-valuemin="0" aria-valuemax="100">
           <div class="upload-progress-header">
-            <span id="uploadProgressText">⚡ Đang tải lên Drive... (0/0)</span>
+            <span id="uploadProgressText">Đang tải lên Drive… (0/0)</span>
             <span class="upload-progress-percent" id="uploadProgressPercent">0%</span>
           </div>
           <div class="upload-progress-bar-bg">
             <div class="upload-progress-bar-fill" id="uploadProgressBarFill"></div>
           </div>
-          <div class="upload-progress-sub" id="uploadProgressSub">
-            <span>🚀 Đang tải song song 3 luồng siêu tốc • Tự động nén chuẩn HD</span>
-          </div>
+          <p class="upload-progress-sub" id="uploadProgressSub">
+            Đang tải song song 3 luồng • Tự động nén chuẩn HD
+          </p>
         </div>
 
-        <!-- Main Send Button -->
         <button class="btn-primary btn-submit-main" id="btnSubmitMedia" type="button" disabled>
-          <span>📤 Gửi Lên Google Drive</span>
+          <span>Gửi lên Google Drive</span>
         </button>
 
       </section>
 
-      <!-- Secondary Quick Feature: Tặng Bài Hát (Accordion Toggle) -->
-      <section class="glass-card secondary-song-card" style="margin-top: 14px;">
-        <div class="song-toggle-header" id="songToggleHeader">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 1.2rem;">🎵</span>
-            <strong style="font-size: 0.95rem; color: var(--primary-burgundy);">Tặng Bài Hát Cho Cô Dâu & Chú Rể</strong>
-          </div>
-          <span class="accordion-arrow" id="songAccordionArrow">▼</span>
+      <!-- Secondary task: song request -->
+      <section class="sheet-section secondary-song-card">
+        <div class="song-toggle-header" id="songToggleHeader" role="button" tabindex="0"
+             aria-expanded="false" aria-controls="songFormCollapse">
+          <span class="song-toggle-title">
+            <svg class="icon-line" viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="6" cy="18" r="3"/>
+              <circle cx="18" cy="16" r="3"/>
+              <path d="M9 18V5l12-2v13"/>
+            </svg>
+            Tặng bài hát cho cô dâu &amp; chú rể
+          </span>
+          <span class="accordion-arrow" id="songAccordionArrow" aria-hidden="true">+</span>
         </div>
 
-        <div class="song-form-collapse" id="songFormCollapse" style="display: none; margin-top: 14px; border-top: 1px dashed var(--card-border); padding-top: 14px;">
+        <div class="song-form-collapse" id="songFormCollapse" style="display: none;">
           <form id="songForm">
             <div class="form-group">
-              <label class="form-label" for="songTitle">Tên bài hát:</label>
-              <input type="text" class="form-input" id="songTitle" placeholder="VD: Cưới Nhau Đi, Ánh Nắng Của Anh..." required>
+              <label class="form-label" for="songTitle">Tên bài hát</label>
+              <input type="text" class="form-input" id="songTitle"
+                     placeholder="Ví dụ: Cưới Nhau Đi, Ánh Nắng Của Anh…" required>
             </div>
             <div class="form-group">
-              <label class="form-label" for="songArtist">Ca sĩ / Thể loại (tùy chọn):</label>
-              <input type="text" class="form-input" id="songArtist" placeholder="VD: Bùi Anh Tuấn, Nhạc Acoustic...">
+              <label class="form-label" for="songArtist">Ca sĩ / thể loại (tùy chọn)</label>
+              <input type="text" class="form-input" id="songArtist"
+                     placeholder="Ví dụ: Bùi Anh Tuấn, nhạc acoustic…">
             </div>
             <div class="form-group">
-              <label class="form-label" for="songSender">Người yêu cầu:</label>
-              <input type="text" class="form-input" id="songSender" placeholder="VD: Lan Anh, Nhóm bạn thân...">
+              <label class="form-label" for="songSender">Người yêu cầu</label>
+              <input type="text" class="form-input" id="songSender"
+                     placeholder="Ví dụ: Lan Anh, nhóm bạn thân…">
             </div>
             <div class="form-group">
-              <label class="form-label" for="songNote">Lời nhắn kèm bài hát:</label>
-              <input type="text" class="form-input" id="songNote" placeholder="VD: Hát mừng đôi bạn trẻ trăm năm hạnh phúc!">
+              <label class="form-label" for="songNote">Lời nhắn kèm bài hát</label>
+              <input type="text" class="form-input" id="songNote"
+                     placeholder="Ví dụ: Chúc đôi bạn trăm năm hạnh phúc!">
             </div>
-            <button class="btn-primary" type="submit" style="margin-top: 8px;">
-              <span>🎶 Gửi Yêu Cầu Cho Ban Nhạc</span>
+            <button class="btn-primary" type="submit" style="margin-top: 20px;">
+              <span>Gửi yêu cầu cho ban nhạc</span>
             </button>
           </form>
 
-          <div style="margin-top: 18px; border-top: 1px dashed var(--card-border); padding-top: 12px;">
-            <h4 style="font-size: 0.85rem; color: var(--primary-burgundy); font-weight: 700; margin-bottom: 8px;">🎧 Bài hát vừa được yêu cầu</h4>
+          <div style="margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border-hairline);">
+            <span class="section-label">Bài hát vừa được yêu cầu</span>
             <div class="feed-list" id="songsFeed"></div>
           </div>
         </div>
@@ -192,7 +200,7 @@
 
     </main>
 
-    <!-- Sticky Floating Action Bar (Mobbin Bottom Sheet Pattern) -->
+    <!-- Sticky submit dock -->
     <div class="floating-bottom-bar" id="floatingBottomBar" style="display: none;">
       <div class="floating-bar-content">
         <div class="floating-bar-info">
@@ -200,59 +208,42 @@
           <span class="floating-sub">Sẵn sàng tải lên</span>
         </div>
         <button type="button" class="floating-submit-btn" id="btnFloatingSubmit">
-          <span>📤 Gửi Lên Drive ⚡</span>
+          <svg class="icon-line" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 16V4M12 4l-4 4M12 4l4 4"/>
+            <path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+          </svg>
+          <span>Gửi lên Drive</span>
         </button>
       </div>
     </div>
 
-    <!-- Image Lightbox Modal (Tap thumbnail to view full image) -->
+    <!-- Lightbox -->
     <div class="lightbox-modal" id="imageLightboxModal">
       <div class="lightbox-overlay" id="lightboxOverlay"></div>
       <div class="lightbox-content">
-        <button type="button" class="lightbox-close" id="btnCloseLightbox">✕</button>
-        <img src="" id="lightboxImage" alt="Zoomed Preview" />
-        <div class="lightbox-caption" id="lightboxCaption">Ảnh kỷ niệm</div>
+        <button type="button" class="lightbox-close" id="btnCloseLightbox" aria-label="Đóng">&times;</button>
+        <img src="" id="lightboxImage" alt="Ảnh xem lớn">
+        <p class="lightbox-caption" id="lightboxCaption">Ảnh kỷ niệm</p>
       </div>
     </div>
 
-    <!-- Lucky Ticket Modal (Hiển thị sau khi gửi ảnh/bài hát thành công) -->
-    <div class="lucky-modal-overlay" id="luckyModal">
-      <div class="lucky-card">
-        <div class="lucky-header">
-          <span class="lucky-icon">🎟️</span>
-          <h3>MÃ SỐ MAY MẮN CỦA BẠN</h3>
-          <p>Dùng để tham gia Mini-game Quay Số Trúng Thưởng cùng MC trên sân khấu!</p>
-        </div>
-        <div class="lucky-number-display" id="luckyNumberText">LUCKY-888</div>
-        <div class="lucky-guest-info" id="luckyGuestInfo">Khách mời: Nguyễn Văn A</div>
-        
-        <div class="lucky-actions">
-          <button class="btn-copy-ticket" id="btnCopyLuckyCode" type="button">
-            <span>📋 Sao chép mã số</span>
-          </button>
-          <button class="btn-primary" id="btnCloseLuckyModal" type="button" style="margin-top: 8px;">
-            <span>✨ Tuyệt Vời, Cảm Ơn!</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer -->
     <footer class="wedding-footer">
-      <div>Made with <span style="color: #C1121F;">❤️</span> for Lucy & Ariel</div>
-      <div style="margin-top: 4px; font-size: 0.7rem; opacity: 0.7;">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
-      <div style="margin-top: 8px;">
-        <a href="qr_card.html" target="_blank" style="color: var(--primary-burgundy); font-weight: 600; font-size: 0.75rem; text-decoration: underline;">🖨️ Xuất File In Thẻ Bàn Tiệc (A6/A5)</a>
-        &nbsp;•&nbsp;
-        <a href="live_wall.html" target="_blank" style="color: var(--primary-burgundy); font-weight: 600; font-size: 0.75rem; text-decoration: underline;">📺 Mở Live Wall Chiếu TV/LED</a>
-      </div>
+      <p class="footer-monogram">L &amp; A</p>
+      <p class="footer-copy">
+        Trân trọng cảm ơn sự hiện diện và yêu thương của quý khách.<br>
+        11.09.2026 &nbsp;·&nbsp; 12.09.2026
+      </p>
+      <nav class="footer-links">
+        <a href="qr_card.html" target="_blank" rel="noopener">Xuất thẻ QR bàn tiệc</a>
+        <span aria-hidden="true">·</span>
+        <a href="live_wall.html" target="_blank" rel="noopener">Mở Live Wall</a>
+      </nav>
     </footer>
 
   </div>
 
-  <!-- Toast Container -->
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="js/app.js?v=20260827_2310"></script>
+  <script src="js/app.js?v=20260911_0600"></script>
 </body>
 </html>

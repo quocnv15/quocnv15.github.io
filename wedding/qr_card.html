@@ -203,21 +203,28 @@
       fill: none;
     }
 
-    /* The quiet zone is baked into the generated image via qzone=4, so it
-       cannot be destroyed by a later CSS change. This padding is visual
-       breathing room only; the bronze rule sits outside both. */
+    /* This is the 4-module quiet zone. It stays solid white even though the
+       QR artwork itself is transparent, so phone cameras can locate it. */
     .card-qr-wrapper {
-      padding: 2.5mm;
-      background: var(--surface-cream-card);
+      padding: 5mm;
+      background: #FFFFFF;
       border: 1px solid var(--border-hairline);
       border-radius: 4px;
       line-height: 0;
     }
 
-    .card-qr-wrapper img {
+    /* The SVG QR itself has no background. The current full wedding backdrop
+       fills this area and is visible through the QR's transparent modules. */
+    .card-qr-art {
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.64), rgba(255, 255, 255, 0.64)),
+        url("assets/lucy-ariel-bg@2x.webp") 51% top / cover;
+    }
+
+    .card-qr-art img {
       display: block;
-      width: 38mm;
-      height: 38mm;
+      width: 40mm;
+      height: 40mm;
     }
 
     .card-features {
@@ -228,14 +235,6 @@
 
     .card-features li {
       list-style: none;
-    }
-
-    /* Typed fallback for the guest whose camera simply will not focus. */
-    .card-fallback-url {
-      font-family: ui-monospace, "SF Mono", Menlo, monospace;
-      font-size: 7.5px;
-      letter-spacing: 0.04em;
-      color: var(--accent-bronze);
     }
 
     .card-footer-dates {
@@ -307,13 +306,11 @@
   <script>
     const CARD_CONFIG = {
       count: 4,
-      siteUrl: "https://quocnv15.github.io/wedding/",
       // Olive rather than black: measured 14.5:1 on the parchment, far above the
-      // 4:1 the QR spec asks for, and it decoded identically to pure black under
-      // blur, low light and rotation. ecc=M survives a scuffed or stained card;
-      // qzone=4 bakes the mandatory 4-module quiet zone into the image itself.
+      // 4:1 the QR spec asks for. High error correction helps the printed code
+      // remain readable above the intentionally visible background photo.
       qrColor: "242217",
-      qrEcc: "M",
+      qrEcc: "H",
       photoWebp: "assets/lucy-ariel-card.webp",
       photoJpg: "assets/lucy-ariel-card.jpg",
       names: ["Lucy", "Ariel"],
@@ -324,15 +321,30 @@
         "Mở Camera hoặc Zalo quét mã — không cần tải app",
         "Ảnh lưu thẳng vào album cưới của Lucy &amp; Ariel"
       ],
-      fallbackUrl: "quocnv15.github.io/wedding"
     };
 
+    function getGuestbookUrl() {
+      return new URL("index.html", window.location.href).href;
+    }
+
+    function getQrUrl(data, size) {
+      return "https://api.qrserver.com/v1/create-qr-code/?format=svg" +
+        `&size=${size}x${size}&ecc=${CARD_CONFIG.qrEcc}&qzone=0` +
+        `&data=${encodeURIComponent(data)}&color=${CARD_CONFIG.qrColor}`;
+    }
+
+    async function makeTransparentQr(data, size) {
+      const response = await fetch(getQrUrl(data, size));
+      if (!response.ok) throw new Error("Không thể tạo mã QR");
+
+      const documentSvg = new DOMParser().parseFromString(await response.text(), "image/svg+xml");
+      documentSvg.querySelector("rect")?.remove();
+      return URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(documentSvg)], {
+        type: "image/svg+xml"
+      }));
+    }
+
     function cardMarkup(cfg) {
-      const qrSrc =
-        "https://api.qrserver.com/v1/create-qr-code/?size=900x900" +
-        "&ecc=" + cfg.qrEcc + "&qzone=4" +
-        "&data=" + encodeURIComponent(cfg.siteUrl) +
-        "&color=" + cfg.qrColor;
       const couple = cfg.names.join(" và ");
 
       return `
@@ -357,13 +369,14 @@
               ${cfg.scanCue}
             </p>
             <div class="card-qr-wrapper">
-              <img src="${qrSrc}" alt="Mã QR mở trang gửi ảnh cưới của ${couple}"
-                   width="900" height="900">
+              <div class="card-qr-art">
+                <img class="guestbook-qr" alt="Mã QR mở trang gửi ảnh cưới của ${couple}"
+                     width="900" height="900">
+              </div>
             </div>
             <ul class="card-features">
               ${cfg.features.map(f => `<li>${f}</li>`).join("")}
             </ul>
-            <p class="card-fallback-url">${cfg.fallbackUrl}</p>
             <p class="card-footer-dates">${cfg.dates}</p>
           </div>
         </div>`;
@@ -371,6 +384,15 @@
 
     document.getElementById("printSheet").innerHTML =
       Array.from({ length: CARD_CONFIG.count }, () => cardMarkup(CARD_CONFIG)).join("");
+
+    const guestbookUrl = getGuestbookUrl();
+    const qrImages = document.querySelectorAll(".guestbook-qr");
+    makeTransparentQr(guestbookUrl, 900)
+      .then((qrSrc) => qrImages.forEach((image) => { image.src = qrSrc; }))
+      .catch(() => {
+        const fallbackQrSrc = getQrUrl(guestbookUrl, 900) + "&bgcolor=FFFFFF&qzone=4";
+        qrImages.forEach((image) => { image.src = fallbackQrSrc; });
+      });
   </script>
 </body>
 </html>

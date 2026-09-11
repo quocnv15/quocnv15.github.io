@@ -3,240 +3,336 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🖨️ In Thẻ QR Bàn Tiệc Đám Cưới — Lucy & Ariel</title>
-  <link rel="stylesheet" href="css/style.css">
+  <title>In thẻ QR bàn tiệc — Lucy &amp; Ariel</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260911_0600">
+
   <style>
+    /* ----------------------------------------------------------------------
+       Table standee: an A4 sheet holding four A6 cards.
+       Each card repeats the web app's structure — full-bleed photo band with
+       the couple's names over it, then the parchment sheet carrying the QR —
+       so the printed card and the page read as one design.
+       ---------------------------------------------------------------------- */
     body {
-      background: #EFEFEF;
-      color: #2C1810;
-      padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding: var(--space-8) var(--space-5);
+      background: #DEDAD1;
+      color: var(--text-primary);
     }
 
     .no-print-bar {
-      background: #FFFFFF;
-      border: 1px solid rgba(226, 149, 120, 0.4);
-      border-radius: 16px;
-      padding: 16px 24px;
-      max-width: 800px;
-      width: 100%;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
       display: flex;
-      justify-content: space-between;
-      align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .print-controls {
-      display: flex;
-      gap: 10px;
       align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      width: 100%;
+      max-width: 210mm;
+      margin-bottom: var(--space-6);
+      padding: var(--space-5) var(--space-6);
+      background: var(--surface-cream);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
     }
 
+    .no-print-bar h1 {
+      font-family: var(--font-serif);
+      font-size: var(--text-xl);
+      font-weight: 600;
+    }
+
+    .no-print-bar p {
+      margin-top: var(--space-1);
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+    }
+
+    .print-tips {
+      margin-top: var(--space-3);
+      padding-left: var(--space-4);
+      font-size: var(--text-xs);
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+
+    .print-tips li::marker {
+      color: var(--accent-bronze);
+    }
+
+    .print-tips strong {
+      color: var(--text-primary);
+    }
+
+    .no-print-bar .btn-primary {
+      width: auto;
+      padding: var(--space-3) var(--space-6);
+    }
+
+    /* A4 = 210x297mm. True A6 is 105x148, but four of those need 216x302mm —
+       they do not fit A4 4-up. 96x136mm cards with a 6mm gutter and 5mm margin
+       come to 208x288mm, which clears every printer's unprintable edge. */
     .print-sheet {
-      width: 210mm; /* A4 standard */
-      min-height: 297mm;
-      background: #FFFFFF;
-      padding: 15mm;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15mm;
       box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 96mm 96mm;
+      grid-auto-rows: 136mm;
+      gap: 6mm;
+      justify-content: center;
+      align-content: center;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 5mm;
+      background: #FFFFFF;
+      box-shadow: 0 10px 40px rgba(36, 34, 23, 0.18);
     }
 
     .standee-card {
-      border: 2px solid #D4AF37;
-      border-radius: 20px;
-      padding: 20px 16px;
-      text-align: center;
+      box-sizing: border-box;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--surface-cream);
+      border: 1px solid var(--accent-bronze);
+    }
+
+    /* ---- Top: full-bleed photo band with the names over it ---- */
+    .card-photo {
+      position: relative;
+      flex: none;
+      height: 61mm;
+      overflow: hidden;
+      background: var(--bg-olive);
+    }
+
+    /* The asset is cut to exactly 96:61, so cover neither crops nor letterboxes
+       it — the couple sits right of centre and the open grass on the left is
+       what the name block sits on. */
+    .card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* Bottom-up scrim. At 0.76 alpha the ivory type clears 8:1 over every tone
+       in this photo, including the brightest sunlit grass. */
+    .card-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(24, 22, 14, 0) 38%,
+        rgba(24, 22, 14, 0.38) 66%,
+        rgba(24, 22, 14, 0.76) 100%
+      );
+    }
+
+    .card-names {
+      position: absolute;
+      left: 6mm;
+      right: 6mm;
+      bottom: 4.5mm;
+      z-index: 1;
+      color: var(--text-on-photo);
+    }
+
+    .card-eyebrow {
+      font-size: 7px;
+      font-weight: 600;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-on-photo-muted);
+    }
+
+    .card-couple-names {
+      margin-top: 1mm;
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+    }
+
+    .card-couple-names span {
+      font-size: 0.62em;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--text-on-photo-muted);
+    }
+
+    /* ---- Bottom: parchment sheet carrying the QR ---- */
+    .card-body {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      background: linear-gradient(135deg, #FFFDFB 0%, #FFF5F2 100%);
-      box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.1);
-      position: relative;
-      height: 125mm;
-      box-sizing: border-box;
+      padding: 5mm 6mm 4.5mm;
+      text-align: center;
     }
 
-    .standee-card::before {
-      content: "";
-      position: absolute;
-      top: 6px;
-      left: 6px;
-      right: 6px;
-      bottom: 6px;
-      border: 1px dashed rgba(226, 149, 120, 0.4);
-      border-radius: 14px;
-      pointer-events: none;
-    }
-
-    .card-top-tag {
-      font-size: 11px;
-      letter-spacing: 2px;
-      color: #8B263E;
-      font-weight: 700;
-      text-transform: uppercase;
-      margin-bottom: 2px;
-    }
-
-    .card-couple-names {
-      font-family: var(--font-serif);
-      font-size: 26px;
-      font-weight: 700;
-      color: #8B263E;
-      line-height: 1.1;
-    }
-
-    .card-couple-names span {
-      color: #D4AF37;
-      font-style: italic;
-    }
-
+    /* The QR spec requires a 4-module quiet zone; the generator bakes in only
+       one. At 32mm across a ~30x30 grid a module is ~1.07mm, so this padding
+       alone must carry 4 modules = 4.3mm. Do not shrink it, and keep the
+       bronze rule outside it — the quiet zone has to stay blank white. */
     .card-qr-wrapper {
+      padding: 4.5mm;
       background: #FFFFFF;
-      padding: 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(212, 175, 55, 0.5);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-      margin: 10px 0;
+      border: 1px solid var(--border-hairline);
     }
 
     .card-qr-wrapper img {
-      width: 140px;
-      height: 140px;
       display: block;
+      width: 32mm;
+      height: 32mm;
+    }
+
+    .card-scan-cue {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--text-bronze);
     }
 
     .card-features {
-      font-size: 11.5px;
+      font-size: 9.5px;
       line-height: 1.45;
-      color: #2C1810;
-      font-weight: 600;
-      margin-bottom: 6px;
+      color: var(--text-secondary);
     }
 
     .card-features li {
       list-style: none;
-      margin-bottom: 2px;
     }
 
     .card-footer-dates {
-      font-size: 11px;
-      color: #735D55;
-      border-top: 1px solid rgba(226, 149, 120, 0.3);
-      padding-top: 6px;
-      width: 90%;
+      width: 78%;
+      padding-top: 2.5mm;
+      font-size: 8.5px;
+      letter-spacing: 0.1em;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-hairline);
     }
 
     @media print {
-      body {
-        background: #FFFFFF;
-        padding: 0;
+      /* Without this the print engine drops the photo band, the cream ground
+         and the bronze rules, leaving four empty outlines. */
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
+
+      body {
+        padding: 0;
+        background: #FFFFFF;
+      }
+
       .no-print-bar {
         display: none !important;
       }
+
       .print-sheet {
-        box-shadow: none;
-        padding: 10mm;
+        width: 210mm;
+        min-height: 297mm;
         margin: 0;
-        width: 100%;
-        min-height: auto;
+        box-shadow: none;
       }
+
+      .standee-card {
+        break-inside: avoid;
+      }
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
     }
   </style>
 </head>
 <body>
 
-  <!-- Controls Bar (Ẩn khi in) -->
   <div class="no-print-bar">
     <div>
-      <h2 style="font-family: var(--font-serif); color: var(--primary-burgundy); font-size: 1.4rem;">
-        🌸 Trình Xuất File In Thẻ QR Bàn Tiệc (A6/A5 Standee)
-      </h2>
-      <p style="font-size: 0.82rem; color: #735D55; margin-top: 2px;">
-        Khổ A4 chia làm 4 thẻ A6 (10x15cm) đặt vừa vặn trên từng bàn tiệc của rạp cưới.
-      </p>
+      <h1>Xuất file in thẻ QR bàn tiệc</h1>
+      <p>Khổ A4 chia thành 4 thẻ 96×136 mm, đặt vừa trên mỗi bàn tiệc.</p>
+      <ul class="print-tips">
+        <li><strong>Màu</strong> — chọn Color, không chọn Grayscale / Black &amp; White.</li>
+        <li><strong>Background graphics</strong> — phải bật, nếu không sẽ mất ảnh cưới và nền kem.</li>
+        <li><strong>Scale 100%</strong> — không chọn "Fit to page", nếu không thẻ sai kích thước.</li>
+        <li>Giấy dày 250–300 gsm, mặt lì. Giấy bóng sẽ lóa đèn rạp và khó quét mã.</li>
+      </ul>
     </div>
-
-    <div class="print-controls">
-      <button class="btn-primary" style="margin: 0; padding: 10px 24px;" onclick="window.print()">
-        <span>🖨️ In Ngay (Ctrl + P)</span>
-      </button>
-    </div>
+    <button class="btn-primary" type="button" onclick="window.print()">
+      <span>In ngay (Ctrl / Cmd + P)</span>
+    </button>
   </div>
 
-  <!-- A4 Print Sheet -->
-  <div class="print-sheet">
-    
-    <!-- Card 1 -->
-    <div class="standee-card">
-      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
-      <div class="card-couple-names">Lucy <span>&</span> Ariel</div>
-      <div class="card-qr-wrapper">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
-      </div>
-      <ul class="card-features">
-        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
-        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
-        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
-      </ul>
-      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
-    </div>
+  <!-- Cards are generated from one template so the copy is edited in a
+       single place instead of being kept in sync across four blocks. -->
+  <div class="print-sheet" id="printSheet"></div>
 
-    <!-- Card 2 -->
-    <div class="standee-card">
-      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
-      <div class="card-couple-names">Lucy <span>&</span> Ariel</div>
-      <div class="card-qr-wrapper">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
-      </div>
-      <ul class="card-features">
-        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
-        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
-        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
-      </ul>
-      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
-    </div>
+  <script>
+    const CARD_CONFIG = {
+      count: 4,
+      siteUrl: "https://quocnv15.github.io/wedding/",
+      qrColor: "242217", // deep olive, matching the web app's ink
+      photoWebp: "assets/lucy-ariel-card.webp",
+      photoJpg: "assets/lucy-ariel-card.jpg",
+      names: ["Lucy", "Ariel"],
+      dates: "11.09.2026 — 12.09.2026",
+      eyebrow: "Wedding Celebration",
+      scanCue: "Quét mã để gửi ảnh",
+      features: [
+        "Gửi ảnh &amp; video kỷ niệm vào Google Drive của dâu rể",
+        "Tặng bài hát cho ban nhạc"
+      ]
+    };
 
-    <!-- Card 3 -->
-    <div class="standee-card">
-      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
-      <div class="card-couple-names">Lucy <span>&</span> Ariel</div>
-      <div class="card-qr-wrapper">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
-      </div>
-      <ul class="card-features">
-        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
-        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
-        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
-      </ul>
-      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
-    </div>
+    function cardMarkup(cfg) {
+      const qrSrc =
+        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0" +
+        "&data=" + encodeURIComponent(cfg.siteUrl) +
+        "&color=" + cfg.qrColor;
+      const couple = cfg.names.join(" và ");
 
-    <!-- Card 4 -->
-    <div class="standee-card">
-      <div class="card-top-tag">🌸 HAPPY WEDDING 🌸</div>
-      <div class="card-couple-names">Lucy <span>&</span> Ariel</div>
-      <div class="card-qr-wrapper">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
-      </div>
-      <ul class="card-features">
-        <li>📸 <strong>Quét mã</strong> gửi ảnh & clip kỷ niệm</li>
-        <li>💌 Gửi lời chúc & nhận Số May Mắn</li>
-        <li>🎵 Gửi yêu cầu bài hát tới ban nhạc</li>
-      </ul>
-      <div class="card-footer-dates">11.09.2026 — 12.09.2026 • Trăm Năm Hạnh Phúc</div>
-    </div>
+      return `
+        <div class="standee-card">
+          <div class="card-photo">
+            <picture>
+              <source srcset="${cfg.photoWebp}" type="image/webp">
+              <img src="${cfg.photoJpg}" alt="${couple} trong ảnh cưới">
+            </picture>
+            <div class="card-names">
+              <p class="card-eyebrow">${cfg.eyebrow}</p>
+              <p class="card-couple-names">${cfg.names[0]} <span>&amp;</span> ${cfg.names[1]}</p>
+            </div>
+          </div>
 
-  </div>
+          <div class="card-body">
+            <div class="card-qr-wrapper">
+              <img src="${qrSrc}" alt="Mã QR mở trang gửi ảnh cưới của ${couple}"
+                   width="300" height="300">
+            </div>
+            <p class="card-scan-cue">${cfg.scanCue}</p>
+            <ul class="card-features">
+              ${cfg.features.map(f => `<li>${f}</li>`).join("")}
+            </ul>
+            <p class="card-footer-dates">${cfg.dates}</p>
+          </div>
+        </div>`;
+    }
 
+    document.getElementById("printSheet").innerHTML =
+      Array.from({ length: CARD_CONFIG.count }, () => cardMarkup(CARD_CONFIG)).join("");
+  </script>
 </body>
 </html>

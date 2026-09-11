@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>💍 Live Stage Wall & Lucky Draw — Đám Cưới Lucy & Ariel (11/9 - 12/9)</title>
+  <title>Live Wall — Lucy &amp; Ariel</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
     body {
-      background: radial-gradient(circle at center, #2B0A16 0%, #15050B 100%);
+      background: radial-gradient(circle at center, #322F1D 0%, #191710 100%);
       color: #FFFFFF;
       overflow: hidden;
       display: flex;
@@ -33,7 +33,7 @@
     /* Left Sidebar: Big QR & Wedding Info */
     .qr-sidebar {
       background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(226, 149, 120, 0.3);
+      border: 1px solid rgba(140, 118, 77, 0.34);
       backdrop-filter: blur(25px);
       border-radius: 24px;
       padding: 20px;
@@ -48,13 +48,13 @@
     .live-header h1 {
       font-family: var(--font-serif);
       font-size: 2.1rem;
-      color: var(--accent-gold-light);
+      color: var(--text-on-photo-muted);
       margin-bottom: 2px;
     }
 
     .live-header p {
       font-size: 0.85rem;
-      color: #FFAAA6;
+      color: #DAC6AE;
       font-weight: 500;
     }
 
@@ -62,7 +62,7 @@
       background: #FFFFFF;
       padding: 14px;
       border-radius: 20px;
-      box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+      box-shadow: 0 0 30px rgba(153, 111, 57, 0.4);
       margin: 12px 0;
     }
 
@@ -79,7 +79,7 @@
     }
 
     .qr-instruction strong {
-      color: var(--accent-gold-light);
+      color: var(--text-on-photo-muted);
     }
 
     /* Mode Navigation Buttons */
@@ -94,7 +94,7 @@
     .mode-btn {
       padding: 10px 14px;
       border-radius: var(--radius-pill);
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      border: 1px solid rgba(153, 111, 57, 0.3);
       background: rgba(255, 255, 255, 0.08);
       color: #FFFFFF;
       font-size: 0.82rem;
@@ -108,9 +108,9 @@
     }
 
     .mode-btn.active, .mode-btn:hover {
-      background: linear-gradient(135deg, var(--primary-burgundy) 0%, #A32D4B 100%);
-      border-color: var(--accent-gold);
-      box-shadow: 0 4px 14px rgba(212, 175, 55, 0.3);
+      background: linear-gradient(135deg, var(--bg-olive) 0%, var(--accent-bronze-deep) 100%);
+      border-color: var(--accent-bronze);
+      box-shadow: 0 4px 14px rgba(153, 111, 57, 0.32);
     }
 
     /* Main Showcase Area */
@@ -125,7 +125,7 @@
 
     .banner-top {
       background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(153, 111, 57, 0.2);
       border-radius: 16px;
       padding: 12px 20px;
       display: flex;
@@ -139,20 +139,20 @@
       gap: 8px;
       font-size: 1.05rem;
       font-weight: 700;
-      color: var(--accent-gold-light);
+      color: var(--text-on-photo-muted);
     }
 
     .live-dot {
       width: 12px;
       height: 12px;
-      background: #FF3366;
+      background: #BA9261;
       border-radius: 50%;
       animation: pulse 1.5s infinite;
     }
 
     @keyframes pulse {
       0% { transform: scale(0.9); opacity: 0.7; }
-      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px #FF3366; }
+      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 12px #BA9261; }
       100% { transform: scale(0.9); opacity: 0.7; }
     }
 
@@ -182,10 +182,10 @@
       width: 92%;
       max-width: 820px;
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.06) 100%);
-      border: 2px solid rgba(212, 175, 55, 0.5);
+      border: 2px solid rgba(153, 111, 57, 0.5);
       border-radius: 32px;
       padding: 36px 40px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(212, 175, 55, 0.1);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(153, 111, 57, 0.1);
       backdrop-filter: blur(30px);
       text-align: center;
       animation: cardFlip 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -199,17 +199,17 @@
     .wish-sender-title {
       font-family: var(--font-serif);
       font-size: 2.3rem;
-      color: var(--accent-gold-light);
+      color: var(--text-on-photo-muted);
       margin-bottom: 8px;
     }
 
     .wish-tag-badge {
       display: inline-block;
       padding: 6px 18px;
-      background: rgba(226, 149, 120, 0.25);
+      background: rgba(140, 118, 77, 0.28);
       border-radius: 999px;
       font-size: 0.95rem;
-      color: #FFE3E0;
+      color: #EFE9DE;
       margin-bottom: 20px;
       font-weight: 600;
     }
@@ -246,7 +246,7 @@
     .ticker-sender {
       font-size: 0.85rem;
       font-weight: 700;
-      color: var(--accent-gold-light);
+      color: var(--text-on-photo-muted);
     }
 
     .ticker-msg {
@@ -257,126 +257,11 @@
       text-overflow: ellipsis;
     }
 
-    /* MODE 2: LUCKY DRAW WHEEL */
-    .lucky-stage-wrapper {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .wheel-container {
-      position: relative;
-      width: 420px;
-      height: 420px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #wheelCanvas {
-      width: 420px;
-      height: 420px;
-      border-radius: 50%;
-      box-shadow: 0 0 50px rgba(212, 175, 55, 0.5), 0 0 100px rgba(139, 38, 62, 0.4);
-    }
-
-    .wheel-pointer {
-      position: absolute;
-      top: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 32px;
-      height: 44px;
-      background: #FFD700;
-      clip-path: polygon(50% 100%, 0 0, 100% 0);
-      z-index: 10;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
-    }
-
-    .spin-controls {
-      margin-top: 20px;
-      display: flex;
-      gap: 16px;
-    }
-
-    .btn-spin {
-      padding: 14px 40px;
-      border-radius: var(--radius-pill);
-      border: 2px solid #FFD700;
-      background: linear-gradient(135deg, #C1121F 0%, #8B263E 100%);
-      color: #FFFFFF;
-      font-family: var(--font-serif);
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(193, 18, 31, 0.5);
-      transition: all 0.25s ease;
-    }
-
-    .btn-spin:hover {
-      transform: scale(1.05);
-      box-shadow: 0 12px 32px rgba(255, 215, 0, 0.5);
-    }
-
-    /* Winner Announcement Modal */
-    .winner-modal {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.8);
-      background: linear-gradient(135deg, #2B0A16 0%, #15050B 100%);
-      border: 3px solid #FFD700;
-      border-radius: 32px;
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(255, 215, 0, 0.4);
-      z-index: 100;
-      display: none;
-      width: 90%;
-      max-width: 600px;
-    }
-
-    .winner-modal.show {
-      display: block;
-      animation: winnerPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    @keyframes winnerPop {
-      to { transform: translate(-50%, -50%) scale(1); }
-    }
-
-    .winner-title {
-      font-size: 1.4rem;
-      color: #FFD700;
-      letter-spacing: 2px;
-      margin-bottom: 8px;
-    }
-
-    .winner-number {
-      font-family: var(--font-serif);
-      font-size: 3.5rem;
-      color: #FFFFFF;
-      font-weight: 700;
-      text-shadow: 0 0 20px #FF3366;
-      margin-bottom: 10px;
-    }
-
-    .winner-name {
-      font-size: 1.8rem;
-      color: var(--accent-gold-light);
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
     /* MODE 3: SONG REQUEST LIST */
     .song-stage-wrapper {
       flex: 1;
       background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(153, 111, 57, 0.2);
       border-radius: 24px;
       padding: 24px;
       overflow-y: auto;
@@ -401,12 +286,12 @@
     .song-card-title {
       font-size: 1.2rem;
       font-weight: 700;
-      color: var(--accent-gold-light);
+      color: var(--text-on-photo-muted);
     }
 
     .song-card-sender {
       font-size: 0.9rem;
-      color: #FFAAA6;
+      color: #DAC6AE;
     }
 
     .song-card-note {
@@ -432,19 +317,18 @@
       </div>
 
       <div class="qr-box">
-        <img id="stageQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=8B263E" alt="QR Code">
+        <img id="stageQrImage" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://quocnv15.github.io/wedding/&color=242217" alt="QR Code">
       </div>
 
       <div class="qr-instruction">
-        <strong>📱 Quét mã QR tại bàn tiệc</strong><br>
+        <strong>Quét mã QR tại bàn tiệc</strong><br>
         Để gửi ảnh, clip & lời chúc hiển thị trực tiếp lên màn hình!
       </div>
 
       <!-- Mode Switcher for Stage Operator / MC -->
       <div class="stage-mode-nav">
-        <button class="mode-btn active" id="btnModeWishes" type="button">💌 Lời Chúc (Phím 1)</button>
-        <button class="mode-btn" id="btnModeLucky" type="button">🎰 Vòng Quay May Mắn (Phím 2)</button>
-        <button class="mode-btn" id="btnModeSongs" type="button">🎵 Danh Sách Bài Hát (Phím 3)</button>
+        <button class="mode-btn active" id="btnModeWishes" type="button">Lời chúc (phím 1)</button>
+        <button class="mode-btn" id="btnModeSongs" type="button">Danh sách bài hát (phím 2)</button>
       </div>
     </aside>
 
@@ -456,8 +340,8 @@
           <span id="stageBannerTitle">TRỰC TIẾP TỪ TIỆC CƯỚI</span>
         </div>
         <div style="display: flex; gap: 16px; align-items: center;">
-          <div style="font-size: 0.95rem; color: #FFAAA6;" id="liveClock"></div>
-          <button style="background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; padding: 4px 10px; cursor: pointer; font-size: 0.75rem;" onclick="toggleFullscreen()">⛶ Toàn màn hình (F)</button>
+          <div style="font-size: 0.95rem; color: #DAC6AE;" id="liveClock"></div>
+          <button style="background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; padding: 4px 10px; cursor: pointer; font-size: 0.75rem;" onclick="toggleFullscreen()">Toàn màn hình (F)</button>
         </div>
       </div>
 
@@ -466,7 +350,7 @@
         <div class="featured-wish-container">
           <div class="featured-card" id="featuredCard">
             <div class="wish-sender-title" id="featuredSender">Hội Bạn Thân Đại Học</div>
-            <div class="wish-tag-badge">🌸 Lời chúc phúc</div>
+            <div class="wish-tag-badge">Lời chúc phúc</div>
             <div class="wish-text-body" id="featuredMessage">
               "Chúc bạn Lucy và Ariel trăm năm hòa hợp, đầu bạc răng long, sớm đón thiên thần nhỏ nha! Nay cô dâu xinh đẹp rạng ngời nhất! 🎉💐"
             </div>
@@ -477,33 +361,11 @@
         <div class="wishes-ticker" id="wishesTicker"></div>
       </div>
 
-      <!-- ================= PANE 2: LUCKY DRAW WHEEL ================= -->
-      <div class="stage-pane" id="paneLucky">
-        <div class="lucky-stage-wrapper">
-          <div class="wheel-container">
-            <div class="wheel-pointer"></div>
-            <canvas id="wheelCanvas" width="420" height="420"></canvas>
-          </div>
-
-          <div class="spin-controls">
-            <button class="btn-spin" id="btnSpinWheel" type="button">🎲 QUAY SỐ TRÚNG THƯỞNG</button>
-          </div>
-
-          <!-- Winner Modal -->
-          <div class="winner-modal" id="winnerModal">
-            <div class="winner-title">🎉 CHÚC MỪNG KHÁCH MỜI MAY MẮN 🎉</div>
-            <div class="winner-number" id="winnerLuckyNum">LUCKY-888</div>
-            <div class="winner-name" id="winnerName">Nguyễn Văn A</div>
-            <button class="mode-btn" style="margin: 20px auto 0 auto; width: fit-content;" onclick="closeWinnerModal()">Tiếp tục</button>
-          </div>
-        </div>
-      </div>
-
       <!-- ================= PANE 3: SONG REQUESTS ================= -->
       <div class="stage-pane" id="paneSongs">
         <div class="song-stage-wrapper">
-          <h2 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--accent-gold-light); margin-bottom: 16px;">
-            🎧 Danh Sách Bài Hát Khách Mời Tặng Lucy & Ariel
+          <h2 style="font-family: var(--font-serif); font-size: 1.8rem; color: var(--text-on-photo-muted); margin-bottom: 16px;">
+            Bài hát khách mời tặng Lucy &amp; Ariel
           </h2>
           <div class="song-grid" id="stageSongsGrid"></div>
         </div>
@@ -521,7 +383,7 @@
     function updateClock() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-      document.getElementById('liveClock').innerText = `🕒 ${timeStr}`;
+      document.getElementById('liveClock').innerText = `${timeStr}`;
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -538,35 +400,27 @@
     // Keyboard Shortcuts (1, 2, 3, F)
     document.addEventListener("keydown", (e) => {
       if (e.key === "1") switchMode("wishes");
-      if (e.key === "2") switchMode("lucky");
-      if (e.key === "3") switchMode("songs");
+      if (e.key === "2") switchMode("songs");
       if (e.key.toLowerCase() === "f") toggleFullscreen();
     });
 
     // Mode Navigation
     const btnWishes = document.getElementById("btnModeWishes");
-    const btnLucky = document.getElementById("btnModeLucky");
     const btnSongs = document.getElementById("btnModeSongs");
 
     const paneWishes = document.getElementById("paneWishes");
-    const paneLucky = document.getElementById("paneLucky");
     const paneSongs = document.getElementById("paneSongs");
     const bannerTitle = document.getElementById("stageBannerTitle");
 
     function switchMode(mode) {
-      [btnWishes, btnLucky, btnSongs].forEach(b => b.classList.remove("active"));
-      [paneWishes, paneLucky, paneSongs].forEach(p => p.classList.remove("active"));
+      [btnWishes, btnSongs].forEach(b => b.classList.remove("active"));
+      [paneWishes, paneSongs].forEach(p => p.classList.remove("active"));
 
       if (mode === "wishes") {
         btnWishes.classList.add("active");
         paneWishes.classList.add("active");
         bannerTitle.innerText = "TRỰC TIẾP TỪ TIỆC CƯỚI";
-      } else if (mode === "lucky") {
-        btnLucky.classList.add("active");
-        paneLucky.classList.add("active");
-        bannerTitle.innerText = "VÒNG QUAY MAY MẮN TRÚNG THƯỞNG CÙNG MC";
-        drawWheel();
-      } else if (mode === "songs") {
+            } else if (mode === "songs") {
         btnSongs.classList.add("active");
         paneSongs.classList.add("active");
         bannerTitle.innerText = "HỘP NHẠC YÊU CẦU CHO BAN NHẠC & MC";
@@ -574,15 +428,14 @@
     }
 
     btnWishes.addEventListener("click", () => switchMode("wishes"));
-    btnLucky.addEventListener("click", () => switchMode("lucky"));
     btnSongs.addEventListener("click", () => switchMode("songs"));
 
     // Initial Live Pool Data
     let liveWishes = [
-      { sender: "Hội Bạn Thân Đại Học", msg: "Chúc bạn Lucy và Ariel trăm năm hòa hợp, đầu bạc răng long, sớm đón thiên thần nhỏ nha! 🎉💐", lucky: "LUCKY-789" },
-      { sender: "Bác Hùng & Gia Đình", msg: "Chúc hai cháu vạn sự như ý, xây dựng tổ ấm hạnh phúc vững bền! ❤️", lucky: "LUCKY-352" },
-      { sender: "Nhóm Đồng Nghiệp", msg: "Mừng ngày trọng đại của Lucy & Ariel! Chúc 2 vợ chồng luôn ngọt ngào như ngày đầu tiên! 🥂✨", lucky: "LUCKY-618" },
-      { sender: "Nhóm Bạn Thân Cấp 3", msg: "Cạn chén mừng hạnh phúc đôi bạn trẻ! Quẩy hết mình hôm nay nha! 🥳🍻", lucky: "LUCKY-999" }
+      { sender: "Hội Bạn Thân Đại Học", msg: "Chúc bạn Lucy và Ariel trăm năm hòa hợp, đầu bạc răng long, sớm đón thiên thần nhỏ nha! 🎉💐" },
+      { sender: "Bác Hùng & Gia Đình", msg: "Chúc hai cháu vạn sự như ý, xây dựng tổ ấm hạnh phúc vững bền! ❤️" },
+      { sender: "Nhóm Đồng Nghiệp", msg: "Mừng ngày trọng đại của Lucy & Ariel! Chúc 2 vợ chồng luôn ngọt ngào như ngày đầu tiên! 🥂✨" },
+      { sender: "Nhóm Bạn Thân Cấp 3", msg: "Cạn chén mừng hạnh phúc đôi bạn trẻ! Quẩy hết mình hôm nay nha! 🥳🍻" }
     ];
 
     let liveSongs = [
@@ -602,8 +455,7 @@
         if (dataWishes && dataWishes.success && dataWishes.data && dataWishes.data.length > 0) {
           liveWishes = dataWishes.data.map(w => ({
             sender: w.senderName,
-            msg: w.message,
-            lucky: w.luckyNumber
+            msg: w.message
           }));
           renderTicker();
         }
@@ -621,11 +473,7 @@
           renderSongs();
         }
 
-        // 3. Fetch Lucky Pool for Wheel
-        const resLucky = await fetch(`${GAS_ENDPOINT_URL}?action=getLuckyPool`);
-        const dataLucky = await resLucky.json();
-        if (dataLucky && dataLucky.success && dataLucky.data && dataLucky.data.length > 0) {
-          updateWheelSegments(dataLucky.data);
+        if (false) {
         }
       } catch (err) {
         console.log("Drive sync poll:", err);
@@ -661,7 +509,7 @@
         const div = document.createElement("div");
         div.className = "ticker-item";
         div.innerHTML = `
-          <div class="ticker-sender">💌 ${w.sender}</div>
+          <div class="ticker-sender">${w.sender}</div>
           <div class="ticker-msg">${w.msg}</div>
         `;
         ticker.appendChild(div);
@@ -677,8 +525,8 @@
         const div = document.createElement("div");
         div.className = "song-card-live";
         div.innerHTML = `
-          <div class="song-card-title">🎵 ${s.title}</div>
-          <div class="song-card-sender">🎤 ${s.artist} • Người tặng: <strong>${s.sender}</strong></div>
+          <div class="song-card-title">${s.title}</div>
+          <div class="song-card-sender">${s.artist} • Người tặng: <strong>${s.sender}</strong></div>
           <div class="song-card-note">"${s.note}"</div>
         `;
         songsGrid.appendChild(div);
@@ -686,122 +534,7 @@
     }
     renderSongs();
 
-    // ================= LUCKY DRAW WHEEL CANVAS =================
-    const wheelCanvas = document.getElementById("wheelCanvas");
-    const ctx = wheelCanvas.getContext("2d");
-    let segments = [
-      { text: "LUCKY-789", color: "#8B263E" },
-      { text: "LUCKY-352", color: "#D4AF37" },
-      { text: "LUCKY-618", color: "#C1121F" },
-      { text: "LUCKY-999", color: "#2B0A16" },
-      { text: "LUCKY-123", color: "#E29578" },
-      { text: "LUCKY-456", color: "#4A7C59" },
-      { text: "LUCKY-888", color: "#8B263E" },
-      { text: "LUCKY-520", color: "#D4AF37" }
-    ];
 
-    const wheelColors = ["#8B263E", "#D4AF37", "#C1121F", "#2B0A16", "#E29578", "#4A7C59"];
-
-    function updateWheelSegments(realLuckyPool) {
-      if (!realLuckyPool || realLuckyPool.length === 0) return;
-      segments = realLuckyPool.slice(0, 12).map((item, idx) => ({
-        text: item.lucky,
-        sender: item.sender,
-        color: wheelColors[idx % wheelColors.length]
-      }));
-      drawWheel();
-    }
-
-    let currentAngle = 0;
-    let isSpinning = false;
-
-    function drawWheel() {
-      const numSegments = segments.length;
-      const anglePerSegment = (2 * Math.PI) / numSegments;
-      const radius = wheelCanvas.width / 2;
-
-      ctx.clearRect(0, 0, wheelCanvas.width, wheelCanvas.height);
-
-      for (let i = 0; i < numSegments; i++) {
-        const angle = currentAngle + i * anglePerSegment;
-        ctx.beginPath();
-        ctx.moveTo(radius, radius);
-        ctx.arc(radius, radius, radius - 8, angle, angle + anglePerSegment);
-        ctx.fillStyle = segments[i].color;
-        ctx.fill();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "#FFD700";
-        ctx.stroke();
-
-        // Text
-        ctx.save();
-        ctx.translate(radius, radius);
-        ctx.rotate(angle + anglePerSegment / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 18px 'Cormorant Garamond', Georgia, serif";
-        ctx.fillText(segments[i].text, radius - 24, 6);
-        ctx.restore();
-      }
-
-      // Center Pin
-      ctx.beginPath();
-      ctx.arc(radius, radius, 28, 0, 2 * Math.PI);
-      ctx.fillStyle = "#FFD700";
-      ctx.fill();
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = "#8B263E";
-      ctx.stroke();
-
-      ctx.fillStyle = "#8B263E";
-      ctx.font = "bold 16px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("🎁", radius, radius + 6);
-    }
-
-    drawWheel();
-
-    const btnSpin = document.getElementById("btnSpinWheel");
-    btnSpin.addEventListener("click", () => {
-      if (isSpinning) return;
-      isSpinning = true;
-      btnSpin.disabled = true;
-
-      const spinAngle = Math.PI * 2 * (5 + Math.random() * 5) + Math.random() * Math.PI * 2;
-      const startAngle = currentAngle;
-      const duration = 4500;
-      const startTime = performance.now();
-
-      function animateSpin(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const ease = 1 - Math.pow(1 - progress, 3);
-        currentAngle = startAngle + spinAngle * ease;
-        drawWheel();
-
-        if (progress < 1) {
-          requestAnimationFrame(animateSpin);
-        } else {
-          isSpinning = false;
-          btnSpin.disabled = false;
-          announceWinner();
-        }
-      }
-
-      requestAnimationFrame(animateSpin);
-    });
-
-    function announceWinner() {
-      const winner = liveWishes[Math.floor(Math.random() * liveWishes.length)];
-      document.getElementById("winnerLuckyNum").innerText = winner.lucky;
-      document.getElementById("winnerName").innerText = winner.sender;
-      document.getElementById("winnerModal").classList.add("show");
-      triggerStageConfetti();
-    }
-
-    function closeWinnerModal() {
-      document.getElementById("winnerModal").classList.remove("show");
-    }
 
     // Stage Confetti
     function triggerStageConfetti() {
@@ -811,7 +544,7 @@
       canvas.height = window.innerHeight;
 
       const particles = [];
-      const colors = ["#FFD700", "#FF3366", "#FFFFFF", "#E29578", "#8B263E"];
+      const colors = ["#BA9261", "#BA9261", "#FFFFFF", "#A08B65", "#75552B"];
       for (let i = 0; i < 120; i++) {
         particles.push({
           x: canvas.width / 2,

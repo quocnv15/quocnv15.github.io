@@ -419,14 +419,7 @@ button {
   margin-bottom: var(--space-2);
 }
 
-.form-hint {
-  font-size: var(--text-xs);
-  color: var(--text-bronze);
-  font-weight: 500;
-}
-
-.form-input,
-.form-textarea {
+.form-input {
   width: 100%;
   min-height: 48px;
   /* 16px keeps iOS Safari from zooming the viewport on focus */
@@ -439,21 +432,14 @@ button {
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-input::placeholder,
-.form-textarea::placeholder {
+.form-input::placeholder {
   color: rgba(92, 83, 47, 0.62);
 }
 
-.form-input:focus,
-.form-textarea:focus {
+.form-input:focus {
   outline: none;
   border-color: var(--accent-bronze);
   box-shadow: 0 0 0 3px var(--accent-bronze-wash);
-}
-
-.form-textarea {
-  resize: vertical;
-  line-height: 1.5;
 }
 
 /* --------------------------------------------------------------------------

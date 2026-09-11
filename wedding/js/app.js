@@ -459,7 +459,7 @@ function initUploadDropzone() {
       console.error("Lỗi upload:", err);
       state.isUploading = false;
       uploadBtn.disabled = false;
-      uploadBtn.innerHTML = `<span>📤 Gửi Lên Google Drive</span>`;
+      uploadBtn.innerHTML = `<span>Gửi lên Google Drive</span>`;
       if (floatingBar) floatingBar.style.display = "block";
       renderMediaPreviews();
       showToast("Có lỗi xảy ra, vui lòng thử lại");

@@ -75,20 +75,12 @@
       padding: var(--space-3) var(--space-6);
     }
 
-    /* A4 = 210x297mm. True A6 is 105x148, but four of those need 216x302mm —
-       they do not fit A4 4-up. 96x136mm cards with a 6mm gutter and 5mm margin
-       come to 208x288mm, which clears every printer's unprintable edge. */
+    /* One complete QR card per A4 sheet — ready to print without cutting. */
     .print-sheet {
       box-sizing: border-box;
-      display: grid;
-      grid-template-columns: 96mm 96mm;
-      grid-auto-rows: 136mm;
-      gap: 6mm;
-      justify-content: center;
-      align-content: center;
       width: 210mm;
       min-height: 297mm;
-      padding: 5mm;
+      padding: 10mm;
       background: #FFFFFF;
       box-shadow: 0 10px 40px rgba(36, 34, 23, 0.18);
     }
@@ -99,6 +91,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      height: 277mm;
       background: var(--surface-cream);
       border: 1px solid var(--accent-bronze);
     }
@@ -107,14 +100,12 @@
     .card-photo {
       position: relative;
       flex: none;
-      height: 61mm;
+      height: 122mm;
       overflow: hidden;
       background: var(--bg-olive);
     }
 
-    /* The asset is cut to exactly 96:61, so cover neither crops nor letterboxes
-       it — the couple sits right of centre and the open grass on the left is
-       what the name block sits on. */
+    /* The image fills the A4 card's photo band while keeping the couple centred. */
     .card-photo img {
       width: 100%;
       height: 100%;
@@ -138,15 +129,15 @@
 
     .card-names {
       position: absolute;
-      left: 6mm;
-      right: 6mm;
-      bottom: 4.5mm;
+      left: 12mm;
+      right: 12mm;
+      bottom: 9mm;
       z-index: 1;
       color: var(--text-on-photo);
     }
 
     .card-eyebrow {
-      font-size: 7px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.3em;
       text-transform: uppercase;
@@ -154,9 +145,9 @@
     }
 
     .card-couple-names {
-      margin-top: 1mm;
+      margin-top: 2mm;
       font-family: var(--font-serif);
-      font-size: 22px;
+      font-size: 38px;
       font-weight: 600;
       line-height: 1.05;
       letter-spacing: 0.02em;
@@ -176,7 +167,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 5mm 6mm 4.5mm;
+      padding: 10mm 12mm 9mm;
       text-align: center;
     }
 
@@ -188,7 +179,7 @@
       align-items: center;
       justify-content: center;
       gap: 1.5mm;
-      font-size: 10px;
+      font-size: 14px;
       font-weight: 600;
       letter-spacing: 0.14em;
       text-transform: uppercase;
@@ -196,8 +187,8 @@
     }
 
     .card-scan-cue svg {
-      width: 11px;
-      height: 11px;
+      width: 16px;
+      height: 16px;
       stroke: currentColor;
       stroke-width: 1.25;
       fill: none;
@@ -220,12 +211,12 @@
 
     .card-qr-art img {
       display: block;
-      width: 50mm;
-      height: 50mm;
+      width: 100mm;
+      height: 100mm;
     }
 
     .card-features {
-      font-size: 9px;
+      font-size: 12px;
       line-height: 1.4;
       color: var(--text-secondary);
     }
@@ -236,8 +227,8 @@
 
     .card-footer-dates {
       width: 78%;
-      padding-top: 2.5mm;
-      font-size: 8.5px;
+      padding-top: 4mm;
+      font-size: 11px;
       letter-spacing: 0.1em;
       color: var(--text-secondary);
       border-top: 1px solid var(--border-hairline);
@@ -283,7 +274,7 @@
   <div class="no-print-bar">
     <div>
       <h1>Xuất file in thẻ QR bàn tiệc</h1>
-      <p>Khổ A4 chia thành 4 thẻ 96×136 mm, đặt vừa trên mỗi bàn tiệc.</p>
+      <p>Một thiết kế QR phủ trọn một tờ A4 — in trực tiếp, không cần cắt.</p>
       <ul class="print-tips">
         <li><strong>Màu</strong> — chọn Color, không chọn Grayscale / Black &amp; White.</li>
         <li><strong>Background graphics</strong> — phải bật, nếu không sẽ mất ảnh cưới và nền kem.</li>
@@ -296,13 +287,12 @@
     </button>
   </div>
 
-  <!-- Cards are generated from one template so the copy is edited in a
-       single place instead of being kept in sync across four blocks. -->
+  <!-- The A4 card is generated from one template so its copy stays in one place. -->
   <div class="print-sheet" id="printSheet"></div>
 
   <script>
     const CARD_CONFIG = {
-      count: 4,
+      count: 1,
       // Olive rather than black: measured 14.5:1 on the parchment, far above the
       // 4:1 the QR spec asks for. High error correction helps the printed code
       // remain readable above the intentionally visible background photo.

@@ -180,38 +180,62 @@
       text-align: center;
     }
 
-    /* The QR spec requires a 4-module quiet zone; the generator bakes in only
-       one. At 32mm across a ~30x30 grid a module is ~1.07mm, so this padding
-       alone must carry 4 modules = 4.3mm. Do not shrink it, and keep the
-       bronze rule outside it — the quiet zone has to stay blank white. */
-    .card-qr-wrapper {
-      padding: 4.5mm;
-      background: #FFFFFF;
-      border: 1px solid var(--border-hairline);
-    }
-
-    .card-qr-wrapper img {
-      display: block;
-      width: 32mm;
-      height: 32mm;
-    }
-
+    /* Scan cue. Vietnamese guests over about 45 read a bare QR on a table as a
+       VietQR bank-transfer code and hesitate, so the headline has to say what
+       scanning does before they decide it is a request for money. */
     .card-scan-cue {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5mm;
       font-size: 10px;
       font-weight: 600;
-      letter-spacing: 0.13em;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--text-bronze);
     }
 
+    .card-scan-cue svg {
+      width: 11px;
+      height: 11px;
+      stroke: currentColor;
+      stroke-width: 1.25;
+      fill: none;
+    }
+
+    /* The quiet zone is baked into the generated image via qzone=4, so it
+       cannot be destroyed by a later CSS change. This padding is visual
+       breathing room only; the bronze rule sits outside both. */
+    .card-qr-wrapper {
+      padding: 2.5mm;
+      background: var(--surface-cream-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: 4px;
+      line-height: 0;
+    }
+
+    .card-qr-wrapper img {
+      display: block;
+      width: 38mm;
+      height: 38mm;
+    }
+
     .card-features {
-      font-size: 9.5px;
-      line-height: 1.45;
+      font-size: 9px;
+      line-height: 1.4;
       color: var(--text-secondary);
     }
 
     .card-features li {
       list-style: none;
+    }
+
+    /* Typed fallback for the guest whose camera simply will not focus. */
+    .card-fallback-url {
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 7.5px;
+      letter-spacing: 0.04em;
+      color: var(--accent-bronze);
     }
 
     .card-footer-dates {
@@ -284,22 +308,29 @@
     const CARD_CONFIG = {
       count: 4,
       siteUrl: "https://quocnv15.github.io/wedding/",
-      qrColor: "242217", // deep olive, matching the web app's ink
+      // Olive rather than black: measured 14.5:1 on the parchment, far above the
+      // 4:1 the QR spec asks for, and it decoded identically to pure black under
+      // blur, low light and rotation. ecc=M survives a scuffed or stained card;
+      // qzone=4 bakes the mandatory 4-module quiet zone into the image itself.
+      qrColor: "242217",
+      qrEcc: "M",
       photoWebp: "assets/lucy-ariel-card.webp",
       photoJpg: "assets/lucy-ariel-card.jpg",
       names: ["Lucy", "Ariel"],
       dates: "11.09.2026 — 12.09.2026",
       eyebrow: "Wedding Celebration",
-      scanCue: "Quét mã để gửi ảnh",
+      scanCue: "Cùng gửi ảnh cho dâu rể",
       features: [
-        "Gửi ảnh &amp; video kỷ niệm vào Google Drive của dâu rể",
-        "Tặng bài hát cho ban nhạc"
-      ]
+        "Mở Camera hoặc Zalo quét mã — không cần tải app",
+        "Ảnh lưu thẳng vào album cưới của Lucy &amp; Ariel"
+      ],
+      fallbackUrl: "quocnv15.github.io/wedding"
     };
 
     function cardMarkup(cfg) {
       const qrSrc =
-        "https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=0" +
+        "https://api.qrserver.com/v1/create-qr-code/?size=900x900" +
+        "&ecc=" + cfg.qrEcc + "&qzone=4" +
         "&data=" + encodeURIComponent(cfg.siteUrl) +
         "&color=" + cfg.qrColor;
       const couple = cfg.names.join(" và ");
@@ -318,14 +349,21 @@
           </div>
 
           <div class="card-body">
+            <p class="card-scan-cue">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              ${cfg.scanCue}
+            </p>
             <div class="card-qr-wrapper">
               <img src="${qrSrc}" alt="Mã QR mở trang gửi ảnh cưới của ${couple}"
-                   width="300" height="300">
+                   width="900" height="900">
             </div>
-            <p class="card-scan-cue">${cfg.scanCue}</p>
             <ul class="card-features">
               ${cfg.features.map(f => `<li>${f}</li>`).join("")}
             </ul>
+            <p class="card-fallback-url">${cfg.fallbackUrl}</p>
             <p class="card-footer-dates">${cfg.dates}</p>
           </div>
         </div>`;
